@@ -7,6 +7,8 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -22,6 +24,7 @@ class User extends Authenticatable implements FilamentUser
         'email',
         'password',
         'is_admin', // Ditambahkan agar bisa diisi saat membuat user admin
+        'avatar_path',
     ];
 
     /**
@@ -64,5 +67,27 @@ class User extends Authenticatable implements FilamentUser
         // Izinkan akses hanya jika pengguna memiliki is_admin = true.
         // (bool) memastikan nilai NULL atau 0 akan menjadi false.
         return (bool) $this->is_admin;
+    }
+
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->avatar_path && Storage::disk('public')->exists($this->avatar_path)) {
+            return Storage::disk('public')->url($this->avatar_path);
+        }
+
+        $name = trim($this->name) !== '' ? $this->name : 'User';
+        $initial = Str::upper(Str::substr($name, 0, 1));
+
+        $svg = <<<SVG
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+    <rect width="128" height="128" rx="64" fill="#059669"/>
+    <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central"
+          font-family="Inter, Arial, sans-serif" font-size="64" fill="#ffffff">{$initial}</text>
+</svg>
+SVG;
+
+        $encodedSvg = base64_encode($svg);
+
+        return "data:image/svg+xml;base64,{$encodedSvg}";
     }
 }

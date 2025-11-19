@@ -79,7 +79,6 @@
                 <input type="text"
                        id="nomor_wa"
                        name="nomor_wa"
-                       placeholder="+62..."
                        required
                        class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
             </label>

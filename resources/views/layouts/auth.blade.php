@@ -2,63 +2,77 @@
 
 @section('body')
 @php($activeNav = $activeNav ?? '')
+
 <div class="grid min-h-screen bg-slate-100 lg:grid-cols-[45%_55%]">
+    
+    {{-- BAGIAN KIRI: GAMBAR (TETAP) --}}
     <div class="relative hidden overflow-hidden lg:block">
         <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=1600"
              alt="Pelatihan Halal"
-             class="absolute inset-0 h-full w-full object-cover">
-        <div class="absolute inset-0 bg-emerald-900/70 mix-blend-multiply"></div>
-        <div class="relative z-10 flex h-full flex-col justify-between p-10 text-white">
-            <div class="space-y-4">
-                <a href="{{ url('/') }}" class="inline-flex items-center gap-3 text-lg font-semibold">
-                    <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-white/10 backdrop-blur">
-                        <i class="fas fa-leaf"></i>
-                    </span>
-                    <span>Pelatihan Pendamping Halal</span>
-                </a>
-                <p class="max-w-sm text-sm leading-relaxed text-emerald-100">
-                    Bergabunglah bersama ratusan pendamping proses produk halal yang tersebar di seluruh Indonesia.
-                    Akses materi pelatihan, ujian, dan sertifikasi dalam satu platform terpadu.
-                </p>
-            </div>
-            <div class="text-xs uppercase tracking-[0.4em] text-emerald-200/80">
-                Komitmen untuk Produk Halal Terpercaya
-            </div>
-        </div>
+             class="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 hover:scale-105">
+        <div class="absolute inset-0 bg-emerald-900/60 mix-blend-multiply"></div>
     </div>
 
-    <div class="flex flex-col bg-white">
-        <header class="border-b border-slate-200/70">
-            <nav class="mx-auto flex w-full max-w-3xl items-center justify-end px-6 py-4">
-                <ul class="flex flex-wrap items-center gap-2 rounded-full border border-slate-200/70 bg-white px-2 py-1 text-xs font-semibold uppercase tracking-wide text-slate-500 shadow-sm">
+    {{-- BAGIAN KANAN: KONTEN & NAVBAR --}}
+    <div class="flex flex-col bg-slate-50 relative">
+        
+        {{-- === NAVBAR === --}}
+        <header class="flex w-full items-center justify-end py-6 pr-8 sm:pr-8">
+            <nav>
+                <ul class="flex items-center gap-3 rounded-full bg-white px-3 py-2 shadow-sm text-xs font-semibold uppercase tracking-wide">
+                    
+                    {{-- Link: HOME --}}
                     <li>
                         <a href="{{ url('/') }}"
-                           class="@class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'home' ? 'bg-emerald-600 text-white shadow' : 'hover:bg-emerald-50 hover:text-emerald-600'])">
+                           class="inline-flex items-center rounded-full px-4 py-2 transition {{ $activeNav === 'home' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600' }}">
                             Home
                         </a>
                     </li>
+
+                    {{-- Link: COURSES --}}
                     <li>
                         <a href="{{ route('courses') }}"
-                           class="@class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'courses' ? 'bg-emerald-600 text-white shadow' : 'hover:bg-emerald-50 hover:text-emerald-600'])">
+                           class="inline-flex items-center rounded-full px-4 py-2 transition {{ $activeNav === 'courses' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600' }}">
                             Courses
                         </a>
                     </li>
+
+                    {{-- Link: ABOUT --}}
                     <li>
                         <a href="{{ url('/about') }}"
-                           class="@class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'about' ? 'bg-emerald-600 text-white shadow' : 'hover:bg-emerald-50 hover:text-emerald-600'])">
+                           class="inline-flex items-center rounded-full px-4 py-2 transition {{ $activeNav === 'about' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600' }}">
                             About
                         </a>
+                    </li>
+
+                    {{-- Link: LOGIN --}}
+                    <li>
+                        @if(request()->routeIs('login') || request()->routeIs('register'))
+                            <span class="inline-flex items-center rounded-full bg-emerald-600 px-4 py-2 text-white shadow-sm">
+                                {{ request()->routeIs('register') ? 'Daftar' : 'Login' }}
+                            </span>
+                        @else
+                            <a href="{{ route('login') }}"
+                               class="inline-flex items-center rounded-full px-4 py-2 transition text-slate-700 hover:text-emerald-600">
+                                Login
+                            </a>
+                        @endif
                     </li>
                 </ul>
             </nav>
         </header>
 
-        <main class="flex flex-1 items-center justify-center px-6 py-10 sm:px-10">
+        {{-- AREA FORM --}}
+        <main class="flex flex-1 items-center justify-center px-6 py-8 sm:px-10">
             <div class="w-full max-w-md">
                 @yield('form')
             </div>
         </main>
+
+        {{-- Footer --}}
+        <div class="py-4 text-center text-xs text-slate-400">
+            &copy; {{ date('Y') }} Halal Center UIN SUKA
+        </div>
     </div>
 </div>
 @endsection
-

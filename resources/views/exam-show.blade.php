@@ -4,29 +4,10 @@
 
 @section('title', 'Kerjakan Ujian - ' . $exam->title)
 
-@section('sidebar-extra')
-    <li>
-        <a href="{{ route('duty') }}"
-           class="group flex items-center gap-3 rounded-xl px-4 py-3 transition text-white/80 hover:bg-white/10">
-            <i class="fas fa-tasks text-base"></i>
-            <span>Duty</span>
-        </a>
-    </li>
-    <li>
-        <a href="{{ route('exam') }}"
-           class="group flex items-center gap-3 rounded-xl px-4 py-3 transition bg-white text-emerald-600 shadow-lg shadow-emerald-900/20">
-            <i class="fas fa-pencil-alt text-base"></i>
-            <span>Exam</span>
-        </a>
-    </li>
-    <li>
-        <a href="{{ route('certificate') }}"
-           class="group flex items-center gap-3 rounded-xl px-4 py-3 transition text-white/80 hover:bg-white/10">
-            <i class="fas fa-certificate text-base"></i>
-            <span>Certificate</span>
-        </a>
-    </li>
-@endsection
+{{-- 
+  Blok @section('sidebar-extra') telah dihapus
+  karena rute-rute tersebut sudah tidak digunakan lagi.
+--}}
 
 @section('content')
     <div class="space-y-8">
@@ -82,4 +63,3 @@
         </div>
     </div>
 @endsection
-

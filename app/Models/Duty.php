@@ -19,6 +19,7 @@ class Duty extends Model
         'course_id',
         'name',
         'description',
+        'attachment_path',
         'deadline',
     ];
 

@@ -25,7 +25,30 @@ class DutyResource extends Resource
                     ->relationship('course', 'title')
                     ->required(),
                 Forms\Components\TextInput::make('name')->required()->columnSpanFull(),
-                Forms\Components\RichEditor::make('description')->columnSpanFull(),
+                Forms\Components\RichEditor::make('description')
+                    ->label('Deskripsi / Instruksi Tambahan')
+                    ->columnSpanFull(),
+                Forms\Components\FileUpload::make('attachment_path')
+                    ->label('File Tugas')
+                    ->disk('public')
+                    ->directory('duties')
+                    ->preserveFilenames()
+                    ->downloadable()
+                    ->openable()
+                    ->maxSize(2048)
+                    ->acceptedFileTypes([
+                        'application/pdf',
+                        'application/msword',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'application/vnd.ms-excel',
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        'application/zip',
+                        'application/x-zip-compressed',
+                        'application/vnd.ms-powerpoint',
+                        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                    ])
+                    ->helperText('Unggah modul atau berkas instruksi tugas (PDF/DOC/ZIP, maks 2MB).')
+                    ->columnSpanFull(),
                 Forms\Components\DateTimePicker::make('deadline')->required(),
             ]);
     }

@@ -3,45 +3,58 @@
 @section('body')
 @php($activeNav = $activeNav ?? '')
 <div class="min-h-screen flex flex-col bg-slate-50 text-slate-900">
-    <header class="sticky top-0 z-30 bg-gray-50/95 backdrop-blur">
-        <div class="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+    <header class="sticky top-0 z-30 bg-white/95 shadow-sm backdrop-blur"> 
+        <div class="mx-auto flex w-full flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
             <a href="{{ url('/') }}" class="flex items-center gap-4">
-                <img src="{{ asset('gambar/logo halal center.png') }}" alt="Logo Halal Center" class="h-14 w-auto rounded-lg border border-emerald-100 bg-white object-contain p-2 shadow-sm">
+                
+                {{-- Logo Tanpa Background --}}
+                <img src="{{ asset('gambar/logo halal center.png') }}" alt="Logo Halal Center" class="h-16 w-auto object-contain">
+                
                 <div class="text-base font-semibold leading-tight text-slate-700">
-                    <span class="block uppercase tracking-wide text-emerald-600">Pelatihan</span>
-                    <span class="block">Pendamping Penyelia Halal</span>
+                    {{-- Judul Tetap Hitam (Sesuai Permintaan) --}}
+                    <span class="block uppercase tracking-wide text-slate-900">Halal</span>
+                    <span class="block uppercase tracking-wide text-slate-900">Center UIN SUKA</span>
                 </div>
             </a>
             <nav class="flex items-center">
-                <ul class="flex items-center gap-3 rounded-lg bg-white px-3 py-2 shadow-sm text-xs font-semibold uppercase tracking-wide">
+                <ul class="flex items-center gap-3 rounded-full bg-white px-3 py-2 shadow-sm text-xs font-semibold uppercase tracking-wide">
                     <li>
                         <a href="{{ url('/') }}"
-                           class="@class(['inline-flex items-center rounded-lg px-4 py-2 transition', $activeNav === 'home' ? 'bg-emerald-700 text-white' : 'text-slate-700 hover:text-emerald-600'])">
+                           {{-- DISERAGAMKAN: Aktif jadi 'bg-emerald-600', Hover jadi 'hover:text-emerald-600' --}}
+                           @class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'home' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])>
                             Home
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('courses') }}"
-                           class="@class(['inline-flex items-center rounded-lg px-4 py-2 transition', $activeNav === 'courses' ? 'bg-emerald-700 text-white' : 'text-slate-700 hover:text-emerald-600'])">
+                           {{-- DISERAGAMKAN: Aktif jadi 'bg-emerald-600', Hover jadi 'hover:text-emerald-600' --}}
+                           @class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'courses' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])>
                             Courses
                         </a>
                     </li>
                     <li>
                         <a href="{{ url('/about') }}"
-                           class="@class(['inline-flex items-center rounded-lg px-4 py-2 transition', $activeNav === 'about' ? 'bg-emerald-700 text-white' : 'text-slate-700 hover:text-emerald-600'])">
+                           {{-- DISERAGAMKAN: Aktif jadi 'bg-emerald-600', Hover jadi 'hover:text-emerald-600' --}}
+                           @class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'about' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])>
                             About
                         </a>
                     </li>
                     @auth
                         <li class="relative">
+                            {{-- PERBAIKAN DI SINI: Menggunakan logika foto profil, bukan hanya ikon statis --}}
                             <button type="button"
-                                    class="profile-trigger inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-700 transition hover:text-emerald-600"
+                                    class="profile-trigger inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 transition hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1"
                                     data-dropdown-target="profile-menu"
                                     aria-expanded="false"
                                     aria-label="Buka menu profil">
                                 <span class="sr-only">Profil</span>
-                                <i class="fas fa-user text-base"></i>
+                                
+                                <img class="h-full w-full rounded-full object-cover"
+                                     src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=10b981&color=fff' }}"
+                                     alt="{{ Auth::user()->name }}"
+                                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=10b981&color=fff';">
                             </button>
+
                             <ul id="profile-menu"
                                 class="dropdown-menu absolute right-0 top-12 hidden min-w-[160px] rounded-lg border border-slate-200 bg-white/95 p-2 text-sm font-medium text-slate-600 shadow-lg focus:outline-none">
                                 <li>
@@ -58,7 +71,8 @@
                     @else
                         <li>
                             <a href="{{ route('login') }}"
-                               class="@class(['inline-flex items-center rounded-lg px-4 py-2 transition', $activeNav === 'login' ? 'bg-emerald-700 text-white' : 'text-slate-700 hover:text-emerald-600'])">
+                               {{-- DISERAGAMKAN: Aktif jadi 'bg-emerald-600', Hover jadi 'hover:text-emerald-600' --}}
+                               @class(['inline-flex items-center rounded-lg px-4 py-2 transition', $activeNav === 'login' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])">
                                 Login
                             </a>
                         </li>
@@ -81,6 +95,7 @@
 @endsection
 
 @push('scripts')
+{{-- Script dropdown Anda (JANGAN DIUBAH) --}}
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const triggers = document.querySelectorAll('[data-dropdown-target]');
@@ -116,4 +131,3 @@
     });
 </script>
 @endpush
-

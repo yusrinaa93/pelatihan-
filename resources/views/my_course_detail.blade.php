@@ -43,13 +43,7 @@
                         data-tab-target="tab-ujian">
                     <i class="fas fa-file-signature text-xs"></i>
                     Ujian
-                </button>
-                <button type="button"
-                        class="tab-link inline-flex items-center gap-2 rounded-full px-4 py-2 text-slate-500 transition hover:bg-emerald-50 hover:text-emerald-600"
-                        data-tab-target="tab-sertifikat">
-                    <i class="fas fa-award text-xs"></i>
-                    Sertifikat
-                </button>
+                </button> 
             </nav>
 
             <div class="tab-panels space-y-8 p-6">
@@ -59,7 +53,7 @@
                         <table class="min-w-full divide-y divide-slate-200 text-sm">
                             <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                                 <tr>
-                                    <th class="px-4 py-3 text-left">ID</th>
+                                    <th class="px-4 py-3 text-left">No</th>
                                     <th class="px-4 py-3 text-left">Tanggal</th>
                                     <th class="px-4 py-3 text-left">Waktu</th>
                                     <th class="px-4 py-3 text-left">Kategori</th>
@@ -69,7 +63,7 @@
                             <tbody class="divide-y divide-slate-100 bg-white text-slate-600">
                                 @forelse($schedules as $schedule)
                                     <tr>
-                                        <td class="px-4 py-3 font-semibold text-slate-800">#{{ $schedule->id }}</td>
+                                        <td class="px-4 py-3 font-semibold text-slate-800">{{ $loop->iteration }}</td>
                                         <td class="px-4 py-3">{{ $schedule->start_time?->translatedFormat('l, d F Y') }}</td>
                                         <td class="px-4 py-3">
                                             {{ $schedule->start_time?->format('H:i') }} - {{ $schedule->end_time?->format('H:i') }}
@@ -103,7 +97,7 @@
                         <table class="min-w-full divide-y divide-slate-200 text-sm">
                             <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                                 <tr>
-                                    <th class="px-4 py-3 text-left">ID</th>
+                                    <th class="px-4 py-3 text-left">No</th>
                                     <th class="px-4 py-3 text-left">Tanggal</th>
                                     <th class="px-4 py-3 text-left">Waktu</th>
                                     <th class="px-4 py-3 text-left">Materi</th>
@@ -114,7 +108,7 @@
                             <tbody class="divide-y divide-slate-100 bg-white text-slate-600">
                                 @forelse($schedules as $schedule)
                                     <tr>
-                                        <td class="px-4 py-3 font-semibold text-slate-800">#{{ $schedule->id }}</td>
+                                        <td class="px-4 py-3 font-semibold text-slate-800">{{ $loop->iteration }}</td>
                                         <td class="px-4 py-3">{{ $schedule->start_time?->translatedFormat('l, d F Y') }}</td>
                                         <td class="px-4 py-3">{{ $schedule->start_time?->format('H:i') }} - {{ $schedule->end_time?->format('H:i') }}</td>
                                         <td class="px-4 py-3">{{ $schedule->category }}</td>
@@ -156,9 +150,10 @@
                         <table class="min-w-full divide-y divide-slate-200 text-sm">
                             <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                                 <tr>
-                                    <th class="px-4 py-3 text-left">ID</th>
+                                    <th class="px-4 py-3 text-left">No</th>
                                     <th class="px-4 py-3 text-left">Nama</th>
                                     <th class="px-4 py-3 text-left">Deskripsi</th>
+                                    <th class="px-4 py-3 text-left">File Tugas</th>
                                     <th class="px-4 py-3 text-left">Deadline</th>
                                     <th class="px-4 py-3 text-left">Aksi</th>
                                 </tr>
@@ -166,10 +161,30 @@
                             <tbody class="divide-y divide-slate-100 bg-white text-slate-600">
                                 @forelse ($duties as $duty)
                                     <tr>
-                                        <td class="px-4 py-3 font-semibold text-slate-800">#{{ $duty->id }}</td>
+                                        <td class="px-4 py-3 font-semibold text-slate-800">{{ $loop->iteration }}</td>
                                         <td class="px-4 py-3 font-semibold text-slate-700">{{ $duty->name }}</td>
                                         <td class="px-4 py-3">
-                                            <div class="prose prose-sm max-w-none text-slate-600">{!! $duty->description !!}</div>
+                                            @if($duty->description)
+                                                <div class="prose prose-sm max-w-none text-slate-600">{!! $duty->description !!}</div>
+                                            @else
+                                                <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                                    Tidak ada deskripsi
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            @if($duty->attachment_path)
+                                                <a href="{{ Storage::disk('public')->url($duty->attachment_path) }}"
+                                                   target="_blank"
+                                                   class="inline-flex items-center gap-2 rounded-full bg-sky-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-sky-400">
+                                                    <i class="fas fa-file-arrow-down"></i>
+                                                    Unduh Tugas
+                                                </a>
+                                            @else
+                                                <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                                    Belum ada file
+                                                </span>
+                                            @endif
                                         </td>
                                         <td class="px-4 py-3">{{ $duty->deadline->translatedFormat('l, d F Y') }}</td>
                                         <td class="px-4 py-3">
@@ -241,45 +256,6 @@
                     </div>
                 </div>
 
-                <div id="tab-sertifikat" class="tab-panel hidden space-y-4">
-                    <h2 class="text-lg font-semibold text-slate-900">Sertifikat</h2>
-                    <div class="overflow-hidden rounded-2xl border border-slate-200">
-                        <table class="min-w-full divide-y divide-slate-200 text-sm">
-                            <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                                <tr>
-                                    <th class="px-4 py-3 text-left">Nama Pelatihan</th>
-                                    <th class="px-4 py-3 text-left">Status Sertifikat</th>
-                                    <th class="px-4 py-3 text-left">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 bg-white text-slate-600">
-                                <tr>
-                                    <td class="px-4 py-3 font-semibold text-slate-800">{{ $course->title }}</td>
-                                    <td class="px-4 py-3">
-                                        @if ($course->is_certificate_active)
-                                            <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600">
-                                                <i class="fas fa-check-circle"></i>
-                                                Tersedia
-                                            </span>
-                                        @else
-                                            <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-400">
-                                                <i class="fas fa-clock"></i>
-                                                Belum tersedia
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <a href="{{ route('certificate.check', $course->id) }}"
-                                           class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-emerald-400">
-                                            <i class="fas fa-download"></i>
-                                            Unduh
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -358,7 +334,7 @@
                     if (!targetId) return;
                     activateTab(link);
                     showPanel(targetId);
-                    window.location.hash = targetId;
+                    history.replaceState(null, null, `#${targetId}`);
                 });
             });
         }
@@ -366,6 +342,7 @@
         document.addEventListener('click', (event) => {
             const presenceButton = event.target.closest('.btn-presence');
             if (!presenceButton) return;
+            
 
             event.preventDefault();
             const scheduleId = presenceButton.dataset.scheduleId;
