@@ -77,10 +77,10 @@
             <label class="space-y-2">
                 <span class="font-semibold text-slate-600">Nomor WhatsApp</span>
                 <input type="text"
-                       id="nomor_wa"
-                       name="nomor_wa"
-                       required
-                       class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
+                           id="nomor_wa"
+                           name="nomor_wa"
+                           required
+                           class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
             </label>
 
             <label class="space-y-2">
@@ -93,8 +93,10 @@
                           placeholder="Tulis alamat lengkap Anda"></textarea>
             </label>
 
+            {{-- TOMBOL SUBMIT DENGAN EFEK LOADING --}}
             <button type="submit"
-                    class="w-full rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-lg shadow-emerald-500/40 transition hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
+                    id="btn-submit"
+                    class="w-full rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-lg shadow-emerald-500/40 transition hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200 disabled:cursor-not-allowed disabled:opacity-70">
                 Daftar Sekarang
             </button>
         </form>
@@ -107,6 +109,15 @@
 <script>
     document.getElementById('registrationForm').addEventListener('submit', function(event) {
         event.preventDefault();
+        
+        // 1. AMBIL TOMBOL & SIMPAN TEKS ASLI
+        const btn = document.getElementById('btn-submit');
+        const originalText = btn.innerHTML;
+
+        // 2. UBAH JADI LOADING & DISABLE
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Memproses...';
+
         const formData = new FormData(this);
         const actionUrl = this.getAttribute('action');
 
@@ -116,17 +127,19 @@
             headers: { 'Accept': 'application/json' }
         })
         .then(response => {
-            if (response.status === 422 || response.status === 500) {
-                return response.json().then(data => {
-                    const error = new Error(data.message || 'Terjadi error.');
-                    error.response = data;
-                    throw error;
-                });
+            // Handle jika responsenya bukan JSON sukses langsung (misal 422 atau 500)
+            if (!response.ok && response.status !== 422 && response.status !== 500) {
+                 throw new Error('Network response was not ok.');
             }
-            if (!response.ok) {
-                throw new Error('Network response was not ok.');
-            }
-            return response.json();
+            return response.json().then(data => {
+                // Jika status code error (4xx/5xx), kita throw error manual biar masuk catch
+                if (!response.ok) {
+                     const error = new Error(data.message || 'Terjadi error.');
+                     error.response = data;
+                     throw error;
+                }
+                return data;
+            });
         })
         .then(data => {
             if (data.status === 'success') {
@@ -135,25 +148,39 @@
                     title: 'Pendaftaran Berhasil!',
                     text: 'Selamat! Anda telah terdaftar pada kursus ini.',
                     confirmButtonText: 'Lanjutkan ke Halaman My Course',
-                    confirmButtonColor: '#10b981'
+                    confirmButtonColor: '#10b981',
+                    allowOutsideClick: false // Biar user gak close sembarangan saat redirect
                 }).then((result) => {
                     if (result.isConfirmed) {
                         window.location.href = '/my-courses';
                     }
                 });
+                // Tombol TETAP DISABLED karena mau pindah halaman
+            } else {
+                // Jika logic sukses tapi status bukan 'success' (jarang terjadi)
+                throw new Error(data.message || 'Gagal mendaftar.');
             }
         })
         .catch(error => {
+            // 3. JIKA ERROR, KEMBALIKAN TOMBOL SEPERTI SEMULA
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+
             let title = 'Terjadi Error!';
             let htmlContent = 'Silakan coba beberapa saat lagi.';
+            
+            // Cek apakah error validasi form (422)
             if (error.response && error.response.errors) {
                 title = 'Data Tidak Valid!';
-                htmlContent = '<ul class="list-disc space-y-1 pl-5 text-left">' +
+                htmlContent = '<ul class="list-disc space-y-1 pl-5 text-left text-sm">' +
                     Object.values(error.response.errors).map(e => `<li>${e[0]}</li>`).join('') +
                     '</ul>';
             } else if (error.response) {
                 htmlContent = error.response.message;
+            } else if (error.message) {
+                htmlContent = error.message;
             }
+
             Swal.fire({
                 icon: 'error',
                 title: title,

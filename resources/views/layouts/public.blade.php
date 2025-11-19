@@ -11,7 +11,6 @@
                 <img src="{{ asset('gambar/logo halal center.png') }}" alt="Logo Halal Center" class="h-16 w-auto object-contain">
                 
                 <div class="text-base font-semibold leading-tight text-slate-700">
-                    {{-- Judul Tetap Hitam (Sesuai Permintaan) --}}
                     <span class="block uppercase tracking-wide text-slate-900">Halal</span>
                     <span class="block uppercase tracking-wide text-slate-900">Center UIN SUKA</span>
                 </div>
@@ -20,28 +19,24 @@
                 <ul class="flex items-center gap-3 rounded-full bg-white px-3 py-2 shadow-sm text-xs font-semibold uppercase tracking-wide">
                     <li>
                         <a href="{{ url('/') }}"
-                           {{-- DISERAGAMKAN: Aktif jadi 'bg-emerald-600', Hover jadi 'hover:text-emerald-600' --}}
                            @class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'home' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])>
-                            Home
+                            Beranda
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('courses') }}"
-                           {{-- DISERAGAMKAN: Aktif jadi 'bg-emerald-600', Hover jadi 'hover:text-emerald-600' --}}
                            @class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'courses' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])>
-                            Courses
+                            Pelatihan
                         </a>
                     </li>
                     <li>
                         <a href="{{ url('/about') }}"
-                           {{-- DISERAGAMKAN: Aktif jadi 'bg-emerald-600', Hover jadi 'hover:text-emerald-600' --}}
                            @class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'about' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])>
-                            About
+                            Tentang
                         </a>
                     </li>
                     @auth
                         <li class="relative">
-                            {{-- PERBAIKAN DI SINI: Menggunakan logika foto profil, bukan hanya ikon statis --}}
                             <button type="button"
                                     class="profile-trigger inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 transition hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1"
                                     data-dropdown-target="profile-menu"
@@ -71,9 +66,8 @@
                     @else
                         <li>
                             <a href="{{ route('login') }}"
-                               {{-- DISERAGAMKAN: Aktif jadi 'bg-emerald-600', Hover jadi 'hover:text-emerald-600' --}}
-                               @class(['inline-flex items-center rounded-lg px-4 py-2 transition', $activeNav === 'login' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])">
-                                Login
+                               @class(['inline-flex items-center rounded-lg px-4 py-2 transition', $activeNav === 'login' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])>
+                                Masuk
                             </a>
                         </li>
                     @endauth

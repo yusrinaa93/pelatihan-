@@ -40,35 +40,35 @@
                     <a href="{{ route('courses') }}"
                        @class(['group flex items-center gap-3 rounded-xl px-4 py-3 transition', $activeSidebar === 'courses' ? 'bg-white text-emerald-600' : 'text-white/80 hover:bg-white/10'])>
                         <i class="fas fa-graduation-cap text-base"></i>
-                        <span>Courses</span>
+                        <span>Daftar Pelatihan</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('my-courses') }}"
                        @class(['group flex items-center gap-3 rounded-xl px-4 py-3 transition', $activeSidebar === 'my-courses' ? 'bg-white text-emerald-600' : 'text-white/80 hover:bg-white/10'])>
                         <i class="fas fa-book-open text-base"></i>
-                        <span>My Courses</span>
+                        <span>Pelatihan Saya</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('certificate.index') }}"
                        @class(['group flex items-center gap-3 rounded-xl px-4 py-3 transition', $activeSidebar === 'my-certificates' ? 'bg-white text-emerald-600' : 'text-white/80 hover:bg-white/10'])>
                         <i class="fas fa-award text-base"></i>
-                        <span>My Certificates</span>
+                        <span>Sertifikat Saya</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('account') }}"
                        @class(['group flex items-center gap-3 rounded-xl px-4 py-3 transition', $activeSidebar === 'account' ? 'bg-white text-emerald-600' : 'text-white/80 hover:bg-white/10'])>
                         <i class="fas fa-user-circle text-base"></i>
-                        <span>Account</span>
+                        <span>Akun Saya</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('faq') }}"
                        @class(['group flex items-center gap-3 rounded-xl px-4 py-3 transition', $activeSidebar === 'faq' ? 'bg-white text-emerald-600' : 'text-white/80 hover:bg-white/10'])>
                         <i class="fas fa-circle-question text-base"></i>
-                        <span>FAQ</span>
+                        <span>Bantuan / FAQ</span>
                     </a>
                 </li>
                 @yield('sidebar-extra')
@@ -105,29 +105,29 @@
                     <span>Menu</span>
                 </button>
                 
-                {{-- Menu Kanan (Home, Courses, About, Profile) --}}
+                {{-- Menu Kanan (Navbar) --}}
                 <nav class="flex items-center">
                     <ul class="flex items-center gap-3 rounded-full bg-white px-3 py-2 shadow-sm text-xs font-semibold uppercase tracking-wide">
                         <li>
                             <a href="{{ url('/') }}"
                                @class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'home' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])>
-                                Home
+                                Beranda
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('courses') }}"
                                @class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'courses' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])>
-                                Courses
+                                Pelatihan
                             </a>
                         </li>
                         <li>
                             <a href="{{ url('/about') }}"
                                @class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'about' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])>
-                                About
+                                Tentang
                             </a>
                         </li>
                         
-                        {{-- BAGIAN PROFIL (SUDAH DIPERBAIKI) --}}
+                        {{-- BAGIAN PROFIL --}}
                         @auth
                             <li class="relative">
                                 <button type="button"
@@ -162,7 +162,7 @@
                             <li>
                                 <a href="{{ route('login') }}"
                                    @class(['inline-flex items-center rounded-lg px-4 py-2 transition', $activeNav === 'login' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])>
-                                    Login
+                                    Masuk
                                 </a>
                             </li>
                         @endauth
