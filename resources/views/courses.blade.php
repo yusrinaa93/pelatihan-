@@ -5,8 +5,7 @@
 @section('title', 'Courses - Pelatihan Halal')
 
 @section('content')
-    <div class="space-y-8 relative">
-        {{-- Header --}}
+    <div class="space-y-8">
         <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
                 <p class="text-xs font-semibold uppercase tracking-widest text-emerald-500">Daftar Pelatihan</p>
@@ -15,7 +14,6 @@
             </div>
         </div>
 
-        {{-- Grid Card Kursus --}}
         <div class="grid gap-6 md:grid-cols-2">
             @forelse ($courses as $course)
                 @php($cover = $course->image_path ? asset('storage/'.$course->image_path) : 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80')
@@ -50,53 +48,4 @@
             @endforelse
         </div>
     </div>
-
-    {{-- MODAL NOTIFIKASI SUKSES DENGAN BLUR --}}
-    @if(session('success'))
-        <div id="successModal" 
-             class="fixed inset-0 z-[999] flex items-center justify-center bg-slate-900/40 px-4 backdrop-blur-sm transition-opacity duration-300">
-            
-            {{-- Card Modal --}}
-            <div class="relative w-full max-w-md transform overflow-hidden rounded-3xl bg-white p-6 text-center shadow-2xl shadow-emerald-500/20 ring-1 ring-slate-900/5 transition-all duration-300 scale-100">
-                
-                {{-- Icon Sukses Animasi --}}
-                <div class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-50 ring-4 ring-emerald-100">
-                    <i class="fas fa-check text-4xl text-emerald-500 animate-pulse"></i>
-                </div>
-
-                {{-- Text --}}
-                <h3 class="mb-2 text-2xl font-bold text-slate-900">Berhasil Terdaftar!</h3>
-                <p class="text-slate-500 mb-8">
-                    {{ session('success') }}
-                </p>
-
-                {{-- Tombol Tutup --}}
-                <button type="button" onclick="closeSuccessModal()" 
-                        class="w-full rounded-full bg-emerald-500 px-5 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-400 hover:shadow-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
-                    Lihat Materi
-                </button>
-            </div>
-        </div>
-
-        {{-- Script Khusus Modal --}}
-        <script>
-            function closeSuccessModal() {
-                const modal = document.getElementById('successModal');
-                // Efek fade out sebelum menghapus
-                modal.style.opacity = '0';
-                modal.style.pointerEvents = 'none';
-                setTimeout(() => {
-                    modal.remove();
-                }, 300); // Sesuaikan dengan duration transition css
-            }
-
-            // Opsional: Tutup jika klik di luar card (area blur)
-            document.getElementById('successModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeSuccessModal();
-                }
-            });
-        </script>
-    @endif
-
 @endsection

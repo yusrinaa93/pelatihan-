@@ -15,7 +15,7 @@
         
         <a href="{{ route('courses') }}" 
            class="inline-block rounded-full border-2 border-emerald-600 bg-emerald-600 px-8 py-4 text-base font-semibold text-white transition hover:bg-emerald-700">
-            START COURSE
+            MULAI PELATIHAN 
         </a>
     </div>
 </section>
@@ -28,7 +28,7 @@
             <a href="#map-section">
                 <div class="rounded-xl border border-gray-200 bg-white p-6 text-center shadow-md transition hover:shadow-lg h-full">
                     <i class="fas fa-map-marker-alt mb-4 text-3xl" style="color: #16A05D;"></i>
-                    <h3 class="mb-2 text-lg font-semibold text-gray-800">Address</h3>
+                    <h3 class="mb-2 text-lg font-semibold text-gray-800">Alamat</h3>
                     <p class="text-sm text-gray-600">
                         Papringan, Caturtunggal, Depok, Sleman, DIY 55281
                     </p>
@@ -40,7 +40,7 @@
             <a href="https://wa.me/622741234567" target="_blank">
                 <div class="rounded-xl border border-gray-200 bg-white p-6 text-center shadow-md transition hover:shadow-lg h-full">
                     <i class="fas fa-phone-alt mb-4 text-3xl" style="color: #16A05D;"></i>
-                    <h3 class="mb-2 text-lg font-semibold text-gray-800">Contact</h3>
+                    <h3 class="mb-2 text-lg font-semibold text-gray-800">Kontak</h3>
                     <p class="text-sm text-gray-600">
                         (0274) 123-4567
                     </p>

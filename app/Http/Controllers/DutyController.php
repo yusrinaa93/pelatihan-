@@ -51,4 +51,4 @@ class DutyController extends Controller
                 ->with('status', 'File uploaded successfully.')
                 ->withFragment('tab-tugas');
     }
-}
+}   

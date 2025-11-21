@@ -3,12 +3,6 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Hasil Ujian - ' . $result->exam->title)
-
-{{-- 
-  Blok @section('sidebar-extra') telah dihapus
-  karena rute-rute tersebut sudah tidak digunakan lagi.
---}}
-
 @section('content')
     <div class="flex flex-col items-center justify-center gap-6 text-center">
         <div class="space-y-3">

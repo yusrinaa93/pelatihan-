@@ -43,10 +43,7 @@
                                      style="width: {{ $course->progress_percent ?? 0 }}%">
                                 </div>
                             </div>
-                            {{-- Menampilkan detail item yang selesai --}}
-                            <p class="text-[10px] text-slate-400">
-                                {{ $course->completed_items ?? 0 }} dari {{ $course->total_items ?? 0 }} materi selesai
-                            </p>
+                    
                         </div>
 
                         <div class="mt-auto pt-2">

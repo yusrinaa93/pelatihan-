@@ -3,8 +3,6 @@
 namespace App\Providers\Filament;
 
 use Filament\Http\Middleware\Authenticate;
-// Hapus AuthenticateSession dari sini karena sudah ada di middleware utama
-// use Filament\Http\Middleware\AuthenticateSession; 
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
@@ -16,7 +14,7 @@ use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\Session\Middleware\AuthenticateSession; // Pastikan ini diimpor
+use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
@@ -29,10 +27,12 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->authGuard('admin') // <-- TAMBAHKAN BARIS INI
+            ->authGuard('admin')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Emerald, // Saya sesuaikan dengan tema hijau Anda
             ])
+             ->brandLogo(asset('gambar/logo halal center.png')) // Menambahkan Logo
+            ->brandLogoHeight('3rem')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -40,8 +40,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                Widgets\AccountWidget::class, // Widget "Selamat Datang" tetap ada
+                // Widgets\FilamentInfoWidget::class, <-- HAPUS ATAU KOMENTAR BARIS INI
             ])
             ->middleware([
                 EncryptCookies::class,

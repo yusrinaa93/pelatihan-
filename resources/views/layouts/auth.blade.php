@@ -25,7 +25,7 @@
                     <li>
                         <a href="{{ url('/') }}"
                            class="inline-flex items-center rounded-full px-4 py-2 transition {{ $activeNav === 'home' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600' }}">
-                            Home
+                            BERANDA
                         </a>
                     </li>
 
@@ -33,7 +33,7 @@
                     <li>
                         <a href="{{ route('courses') }}"
                            class="inline-flex items-center rounded-full px-4 py-2 transition {{ $activeNav === 'courses' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600' }}">
-                            Courses
+                            PELATIHAN
                         </a>
                     </li>
 
@@ -41,8 +41,8 @@
                     <li>
                         <a href="{{ url('/about') }}"
                            class="inline-flex items-center rounded-full px-4 py-2 transition {{ $activeNav === 'about' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600' }}">
-                            About
-                        </a>
+                            TENTANG
+                        </a>    
                     </li>
 
                     {{-- Link: LOGIN --}}
@@ -54,9 +54,9 @@
                         @else
                             <a href="{{ route('login') }}"
                                class="inline-flex items-center rounded-full px-4 py-2 transition text-slate-700 hover:text-emerald-600">
-                                Login
+                                Masuk
                             </a>
-                        @endif
+                        @endif  
                     </li>
                 </ul>
             </nav>
