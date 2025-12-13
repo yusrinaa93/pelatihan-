@@ -24,10 +24,10 @@ class AccountController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email', 
-            'tempat_lahir' => 'nullable|string|max:255',
-            'tanggal_lahir' => 'nullable|date',
-            'nomor_wa' => 'nullable|string|max:20',
-            'alamat' => 'nullable|string|max:500',
+            'tempat_lahir' => 'required|string|max:255',
+            'tanggal_lahir' => 'required|date',
+            'nomor_wa' => 'required|string|max:20',
+            'alamat' => 'required|string|max:500',
             'avatar' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
@@ -47,6 +47,7 @@ class AccountController extends Controller
         $user->tanggal_lahir = $request->tanggal_lahir;
         $user->nomor_wa = $request->nomor_wa;
         $user->alamat = $request->alamat;
+        $user->profile_completed = true; // Tandai bahwa profil sudah lengkap
         $user->save();
 
         return back()->with('status', 'Profil berhasil diperbarui.');

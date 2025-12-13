@@ -57,11 +57,18 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // 3. Jika berhasil, arahkan ke halaman 'courses'
+            // 3. Cek apakah profil sudah lengkap
+            $user = Auth::user();
+            if (!$user->profile_completed) {
+                // Jika profil belum lengkap, arahkan ke halaman account
+                return redirect()->route('account')->with('info', 'Silakan lengkapi profil Anda terlebih dahulu.');
+            }
+
+            // 4. Jika profil sudah lengkap, arahkan ke halaman 'courses'
             return redirect()->intended('/courses');
         }
 
-        // 4. Jika gagal, kembalikan ke halaman login dengan pesan error
+        // 5. Jika gagal, kembalikan ke halaman login dengan pesan error
         return back()->withErrors([
             'email' => 'Email atau Password yang Anda masukkan salah.',
         ])->onlyInput('email');

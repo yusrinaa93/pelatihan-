@@ -23,10 +23,15 @@ Route::get('/about', function () {
 });
 
 // Rute untuk menampilkan form pendaftaran kursus (opsional pilih course)
-Route::get('/pendaftaran-kursus/{course?}', [CourseRegistrationController::class, 'create'])->name('course.register.form');
+// Memerlukan middleware untuk memastikan profil sudah lengkap
+Route::get('/pendaftaran-kursus/{course?}', [CourseRegistrationController::class, 'create'])
+    ->name('course.register.form')
+    ->middleware('auth', 'ensureProfileCompleted');
 
 // Rute untuk menyimpan data dari form pendaftaran kursus
-Route::post('/pendaftaran-kursus', [CourseRegistrationController::class, 'store'])->name('course.register.store');
+Route::post('/pendaftaran-kursus', [CourseRegistrationController::class, 'store'])
+    ->name('course.register.store')
+    ->middleware('auth', 'ensureProfileCompleted');
 
 // Rute untuk menampilkan form register dan login PENGGUNA
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');

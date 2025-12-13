@@ -20,6 +20,28 @@
             </div>
         @endif
 
+        {{-- Notifikasi Info --}}
+        @if (session('info'))
+            <div class="rounded-2xl border border-blue-200 bg-blue-50/80 px-4 py-3 text-sm font-semibold text-blue-700">
+                <i class="fas fa-info-circle mr-2"></i>{{ session('info') }}
+            </div>
+        @endif
+
+        {{-- Notifikasi Warning --}}
+        @if (session('warning'))
+            <div class="rounded-2xl border border-amber-200 bg-amber-50/80 px-4 py-3 text-sm font-semibold text-amber-700">
+                <i class="fas fa-exclamation-triangle mr-2"></i>{{ session('warning') }}
+            </div>
+        @endif
+
+        {{-- Alert jika profil belum lengkap --}}
+        @if (!Auth::user()->profile_completed)
+            <div class="rounded-2xl border border-amber-300 bg-amber-100/80 px-4 py-3 text-sm font-semibold text-amber-800">
+                <i class="fas fa-warning mr-2"></i>
+                <strong>Penting:</strong> Profil Anda belum lengkap. Lengkapi semua data di bawah ini agar bisa mendaftar pelatihan.
+            </div>
+        @endif
+
         {{-- Notifikasi Error --}}
         @if ($errors->any())
             <div class="rounded-2xl border border-rose-200 bg-rose-50/80 px-4 py-3 text-sm text-rose-700">
