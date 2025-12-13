@@ -1,0 +1,86 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* Filament Custom Styling */
+@layer components {
+    /* Sidebar Background */
+    .fi-sidebar {
+        @apply bg-emerald-600 text-white;
+    }
+
+    /* Sidebar Navigation Items */
+    .fi-sidebar-nav-item {
+        @apply text-white/80 hover:bg-white/10 hover:text-white transition;
+    }
+
+    .fi-sidebar-nav-item.fi-active {
+        @apply bg-white text-emerald-600;
+    }
+
+    /* Sidebar Header */
+    .fi-sidebar-header {
+        @apply border-b border-white/10;
+    }
+
+    /* Sidebar Footer */
+    .fi-sidebar-footer {
+        @apply border-t border-white/10;
+    }
+
+    /* User Menu Button */
+    .fi-user-menu-button {
+        @apply text-white/80 hover:text-white hover:bg-white/10 transition;
+    }
+
+    /* Mobile Sidebar Overlay */
+    .fi-sidebar-mobile-overlay {
+        @apply bg-slate-900/50;
+    }
+
+    /* Topbar */
+    .fi-topbar {
+        @apply bg-white shadow-sm;
+    }
+
+    /* Form Inputs */
+    .fi-input {
+        @apply border-slate-200 focus:border-emerald-400 focus:ring-emerald-200;
+    }
+
+    /* Button Actions */
+    .fi-button-action {
+        @apply bg-emerald-500 hover:bg-emerald-400 text-white;
+    }
+
+    /* Tables */
+    .fi-table {
+        @apply border-slate-200;
+    }
+
+    .fi-table-header {
+        @apply bg-slate-50;
+    }
+
+    /* Badges */
+    .fi-badge-success {
+        @apply bg-emerald-50 text-emerald-600;
+    }
+
+    .fi-badge-danger {
+        @apply bg-rose-50 text-rose-600;
+    }
+
+    /* Cards */
+    .fi-card {
+        @apply border-slate-200 shadow-sm;
+    }
+}
