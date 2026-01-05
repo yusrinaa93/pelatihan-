@@ -34,69 +34,43 @@
                 </select>
             </div>
 
-            <div class="grid gap-4 sm:grid-cols-2">
-                <label class="space-y-2">
-                    <span class="font-semibold text-slate-600">Nama Lengkap</span>
-                    <input type="text"
-                           id="nama"
-                           name="nama"
-                           value="{{ $user->name ?? '' }}"
-                           required
-                           class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
-                </label>
-                <label class="space-y-2">
-                    <span class="font-semibold text-slate-600">Email</span>
-                    <input type="email"
-                           id="email"
-                           name="email"
-                           value="{{ $user->email ?? '' }}"
-                           readonly
-                           class="w-full cursor-not-allowed rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-500">
-                </label>
+            {{-- Data User (read-only, tidak perlu di-edit) --}}
+            <div class="space-y-3 rounded-2xl bg-emerald-50 p-4 border border-emerald-200">
+                <p class="text-xs font-semibold uppercase tracking-wide text-emerald-700">Informasi Peserta</p>
+                <div class="grid gap-3 text-sm">
+                    <div>
+                        <span class="font-semibold text-slate-600">Nama:</span>
+                        <span class="text-slate-700">{{ $user->name }}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-slate-600">Email:</span>
+                        <span class="text-slate-700">{{ $user->email }}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-slate-600">Tempat Lahir:</span>
+                        <span class="text-slate-700">{{ $user->tempat_lahir ?? '-' }}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-slate-600">Tanggal Lahir:</span>
+                        <span class="text-slate-700">{{ $user->tanggal_lahir ? date('d M Y', strtotime($user->tanggal_lahir)) : '-' }}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-slate-600">Nomor WhatsApp:</span>
+                        <span class="text-slate-700">{{ $user->nomor_wa ?? '-' }}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-slate-600">Alamat:</span>
+                        <span class="text-slate-700">{{ $user->alamat ?? '-' }}</span>
+                    </div>
+                </div>
+                <p class="text-xs text-emerald-600 pt-2 border-t border-emerald-200">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Untuk mengubah data, silakan ke menu <strong>"Akun Saya"</strong>
+                </p>
             </div>
-
-            <div class="grid gap-4 sm:grid-cols-2">
-                <label class="space-y-2">
-                    <span class="font-semibold text-slate-600">Tempat Lahir</span>
-                    <input type="text"
-                           id="tempat_lahir"
-                           name="tempat_lahir"
-                           value="{{ $user->tempat_lahir ?? '' }}"
-                           placeholder="e.g. Jakarta"
-                           required
-                           class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
-                </label>
-                <label class="space-y-2">
-                    <span class="font-semibold text-slate-600">Tanggal Lahir</span>
-                    <input type="date"
-                           id="tanggal_lahir"
-                           name="tanggal_lahir"
-                           value="{{ $user->tanggal_lahir ?? '' }}"
-                           required
-                           class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
-                </label>
-            </div>
-
-            <label class="space-y-2">
-                <span class="font-semibold text-slate-600">Nomor WhatsApp</span>
-                <input type="text"
-                           id="nomor_wa"
-                           name="nomor_wa"
-                           value="{{ $user->nomor_wa ?? '' }}"
-                           placeholder="e.g. 08123456789"
-                           required
-                           class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
-            </label>
-
-            <label class="space-y-2">
-                <span class="font-semibold text-slate-600">Alamat Domisili</span>
-                <textarea id="alamat"
-                          name="alamat"
-                          rows="3"
-                          required
-                          class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200"
-                          placeholder="Tulis alamat lengkap Anda">{{ $user->alamat ?? '' }}</textarea>
-            </label>
+            {{-- Hidden input untuk nama dan email --}}
+            <input type="hidden" name="nama" value="{{ $user->name }}">
+            <input type="hidden" name="email" value="{{ $user->email }}">
 
             {{-- TOMBOL SUBMIT DENGAN EFEK LOADING --}}
             <button type="submit"

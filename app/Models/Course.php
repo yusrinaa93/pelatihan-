@@ -15,6 +15,7 @@ class Course extends Model
         'title',
         'image_path',
         'description',
+        'short_description',
         'start_date',
         'end_date',
         'is_certificate_active',

@@ -1,90 +1,65 @@
-@extends('layouts.auth')
+@extends('layouts.public')
 
 @section('title', 'Pelatihan - Halal Center')
 
-@section('body')
+@section('content')
 @php($activeNav = 'courses')
 
-<div class="min-h-screen bg-slate-50">
-    {{-- NAVBAR --}}
-    <header class="flex w-full items-center justify-between py-6 px-8">
-        <div class="flex items-center gap-3">
-            <img src="{{ asset('gambar/logo halal center.png') }}" alt="Logo" class="h-10 w-10">
-            <h1 class="text-xl font-bold text-emerald-600">Halal Center</h1>
+<div class="space-y-16">
+    {{-- Header Section --}}
+    <section class="relative flex min-h-[35vh] items-center justify-center bg-white py-16">
+        <div class="relative z-10 mx-auto max-w-4xl px-4 text-center text-slate-900">
+            <h1 class="mb-4 text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
+                Pelatihan Kami
+            </h1>
+            <p class="text-lg leading-relaxed text-slate-600 sm:text-xl">
+                Pelajari berbagai pelatihan tentang produk halal dari Halal Center UIN SUKA
+            </p>
         </div>
-        
-        <nav>
-            <ul class="flex items-center gap-3 rounded-full bg-white px-3 py-2 shadow-sm text-xs font-semibold uppercase tracking-wide">
-                <li>
-                    <a href="{{ url('/') }}"
-                       class="inline-flex items-center rounded-full px-4 py-2 transition text-slate-700 hover:text-emerald-600">
-                        BERANDA
-                    </a>
-                </li>
-                <li>
-                    <span class="inline-flex items-center rounded-full bg-emerald-600 px-4 py-2 text-white shadow-sm">
-                        PELATIHAN
-                    </span>
-                </li>
-                <li>
-                    <a href="{{ url('/about') }}"
-                       class="inline-flex items-center rounded-full px-4 py-2 transition text-slate-700 hover:text-emerald-600">
-                        TENTANG
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('login') }}"
-                       class="inline-flex items-center rounded-full px-4 py-2 transition text-slate-700 hover:text-emerald-600">
-                        Masuk
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </header>
+    </section>
 
-    {{-- MAIN CONTENT --}}
-    <main class="px-6 py-12 sm:px-10">
-        <div class="max-w-6xl mx-auto space-y-8">
-            {{-- Header --}}
-            <div class="text-center space-y-2">
-                <p class="text-xs font-semibold uppercase tracking-widest text-emerald-500">Daftar Pelatihan</p>
-                <h2 class="text-4xl font-bold text-slate-900">Pelatihan Kami</h2>
-                <p class="mt-4 text-lg text-slate-600">Pelajari berbagai pelatihan tentang produk halal dari Halal Center UIN SUKA</p>
-            </div>
-
-            {{-- Course Grid --}}
-            <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mt-12">
+    {{-- Course Section --}}
+    <div class="max-w-7xl mx-auto space-y-12 px-4 pb-12">
+        {{-- Course Grid --}}
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 @forelse ($courses as $course)
                     @php($cover = $course->image_path ? asset('storage/'.$course->image_path) : 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80')
-                    <article class="flex flex-col overflow-hidden rounded-3xl border border-slate-200/70 bg-white shadow-lg shadow-slate-200/60 hover:shadow-xl hover:shadow-slate-200/80 transition-all duration-300 h-full group">
+                    <article class="flex flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-md hover:shadow-xl transition-all duration-300 h-full group">
                         {{-- Image Container --}}
-                        <div class="relative h-48 overflow-hidden">
+                        <div class="relative h-48 overflow-hidden bg-gradient-to-br from-emerald-50 to-emerald-100">
                             <img src="{{ $cover }}" 
                                  alt="Gambar {{ $course->title }}" 
                                  class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </div>
 
                         {{-- Content --}}
-                        <div class="flex flex-1 flex-col gap-4 p-6">
-                            <div class="space-y-2 flex-1">
-                                <p class="text-xs font-semibold uppercase tracking-widest text-emerald-500">Pelatihan</p>
-                                <h3 class="text-xl font-bold text-slate-900">{{ $course->title }}</h3>
-                                <p class="text-sm text-slate-600 line-clamp-3">{!! strip_tags($course->description) !!}</p>
+                        <div class="flex flex-1 flex-col gap-4 p-5">
+                            {{-- Breadcrumb --}}
+                            <div class="text-xs text-slate-500">
+                                <p class="text-emerald-600 font-semibold">Pelatihan</p>
                             </div>
 
+                            {{-- Title --}}
+                            <h3 class="text-lg font-bold text-slate-900 line-clamp-2">{{ $course->title }}</h3>
+
+                            {{-- Description --}}
+                            <p class="text-sm text-slate-600 line-clamp-3 flex-1">
+                                {{ $course->short_description ? strip_tags($course->short_description) : strip_tags($course->description) }}
+                            </p>
+
                             {{-- Button Section --}}
-                            <div class="flex gap-3 pt-4 border-t border-slate-200">
+                            <div class="flex gap-2 pt-4 mt-auto">
                                 <button type="button"
-                                        class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-600 transition hover:bg-emerald-200 cursor-pointer"
-                                        onclick="showCourseDetail({{ $course->id }}, '{{ addslashes($course->title) }}', '{{ addslashes(strip_tags($course->description)) }}')">
-                                    <i class="fas fa-info-circle"></i>
-                                    Info Detail
+                                        class="flex-1 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-600 text-emerald-600 px-3 py-2.5 text-sm font-semibold transition hover:bg-emerald-50 cursor-pointer"
+                                        onclick="showCourseDetail({{ $course->id }}, '{{ addslashes($course->title) }}', '{{ addslashes($course->description) }}')">
+                                    <i class="fas fa-info-circle text-lg"></i>
+                                    <span>Info Detail</span>
                                 </button>
                                 <a href="{{ route('login') }}"
-                                   class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/40 transition hover:bg-emerald-400">
-                                    <i class="fas fa-clipboard-check"></i>
-                                    Daftar
+                                   onclick="setIntendedRedirect('{{ route('guest.courses') }}')"
+                                   class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 text-white px-3 py-2.5 text-sm font-semibold shadow-lg shadow-emerald-600/30 transition hover:bg-emerald-700">
+                                    <i class="fas fa-arrow-right text-lg"></i>
+                                    <span>Daftar</span>
                                 </a>
                             </div>
                         </div>
@@ -97,30 +72,52 @@
                 @endforelse
             </div>
         </div>
-    </main>
-
-    {{-- Footer --}}
-    <footer class="mt-20 border-t border-slate-200 py-8 text-center text-sm text-slate-500">
-        &copy; {{ date('Y') }} Halal Center UIN SUKA. All rights reserved.
-    </footer>
+    </div>
 </div>
 
 {{-- Modal Detail Pelatihan --}}
 <div id="courseModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-    <div class="w-full max-w-2xl bg-white rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto">
         <div class="sticky top-0 bg-white border-b border-slate-200 px-8 py-6 flex items-center justify-between">
-            <h2 id="modalTitle" class="text-2xl font-bold text-slate-900"></h2>
+            <div>
+                <p class="text-sm text-emerald-600 font-semibold mb-1">Pelatihan Halal</p>
+                <h2 id="modalTitle" class="text-3xl font-bold text-slate-900"></h2>
+            </div>
             <button type="button" 
                     onclick="closeCourseDetail()"
-                    class="text-slate-400 hover:text-slate-600 transition">
+                    class="text-slate-400 hover:text-slate-600 transition p-2">
                 <i class="fas fa-times text-2xl"></i>
             </button>
         </div>
 
-        <div class="px-8 py-6 space-y-4">
-            <div id="modalDescription" class="text-slate-600 space-y-4 prose prose-sm max-w-none"></div>
+        <div class="px-8 py-6 space-y-6">
+            {{-- Info Stats --}}
+            <div class="flex items-center gap-6 text-sm text-slate-600 pb-4 border-b border-slate-200">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-clock text-emerald-600"></i>
+                    <span><strong>10 Jam</strong> Belajar</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-users text-emerald-600"></i>
+                    <span><strong>200+</strong> Siswa</span>
+                </div>
+            </div>
 
-            <div class="mt-8 flex gap-3 pt-6 border-t border-slate-200">
+            {{-- Description --}}
+            <div id="modalDescription" class="text-slate-600 space-y-4 prose prose-sm max-w-none text-base leading-relaxed"></div>
+
+            {{-- Tags --}}
+            <div class="flex flex-wrap gap-2 pt-4 border-t border-slate-200">
+                <span class="inline-flex items-center rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-600 border border-emerald-200">
+                    Pelatihan Halal
+                </span>
+                <span class="inline-flex items-center rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-600 border border-blue-200">
+                    Learning Path
+                </span>
+            </div>
+
+            {{-- Action Buttons --}}
+            <div class="flex gap-3 pt-6 border-t border-slate-200">
                 <button type="button"
                         onclick="closeCourseDetail()"
                         class="flex-1 inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-600 transition hover:border-slate-400 hover:bg-slate-50">
@@ -128,8 +125,9 @@
                     Tutup
                 </button>
                 <a href="{{ route('login') }}"
-                   class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/40 transition hover:bg-emerald-400">
-                    <i class="fas fa-clipboard-check"></i>
+                   onclick="setIntendedRedirect('{{ route('guest.courses') }}')"
+                   class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 text-white px-6 py-3 text-sm font-semibold shadow-lg shadow-emerald-600/40 transition hover:bg-emerald-700">
+                    <i class="fas fa-arrow-right"></i>
                     Daftar Pelatihan
                 </a>
             </div>
@@ -150,6 +148,18 @@ function closeCourseDetail() {
     document.body.style.overflow = 'auto';
 }
 
+// Set intended redirect ke session sebelum pergi ke login
+function setIntendedRedirect(url) {
+    fetch('{{ route("login") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+        },
+        body: 'intended_redirect=' + encodeURIComponent(url)
+    }).catch(err => console.log('Setting intended redirect...'));
+}
+
 // Close modal when clicking outside
 document.getElementById('courseModal')?.addEventListener('click', function(e) {
     if (e.target === this) {
@@ -163,5 +173,4 @@ document.addEventListener('keydown', function(e) {
         closeCourseDetail();
     }
 });
-</script>
 @endsection

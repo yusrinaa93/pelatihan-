@@ -35,7 +35,14 @@ class CourseResource extends Resource
                     ->visibility('public')
                     ->columnSpanFull(),
                 Forms\Components\RichEditor::make('description')
-                    ->label('Deskripsi')
+                    ->label('Deskripsi Lengkap')
+                    ->helperText('Deskripsi detail yang akan tampil di modal info detail')
+                    ->columnSpanFull(),
+                Forms\Components\Textarea::make('short_description')
+                    ->label('Deskripsi Singkat')
+                    ->helperText('Deskripsi singkat yang akan tampil di card pelatihan (maksimal 200 karakter)')
+                    ->maxLength(200)
+                    ->rows(3)
                     ->columnSpanFull(),
                 Forms\Components\DatePicker::make('start_date')
                     ->label('Tanggal Mulai'),
