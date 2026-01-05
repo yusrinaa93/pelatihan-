@@ -13,7 +13,7 @@
             Ini adalah deskripsi mengenai pelatihan PPH pada dengan Desmber tanggal 21.<br>Pelatihan ini bersifat online.
         </p>
         
-        <a href="{{ route('courses') }}" 
+        <a href="{{ route('guest.courses') }}" 
            class="inline-block rounded-full border-2 border-emerald-600 bg-emerald-600 px-8 py-4 text-base font-semibold text-white transition hover:bg-emerald-700">
             MULAI PELATIHAN 
         </a>

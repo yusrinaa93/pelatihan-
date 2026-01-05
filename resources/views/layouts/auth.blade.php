@@ -15,7 +15,6 @@
 
     {{-- BAGIAN KANAN: KONTEN & NAVBAR --}}
     <div class="flex flex-col bg-slate-50 relative">
-        
         {{-- === NAVBAR === --}}
         <header class="flex w-full items-center justify-end py-6 pr-8 sm:pr-8">
             <nav>

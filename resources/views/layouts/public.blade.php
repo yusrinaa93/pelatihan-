@@ -24,7 +24,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('courses') }}"
+                        <a href="{{ route('guest.courses') }}"
                            @class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'courses' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])>
                             Pelatihan
                         </a>

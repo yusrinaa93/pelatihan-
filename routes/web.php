@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseRegistrationController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\GuestCourseController;
 use App\Http\Controllers\MyCourseController;
 use App\Http\Controllers\DutyController;
 use App\Http\Controllers\CertificateController;
@@ -21,6 +22,9 @@ Route::get('/', function () {
 Route::get('/about', function () {
     return view('about', ['activeNav' => 'about']);
 });
+
+// Route untuk halaman pelatihan public (tanpa login)
+Route::get('/pelatihan', [GuestCourseController::class, 'index'])->name('guest.courses');
 
 // Rute untuk menampilkan form pendaftaran kursus (opsional pilih course)
 // Memerlukan middleware untuk memastikan profil sudah lengkap
