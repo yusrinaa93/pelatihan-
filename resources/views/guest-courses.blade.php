@@ -56,7 +56,6 @@
                                     <span>Info Detail</span>
                                 </button>
                                 <a href="{{ route('login') }}"
-                                   onclick="setIntendedRedirect('{{ route('guest.courses') }}')"
                                    class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 text-white px-3 py-2.5 text-sm font-semibold shadow-lg shadow-emerald-600/30 transition hover:bg-emerald-700">
                                     <i class="fas fa-arrow-right text-lg"></i>
                                     <span>Daftar</span>
@@ -125,7 +124,6 @@
                     Tutup
                 </button>
                 <a href="{{ route('login') }}"
-                   onclick="setIntendedRedirect('{{ route('guest.courses') }}')"
                    class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 text-white px-6 py-3 text-sm font-semibold shadow-lg shadow-emerald-600/40 transition hover:bg-emerald-700">
                     <i class="fas fa-arrow-right"></i>
                     Daftar Pelatihan
@@ -148,18 +146,6 @@ function closeCourseDetail() {
     document.body.style.overflow = 'auto';
 }
 
-// Set intended redirect ke session sebelum pergi ke login
-function setIntendedRedirect(url) {
-    fetch('{{ route("login") }}', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
-        },
-        body: 'intended_redirect=' + encodeURIComponent(url)
-    }).catch(err => console.log('Setting intended redirect...'));
-}
-
 // Close modal when clicking outside
 document.getElementById('courseModal')?.addEventListener('click', function(e) {
     if (e.target === this) {
@@ -173,4 +159,4 @@ document.addEventListener('keydown', function(e) {
         closeCourseDetail();
     }
 });
-@endsection
+</script>

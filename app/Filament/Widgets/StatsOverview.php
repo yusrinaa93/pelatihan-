@@ -3,7 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Course;
-use App\Models\Pendaftar;
+use App\Models\CourseRegistration;
 use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -33,8 +33,8 @@ class StatsOverview extends BaseWidget
                 ->chart([2, 10, 3, 12, 1, 15, 10, 17]), // Grafik hiasan naik
 
             // 3. STATISTIK PENDAFTAR
-            Stat::make('Total Pendaftar', Pendaftar::count())
-                ->description('Formulir masuk')
+            Stat::make('Total Pendaftar', CourseRegistration::count())
+                ->description('Peserta mendaftar pelatihan')
                 ->descriptionIcon('heroicon-m-clipboard-document-check')
                 ->color('info') // Biru (sebagai variasi yang harmonis)
                 ->chart([15, 4, 10, 2, 12, 4, 12]), // Grafik hiasan
