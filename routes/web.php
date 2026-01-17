@@ -41,15 +41,6 @@ Route::post('/pendaftaran-kursus', [CourseRegistrationController::class, 'store'
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
-// Route untuk menyimpan intended_redirect ke session
-Route::post('/login', function (\Illuminate\Http\Request $request) {
-    if ($request->has('intended_redirect')) {
-        $request->session()->put('intended_redirect', $request->input('intended_redirect'));
-        return response()->json(['status' => 'success']);
-    }
-    return response()->json(['status' => 'error'], 400);
-});
-
 // Rute untuk memproses data register dan login PENGGUNA
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);

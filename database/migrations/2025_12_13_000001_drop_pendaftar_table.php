@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // NOTE: Disabled.
+        // Dropping `pendaftar` breaks the admin (Filament) resource that still queries this table.
+        // If you really want to migrate away from this table, remove/disable the Filament PendaftarResource first.
+        return;
+
         // Hapus tabel pendaftar karena sekarang menggunakan users table
-        Schema::dropIfExists('pendaftar');
+        // Schema::dropIfExists('pendaftar');
     }
 
     /**

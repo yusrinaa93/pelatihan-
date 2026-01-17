@@ -64,19 +64,11 @@ class AuthController extends Controller
                 return redirect()->route('account')->with('info', 'Silakan lengkapi profil Anda terlebih dahulu.');
             }
 
-            // 4. Jika profil sudah lengkap, cek apakah ada intended_redirect di session
-            $intendedRedirect = session('intended_redirect');
-            if ($intendedRedirect) {
-                // Hapus session setelah digunakan
-                session()->forget('intended_redirect');
-                return redirect($intendedRedirect);
-            }
-
-            // 5. Jika tidak ada intended_redirect, arahkan ke halaman 'courses'
+            // 4. Jika profil sudah lengkap, arahkan ke halaman 'courses'
             return redirect()->intended('/courses');
         }
 
-        // 6. Jika gagal, kembalikan ke halaman login dengan pesan error
+        // 5. Jika gagal, kembalikan ke halaman login dengan pesan error
         return back()->withErrors([
             'email' => 'Email atau Password yang Anda masukkan salah.',
         ])->onlyInput('email');

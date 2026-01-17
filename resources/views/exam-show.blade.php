@@ -17,10 +17,6 @@
                 <h1 class="text-2xl font-bold text-slate-900">{{ $exam->title }}</h1>
                 <p class="mt-2 text-sm text-slate-500">{{ $exam->description ?? 'Jawab seluruh pertanyaan berikut dengan teliti.' }}</p>
             </div>
-            <div class="flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-600">
-                <i class="fas fa-circle-question"></i>
-                {{ $exam->questions_count }} pertanyaan
-            </div>
         </div>
 
         <div class="rounded-3xl border border-slate-200/70 bg-white/95 p-6 shadow-lg shadow-slate-200/60">

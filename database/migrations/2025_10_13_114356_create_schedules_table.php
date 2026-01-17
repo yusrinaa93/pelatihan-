@@ -18,6 +18,9 @@ return new class extends Migration
             $table->date('date');       // Kolom untuk tanggal
             $table->string('time');     // Contoh: '07.00 - 16.00'
             $table->text('zoom_link')->nullable(); // Kolom untuk link Zoom, boleh kosong
+            $table->boolean('manual_presensi')->default(false); // Kolom untuk toggle manual presensi
+            $table->boolean('presensi_open')->default(false); // Kolom untuk menandai apakah presensi dibuka
+            $table->boolean('presensi_close')->default(false); // Kolom untuk menandai apakah presensi ditutup
             $table->timestamps(); // Membuat kolom created_at dan updated_at
         });
     }

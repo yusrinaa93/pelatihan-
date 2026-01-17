@@ -35,11 +35,45 @@ class ScheduleResource extends Resource
                 
                 Forms\Components\DateTimePicker::make('start_time')
                     ->label('Waktu Mulai')
+                    ->timezone('Asia/Jakarta')
+                    ->seconds(false)
+                    ->displayFormat('d/m/Y H:i')
                     ->required(),
 
                 Forms\Components\DateTimePicker::make('end_time')
                     ->label('Waktu Selesai')
+                    ->timezone('Asia/Jakarta')
+                    ->seconds(false)
+                    ->displayFormat('d/m/Y H:i')
                     ->required(),
+
+                Forms\Components\Toggle::make('manual_presensi')
+                    ->label('Presensi Manual (override jam)')
+                    ->helperText('Jika aktif, admin dapat paksa buka/tutup presensi tanpa mengikuti rentang waktu.')
+                    ->default(false)
+                    ->reactive(),
+
+                Forms\Components\Toggle::make('presensi_open')
+                    ->label('Buka Presensi')
+                    ->default(false)
+                    ->visible(fn (Forms\Get $get) => (bool) $get('manual_presensi'))
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, Forms\Set $set) {
+                        if ($state) {
+                            $set('presensi_close', false);
+                        }
+                    }),
+
+                Forms\Components\Toggle::make('presensi_close')
+                    ->label('Tutup Presensi')
+                    ->default(false)
+                    ->visible(fn (Forms\Get $get) => (bool) $get('manual_presensi'))
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, Forms\Set $set) {
+                        if ($state) {
+                            $set('presensi_open', false);
+                        }
+                    }),
 
                 Forms\Components\TextInput::make('zoom_link')
                     ->label('Link Zoom Meeting')

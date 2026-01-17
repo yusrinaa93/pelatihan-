@@ -2,12 +2,14 @@
 
 @section('body')
 @php($activeNav = $activeNav ?? '')
+
 <div class="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+    
+    {{-- Header FIXED --}}
     <header class="sticky top-0 z-30 bg-white/95 shadow-sm backdrop-blur"> 
         <div class="mx-auto flex w-full flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
             <a href="{{ url('/') }}" class="flex items-center gap-4">
-                
-                {{-- Logo Tanpa Background --}}
+                {{-- Logo --}}
                 <img src="{{ asset('gambar/logo halal center.png') }}" alt="Logo Halal Center" class="h-16 w-auto object-contain">
                 
                 <div class="text-base font-semibold leading-tight text-slate-700">
@@ -15,6 +17,7 @@
                     <span class="block uppercase tracking-wide text-slate-900">Center UIN SUKA</span>
                 </div>
             </a>
+            
             <nav class="flex items-center">
                 <ul class="flex items-center gap-3 rounded-full bg-white px-3 py-2 shadow-sm text-xs font-semibold uppercase tracking-wide">
                     <li>
@@ -23,18 +26,32 @@
                             Beranda
                         </a>
                     </li>
+
+                    {{-- PERBAIKAN DI SINI: Link Pelatihan Kondisional --}}
                     <li>
-                        <a href="{{ route('guest.courses') }}"
-                           @class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'courses' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])>
-                            Pelatihan
-                        </a>
+                        @auth
+                            {{-- JIKA SUDAH LOGIN: Arahkan ke route untuk member (biasanya 'courses' atau 'my.courses') --}}
+                            {{-- Pastikan nama route 'courses' ada di web.php dan tidak diproteksi middleware 'guest' --}}
+                            <a href="{{ route('courses') }}"
+                               @class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'courses' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])>
+                                Pelatihan
+                            </a>
+                        @else
+                            {{-- JIKA BELUM LOGIN: Arahkan ke route tamu --}}
+                            <a href="{{ route('guest.courses') }}"
+                               @class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'courses' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])>
+                                Pelatihan
+                            </a>
+                        @endauth
                     </li>
+
                     <li>
                         <a href="{{ url('/about') }}"
                            @class(['inline-flex items-center rounded-full px-4 py-2 transition', $activeNav === 'about' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600'])>
                             Tentang
                         </a>
                     </li>
+                    
                     @auth
                         <li class="relative">
                             <button type="button"
@@ -43,7 +60,6 @@
                                     aria-expanded="false"
                                     aria-label="Buka menu profil">
                                 <span class="sr-only">Profil</span>
-                                
                                 <img class="h-full w-full rounded-full object-cover"
                                      src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=10b981&color=fff' }}"
                                      alt="{{ Auth::user()->name }}"
@@ -76,7 +92,8 @@
         </div>
     </header>
 
-    <main class="flex-1">
+    {{-- Main Content dengan Padding Top agar tidak tertutup Header --}}
+    <main class="flex-1 pt-1">
         @yield('content')
     </main>
 
@@ -89,7 +106,6 @@
 @endsection
 
 @push('scripts')
-{{-- Script dropdown Anda (JANGAN DIUBAH) --}}
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const triggers = document.querySelectorAll('[data-dropdown-target]');

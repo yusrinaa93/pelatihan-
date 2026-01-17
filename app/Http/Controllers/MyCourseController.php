@@ -82,14 +82,29 @@ class MyCourseController extends Controller
         }])->where('course_id', $course->id)->get();
 
         foreach ($schedules as $schedule) {
-            $schedule->is_presence_active = false;
-            if ($schedule->start_time && $schedule->end_time) {
-                $schedule->is_presence_active = now()->between(
-                    $schedule->start_time,
-                    $schedule->end_time
-                );
-            }
             $schedule->has_attended = $schedule->attendances->isNotEmpty();
+
+            // Use accessor so it also respects manual admin overrides
+            $schedule->is_presence_active = (bool) $schedule->is_presence_active;
+
+            // Derive status for UI
+            $schedule->presence_status = 'closed';
+
+            if ($schedule->manual_presensi) {
+                if ($schedule->presensi_open && ! $schedule->presensi_close) {
+                    $schedule->presence_status = 'active';
+                } else {
+                    $schedule->presence_status = 'closed';
+                }
+            } elseif ($schedule->start_time && $schedule->end_time) {
+                if (now()->lt($schedule->start_time)) {
+                    $schedule->presence_status = 'not_started';
+                } elseif (now()->between($schedule->start_time, $schedule->end_time)) {
+                    $schedule->presence_status = 'active';
+                } else {
+                    $schedule->presence_status = 'closed';
+                }
+            }
         }
 
         // Duties + submission status for this user

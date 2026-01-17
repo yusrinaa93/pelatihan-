@@ -9,37 +9,50 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-  public function up(): void
-{
-    Schema::table('exam_results', function (Blueprint $table) {
+    public function up(): void
+    {
+        Schema::table('exam_results', function (Blueprint $table) {
+            // --- Pastikan kolom ada ---
+            if (!Schema::hasColumn('exam_results', 'user_id')) {
+                $table->foreignId('user_id')->constrained('users')->after('id');
+            }
 
-        // Anda bisa hapus kolom-kolom lama yang tidak terpakai di sini
-        // if (Schema::hasColumn('exam_results', 'kolom_aneh_lama')) {
-        //     $table->dropColumn('kolom_aneh_lama');
-        // }
+            if (!Schema::hasColumn('exam_results', 'exam_id')) {
+                $table->foreignId('exam_id')->after('user_id');
+            }
 
-        // --- TAMBAHKAN 3 KOLOM WAJIB ---
+            if (!Schema::hasColumn('exam_results', 'score')) {
+                $table->integer('score')->after('exam_id');
+            }
+        });
 
-        // 1. Kolom untuk tahu siapa yang mengerjakan
-        if (!Schema::hasColumn('exam_results', 'user_id')) {
-            $table->foreignId('user_id')->constrained('users')->after('id');
-        }
+        // --- Perbaiki foreign key exam_id supaya cascade ---
+        Schema::table('exam_results', function (Blueprint $table) {
+            // drop FK lama kalau ada, lalu buat ulang dengan cascade
+            try {
+                $table->dropForeign(['exam_id']);
+            } catch (\Throwable $e) {
+                // ignore jika belum ada
+            }
 
-        // 2. Kolom untuk tahu ujian mana yang dikerjakan
-        if (!Schema::hasColumn('exam_results', 'exam_id')) {
-            $table->foreignId('exam_id')->constrained('exams')->after('user_id');
-        }
+            $table->foreign('exam_id')
+                ->references('id')
+                ->on('exams')
+                ->onDelete('cascade');
 
-        // 3. Kolom untuk menyimpan nilainya
-        if (!Schema::hasColumn('exam_results', 'score')) {
-            $table->integer('score')->after('exam_id');
-        }
-    });
-}
+            // user_id biasanya tidak perlu cascade; cukup restrict
+            // (opsional) kalau mau, bisa juga cascade user delete.
+        });
+    }
+
     public function down(): void
     {
         Schema::table('exam_results', function (Blueprint $table) {
-            //
+            try {
+                $table->dropForeign(['exam_id']);
+            } catch (\Throwable $e) {
+                // ignore
+            }
         });
     }
 };

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\PendaftarResource\Pages;
 
 use App\Filament\Resources\PendaftarResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListPendaftars extends ListRecords
@@ -12,8 +11,6 @@ class ListPendaftars extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [
-            Actions\CreateAction::make(),
-        ];
+        return [];
     }
 }

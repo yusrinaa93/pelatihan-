@@ -18,6 +18,9 @@ class Schedule extends Model
         'start_time',
         'end_time',
         'zoom_link',
+        'manual_presensi',
+        'presensi_open',
+        'presensi_close',
     ];
 
     /**
@@ -26,6 +29,9 @@ class Schedule extends Model
     protected $casts = [
         'start_time' => 'datetime',
         'end_time' => 'datetime',
+        'manual_presensi' => 'boolean',
+        'presensi_open' => 'boolean',
+        'presensi_close' => 'boolean',
     ];
 
     /**
@@ -34,6 +40,19 @@ class Schedule extends Model
      */
     public function getIsPresenceActiveAttribute()
     {
+        // Admin override (manual presensi)
+        if ($this->manual_presensi) {
+            // If both toggles are set, "close" wins for safety.
+            if ($this->presensi_close) {
+                return false;
+            }
+            if ($this->presensi_open) {
+                return true;
+            }
+            // Manual enabled but no explicit open => treat as closed.
+            return false;
+        }
+
         $now = now(); // Waktu server saat ini
 
         // Jika start_time atau end_time null, anggap tidak aktif

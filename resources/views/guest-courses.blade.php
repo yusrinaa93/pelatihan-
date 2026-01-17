@@ -5,21 +5,20 @@
 @section('content')
 @php($activeNav = 'courses')
 
-<div class="space-y-16">
-    {{-- Header Section --}}
-    <section class="relative flex min-h-[35vh] items-center justify-center bg-white py-16">
-        <div class="relative z-10 mx-auto max-w-4xl px-4 text-center text-slate-900">
-            <h1 class="mb-4 text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
-                Pelatihan Kami
-            </h1>
-            <p class="text-lg leading-relaxed text-slate-600 sm:text-xl">
-                Pelajari berbagai pelatihan tentang produk halal dari Halal Center UIN SUKA
-            </p>
-        </div>
-    </section>
+{{-- Header Section --}}
+<section class="relative flex min-h-[15vh] items-center justify-center bg-white py-8">
+    <div class="relative z-10 mx-auto max-w-4xl px-4 text-center text-slate-900">
+        <h1 class="mb-4 text-4xl font-bold leading-tight sm:text-5xl">
+            Pelatihan Kami
+        </h1>
+        <p class="text-lg leading-relaxed text-slate-600">
+            Pelajari berbagai pelatihan tentang produk halal dari Halal Center UIN SUKA
+        </p>
+    </div>
+</section>
 
-    {{-- Course Section --}}
-    <div class="max-w-7xl mx-auto space-y-12 px-4 pb-12">
+{{-- Course Section --}}
+<div class="max-w-7xl mx-auto space-y-8 px-4 pb-12">
         {{-- Course Grid --}}
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 @forelse ($courses as $course)
@@ -52,12 +51,10 @@
                                 <button type="button"
                                         class="flex-1 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-600 text-emerald-600 px-3 py-2.5 text-sm font-semibold transition hover:bg-emerald-50 cursor-pointer"
                                         onclick="showCourseDetail({{ $course->id }}, '{{ addslashes($course->title) }}', '{{ addslashes($course->description) }}')">
-                                    <i class="fas fa-info-circle text-lg"></i>
                                     <span>Info Detail</span>
                                 </button>
                                 <a href="{{ route('login') }}"
                                    class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 text-white px-3 py-2.5 text-sm font-semibold shadow-lg shadow-emerald-600/30 transition hover:bg-emerald-700">
-                                    <i class="fas fa-arrow-right text-lg"></i>
                                     <span>Daftar</span>
                                 </a>
                             </div>
@@ -71,25 +68,24 @@
                 @endforelse
             </div>
         </div>
-    </div>
-</div>
+    {{-- removed stray extra closing div --}}
 
 {{-- Modal Detail Pelatihan --}}
-<div id="courseModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-    <div class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto">
-        <div class="sticky top-0 bg-white border-b border-slate-200 px-8 py-6 flex items-center justify-between">
+<div id="courseModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-black/50" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="w-full max-w-3xl sm:max-w-4xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
+        <!-- Modal Header -->
+        <div class="shrink-0 bg-white border-b border-slate-200 px-6 sm:px-8 py-5 flex items-center justify-between">
             <div>
                 <p class="text-sm text-emerald-600 font-semibold mb-1">Pelatihan Halal</p>
-                <h2 id="modalTitle" class="text-3xl font-bold text-slate-900"></h2>
+                <h2 id="modalTitle" class="text-2xl sm:text-3xl font-bold text-slate-900"></h2>
             </div>
-            <button type="button" 
-                    onclick="closeCourseDetail()"
-                    class="text-slate-400 hover:text-slate-600 transition p-2">
+            <button type="button" onclick="closeCourseDetail()" class="text-slate-400 hover:text-slate-600 transition p-2" aria-label="Tutup dialog">
                 <i class="fas fa-times text-2xl"></i>
             </button>
         </div>
 
-        <div class="px-8 py-6 space-y-6">
+        <!-- Modal Body (scrollable) -->
+        <div class="flex-1 overflow-y-auto overscroll-contain px-6 sm:px-8 py-6 space-y-6">
             {{-- Info Stats --}}
             <div class="flex items-center gap-6 text-sm text-slate-600 pb-4 border-b border-slate-200">
                 <div class="flex items-center gap-2">
@@ -114,21 +110,18 @@
                     Learning Path
                 </span>
             </div>
+        </div>
 
-            {{-- Action Buttons --}}
-            <div class="flex gap-3 pt-6 border-t border-slate-200">
-                <button type="button"
-                        onclick="closeCourseDetail()"
-                        class="flex-1 inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-600 transition hover:border-slate-400 hover:bg-slate-50">
-                    <i class="fas fa-arrow-left"></i>
-                    Tutup
-                </button>
-                <a href="{{ route('login') }}"
-                   class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 text-white px-6 py-3 text-sm font-semibold shadow-lg shadow-emerald-600/40 transition hover:bg-emerald-700">
-                    <i class="fas fa-arrow-right"></i>
-                    Daftar Pelatihan
-                </a>
-            </div>
+        <!-- Modal Footer -->
+        <div class="shrink-0 flex gap-3 px-6 sm:px-8 py-4 border-t border-slate-200 bg-white">
+            <button type="button" onclick="closeCourseDetail()" class="flex-1 inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-600 transition hover:border-slate-400 hover:bg-slate-50">
+                <i class="fas fa-arrow-left"></i>
+                Tutup
+            </button>
+            <a href="{{ route('login') }}" class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 text-white px-6 py-3 text-sm font-semibold shadow-lg shadow-emerald-600/40 transition hover:bg-emerald-700">
+                <i class="fas fa-arrow-right"></i>
+                Daftar Pelatihan
+            </a>
         </div>
     </div>
 </div>
@@ -140,23 +133,20 @@ function showCourseDetail(courseId, title, description) {
     document.getElementById('courseModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 }
-
 function closeCourseDetail() {
     document.getElementById('courseModal').classList.add('hidden');
     document.body.style.overflow = 'auto';
 }
-
 // Close modal when clicking outside
-document.getElementById('courseModal')?.addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeCourseDetail();
-    }
-});
-
+(function() {
+    const overlay = document.getElementById('courseModal');
+    overlay?.addEventListener('click', function(e) {
+        if (e.target === this) closeCourseDetail();
+    });
+})();
 // Close modal with Escape key
 document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeCourseDetail();
-    }
+    if (e.key === 'Escape') closeCourseDetail();
 });
 </script>
+@endsection

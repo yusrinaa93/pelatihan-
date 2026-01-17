@@ -3,98 +3,97 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PendaftarResource\Pages;
-use App\Models\Pendaftar;
+use App\Models\CourseRegistration;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-// Pastikan semua method berada di dalam class ini
 class PendaftarResource extends Resource
 {
-    protected static ?string $model = Pendaftar::class;
+    protected static ?string $model = CourseRegistration::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel = 'Pendaftar';
     protected static ?string $modelLabel = 'Pendaftar';
     protected static ?string $pluralModelLabel = 'Daftar Pendaftar';
 
-    // METHOD FORM ANDA HARUS DI DALAM SINI
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama')
-                    ->label('Nama Lengkap')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->label('Email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Select::make('course_id')
+                    ->label('Pelatihan')
+                    ->relationship('course', 'title')
+                    ->disabled()
+                    ->dehydrated(false),
+
+                Forms\Components\Select::make('user_id')
+                    ->label('User')
+                    ->relationship('user', 'name')
+                    ->disabled()
+                    ->dehydrated(false),
+
+                Forms\Components\TextInput::make('nik')
+                    ->label('NIK')
+                    ->disabled(),
+
+                Forms\Components\TextInput::make('no_hp')
+                    ->label('No. HP / WhatsApp')
+                    ->disabled(),
+
                 Forms\Components\TextInput::make('tempat_lahir')
                     ->label('Tempat Lahir')
-                    ->required()
-                    ->maxLength(100),
+                    ->disabled(),
+
                 Forms\Components\DatePicker::make('tanggal_lahir')
                     ->label('Tanggal Lahir')
-                    ->required(),
-                Forms\Components\TextInput::make('nomor_wa')
-                    ->label('Nomor WhatsApp')
-                    ->required()
-                    ->maxLength(25),
-                Forms\Components\Textarea::make('alamat')
-                    ->label('Alamat Domisili')
-                    ->required()
-                    ->columnSpanFull(),
+                    ->disabled(),
             ]);
     }
 
-    // METHOD TABLE ANDA JUGA HARUS DI DALAM SINI
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama')
-                    ->label('Nama Lengkap')
+                Tables\Columns\TextColumn::make('course.title')
+                    ->label('Pelatihan')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Nama')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+
+                Tables\Columns\TextColumn::make('user.email')
                     ->label('Email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('nomor_wa')
-                    ->label('Nomor WhatsApp'),
+
+                Tables\Columns\TextColumn::make('nik')
+                    ->label('NIK')
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('no_hp')
+                    ->label('No. HP')
+                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Tanggal Daftar')
-                    ->dateTime('d M Y')
+                    ->dateTime('d M Y H:i')
                     ->sortable(),
             ])
-            ->filters([
-                //
-            ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
+            ->bulkActions([]);
     }
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListPendaftars::route('/'),
-            'create' => Pages\CreatePendaftar::route('/create'),
-            'edit' => Pages\EditPendaftar::route('/{record}/edit'),
+            'view' => Pages\ViewPendaftar::route('/{record}'),
         ];
     }
-} // <-- Pastikan ada kurung kurawal penutup untuk class
+}
