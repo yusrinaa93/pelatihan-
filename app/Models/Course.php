@@ -21,6 +21,23 @@ class Course extends Model
         'is_certificate_active',
     ];
 
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'is_certificate_active' => 'boolean',
+    ];
+
+    public function getRegistrationEndedAttribute(): bool
+    {
+        // If end_date is missing, don't block registration.
+        if (! $this->end_date) {
+            return false;
+        }
+
+        // Registration ends after end_date has passed.
+        return now()->startOfDay()->gt($this->end_date->startOfDay());
+    }
+
     // Optional accessor to support older blades using 'judul'
     public function getJudulAttribute()
     {

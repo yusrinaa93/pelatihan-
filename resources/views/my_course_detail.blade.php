@@ -245,6 +245,17 @@
                                 <div>
                                     <h3 class="text-base font-semibold text-slate-800">{{ $exam->title }}</h3>
                                     <p class="mt-1 text-sm text-slate-500">{{ $exam->description ?? 'Tidak ada deskripsi.' }}</p>
+
+                                    @if($exam->deadline)
+                                        <div class="mt-2 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold
+                                            {{ $exam->is_deadline_passed ? 'bg-rose-100 text-rose-700' : 'bg-emerald-50 text-emerald-700' }}">
+                                            <i class="fas fa-clock"></i>
+                                            <span>
+                                                Deadline: {{ $exam->deadline->translatedFormat('d F Y') }} • {{ $exam->deadline->format('H:i') }} WIB
+                                            </span>
+                                        </div>
+                                    @endif
+
                                     <p class="mt-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
                                         {{ $exam->questions_count }} Soal
                                     </p>
@@ -254,6 +265,11 @@
                                         <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-600">
                                             <i class="fas fa-circle-check"></i>
                                             Selesai
+                                        </span>
+                                    @elseif ($exam->is_deadline_passed)
+                                        <span class="inline-flex items-center gap-2 rounded-full bg-rose-100 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-rose-700">
+                                            <i class="fas fa-ban"></i>
+                                            Ditutup
                                         </span>
                                     @else
                                         <a href="{{ route('exams.show', $exam->id) }}"

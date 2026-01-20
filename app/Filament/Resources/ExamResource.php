@@ -41,6 +41,13 @@ class ExamResource extends Resource
                 Textarea::make('description')
                     ->label('Deskripsi Ujian')
                     ->columnSpanFull(),
+                Forms\Components\DateTimePicker::make('deadline')
+                    ->label('Deadline Ujian')
+                    ->timezone('Asia/Jakarta')
+                    ->seconds(false)
+                    ->displayFormat('d/m/Y H:i')
+                    ->helperText('Jika diisi, peserta tidak bisa mengerjakan setelah melewati deadline.')
+                    ->nullable(),
             ]);
     }
 

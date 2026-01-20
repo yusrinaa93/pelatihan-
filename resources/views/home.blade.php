@@ -6,11 +6,11 @@
 @section('content')
 <section class="relative flex min-h-[88vh] items-center justify-center bg-cover bg-center bg-no-repeat" style="background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto-format&fit=crop&q=80&w=2070');">
     <div class="relative z-10 mx-auto max-w-4xl px-4 text-center text-white">
-        <h1 class="mb-4 text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
-            Pelatihan PPH - Batch 1
+        <h1 class="mb-4 text-5xl font-bold leading-tight">
+            Pelatihan Pendamping Produk Halal
         </h1>
-        <p class="mb-8 text-lg leading-relaxed text-white/90 sm:text-xl">
-            Ini adalah deskripsi mengenai pelatihan PPH pada dengan Desmber tanggal 21.<br>Pelatihan ini bersifat online.
+        <p class="mb-8 text-base leading-relaxed text-white/90">
+            Pelatihan Pendamping Proses Produk Halal (PPPH) merupakan program pembekalan bagi calon pendamping halal untuk memahami dan mendampingi pelaku usaha dalam memenuhi persyaratan sertifikasi halal.
         </p>
         
         <a href="{{ route('guest.courses') }}" 

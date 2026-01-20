@@ -4,11 +4,6 @@
 
 @section('title', 'Kerjakan Ujian - ' . $exam->title)
 
-{{-- 
-  Blok @section('sidebar-extra') telah dihapus
-  karena rute-rute tersebut sudah tidak digunakan lagi.
---}}
-
 @section('content')
     <div class="space-y-8">
         <div class="flex flex-wrap items-center justify-between gap-4">
@@ -16,8 +11,30 @@
                 <p class="text-xs font-semibold uppercase tracking-widest text-emerald-500">Kerjakan Ujian</p>
                 <h1 class="text-2xl font-bold text-slate-900">{{ $exam->title }}</h1>
                 <p class="mt-2 text-sm text-slate-500">{{ $exam->description ?? 'Jawab seluruh pertanyaan berikut dengan teliti.' }}</p>
+
+                @if($exam->deadline)
+                    <div class="mt-4 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold
+                        {{ $exam->is_deadline_passed ? 'bg-rose-100 text-rose-700' : 'bg-emerald-50 text-emerald-700' }}">
+                        <i class="fas {{ $exam->is_deadline_passed ? 'fa-circle-xmark' : 'fa-clock' }}"></i>
+                        <span>
+                            Deadline: {{ $exam->deadline->translatedFormat('l, d F Y') }} • {{ $exam->deadline->format('H:i') }} WIB
+                        </span>
+                    </div>
+                @endif
             </div>
         </div>
+
+        @if($exam->is_deadline_passed)
+            <div class="rounded-3xl border border-rose-200 bg-rose-50/80 px-6 py-4 text-sm text-rose-700">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-triangle-exclamation mt-0.5"></i>
+                    <div>
+                        <p class="font-semibold">Ujian sudah ditutup.</p>
+                        <p class="mt-1">Deadline sudah terlewati, Anda tidak dapat mengumpulkan jawaban.</p>
+                    </div>
+                </div>
+            </div>
+        @endif
 
         <div class="rounded-3xl border border-slate-200/70 bg-white/95 p-6 shadow-lg shadow-slate-200/60">
             <form action="{{ route('exams.submit', $exam->id) }}" method="POST" class="space-y-6">
@@ -50,7 +67,9 @@
 
                 <div class="flex items-center justify-end">
                     <button type="submit"
-                            class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-lg shadow-emerald-500/40 transition hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
+                            @if($exam->is_deadline_passed) disabled @endif
+                            class="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-lg transition focus:outline-none focus:ring-2 focus:ring-emerald-200
+                                {{ $exam->is_deadline_passed ? 'bg-slate-300 cursor-not-allowed shadow-slate-200/0' : 'bg-emerald-500 shadow-emerald-500/40 hover:bg-emerald-400' }}">
                         <i class="fas fa-paper-plane"></i>
                         Kumpulkan Jawaban
                     </button>

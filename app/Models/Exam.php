@@ -12,11 +12,15 @@ class Exam extends Model
 {
     use HasFactory;
 
-    // ... (properti $fillable, dll. biarkan saja) ...
     protected $fillable = [
         'title',
         'description',
         'course_id',
+        'deadline',
+    ];
+
+    protected $casts = [
+        'deadline' => 'datetime',
     ];
 
     /**
@@ -56,5 +60,14 @@ class Exam extends Model
             return false;
         }
         return $this->results()->where('user_id', Auth::id())->exists();
+    }
+
+    public function getIsDeadlinePassedAttribute(): bool
+    {
+        if (! $this->deadline) {
+            return false;
+        }
+
+        return now()->gt($this->deadline);
     }
 }

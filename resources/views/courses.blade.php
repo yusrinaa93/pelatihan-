@@ -33,6 +33,15 @@
                         <div class="space-y-2">
                             <p class="text-xs font-semibold uppercase tracking-widest text-emerald-500">Pelatihan Pendamping Produk Halal</p>
                             <h2 class="text-xl font-bold text-slate-900">{{ $course->title }}</h2>
+                            <div class="mt-2 flex items-center gap-2 text-xs font-medium text-slate-500">
+                            @if($course->end_date)
+                                <div class="mt-2 flex items-center gap-2 text-xs font-medium text-slate-500">
+                                <i class="fas fa-calendar-alt text-emerald-500"></i>
+                                    <span>
+                                Batas Daftar: {{ \Carbon\Carbon::parse($course->end_date)->translatedFormat('d F Y') }}
+                                    </span>
+                                </div>
+                            @endif
                         </div>
                         <div class="prose prose-sm max-w-none text-slate-600">{!! $course->short_description ? $course->short_description : $course->description !!}</div>
                         <div class="mt-auto">
@@ -41,6 +50,13 @@
                                     <i class="fas fa-circle-check text-emerald-500"></i>
                                     Anda sudah terdaftar
                                 </span>
+                            @elseif ($course->registration_ended)
+                                <button type="button"
+                                        disabled
+                                        class="inline-flex w-full items-center justify-center gap-2 rounded-full bg-rose-100 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-rose-600 cursor-not-allowed">
+                                    <i class="fas fa-ban"></i>
+                                    Pendaftaran telah berakhir
+                                </button>
                             @elseif (Auth::check() && !Auth::user()->profile_completed)
                                 <button type="button"
                                         disabled

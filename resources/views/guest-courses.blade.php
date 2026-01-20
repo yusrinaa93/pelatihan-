@@ -6,13 +6,10 @@
 @php($activeNav = 'courses')
 
 {{-- Header Section --}}
-<section class="relative flex min-h-[15vh] items-center justify-center bg-white py-8">
-    <div class="relative z-10 mx-auto max-w-4xl px-4 text-center text-slate-900">
-        <h1 class="mb-4 text-4xl font-bold leading-tight sm:text-5xl">
-            Pelatihan Kami
-        </h1>
-        <p class="text-lg leading-relaxed text-slate-600">
-            Pelajari berbagai pelatihan tentang produk halal dari Halal Center UIN SUKA
+<section class="relative overflow-hidden bg-gradient-to-b from-white to-slate-100 py-12 pt-24">
+    <div class="mx-auto w-full max-w-7xl px-4">
+        <p class="text-sm font-semibold uppercase tracking-widest text-emerald-500">Pelatihan</p>
+        <h1 class="mt-2 text-3xl font-bold text-slate-900">PELATIHAN KAMI</h1>
         </p>
     </div>
 </section>
@@ -41,6 +38,24 @@
                             {{-- Title --}}
                             <h3 class="text-lg font-bold text-slate-900 line-clamp-2">{{ $course->title }}</h3>
 
+                            {{-- Registration deadline info --}}
+                            <div class="text-xs">
+                                @if($course->end_date)
+                                    <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 font-semibold
+                                        {{ $course->registration_ended ? 'bg-rose-100 text-rose-700' : 'bg-emerald-50 text-emerald-700' }}">
+                                        <i class="fas {{ $course->registration_ended ? 'fa-circle-xmark' : 'fa-calendar-check' }}"></i>
+                                        {{ $course->registration_ended
+                                            ? 'Pendaftaran berakhir'
+                                            : 'Batas daftar: ' . $course->end_date->translatedFormat('d F Y') }}
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-600">
+                                        <i class="fas fa-calendar"></i>
+                                        Batas daftar: -
+                                    </span>
+                                @endif
+                            </div>
+
                             {{-- Description --}}
                             <p class="text-sm text-slate-600 line-clamp-3 flex-1">
                                 {{ $course->short_description ? strip_tags($course->short_description) : strip_tags($course->description) }}
@@ -53,10 +68,20 @@
                                         onclick="showCourseDetail({{ $course->id }}, '{{ addslashes($course->title) }}', '{{ addslashes($course->description) }}')">
                                     <span>Info Detail</span>
                                 </button>
-                                <a href="{{ route('login') }}"
-                                   class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 text-white px-3 py-2.5 text-sm font-semibold shadow-lg shadow-emerald-600/30 transition hover:bg-emerald-700">
-                                    <span>Daftar</span>
-                                </a>
+
+                                @if($course->registration_ended)
+                                    <button type="button"
+                                            disabled
+                                            class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-rose-100 text-rose-700 px-3 py-2.5 text-sm font-semibold cursor-not-allowed"
+                                            title="Pendaftaran sudah berakhir">
+                                        <span>Pendaftaran Berakhir</span>
+                                    </button>
+                                @else
+                                    <a href="{{ route('login') }}"
+                                       class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 text-white px-3 py-2.5 text-sm font-semibold shadow-lg shadow-emerald-600/30 transition hover:bg-emerald-700">
+                                        <span>Daftar</span>
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </article>
@@ -86,40 +111,15 @@
 
         <!-- Modal Body (scrollable) -->
         <div class="flex-1 overflow-y-auto overscroll-contain px-6 sm:px-8 py-6 space-y-6">
-            {{-- Info Stats --}}
-            <div class="flex items-center gap-6 text-sm text-slate-600 pb-4 border-b border-slate-200">
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-clock text-emerald-600"></i>
-                    <span><strong>10 Jam</strong> Belajar</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-users text-emerald-600"></i>
-                    <span><strong>200+</strong> Siswa</span>
-                </div>
-            </div>
-
-            {{-- Description --}}
             <div id="modalDescription" class="text-slate-600 space-y-4 prose prose-sm max-w-none text-base leading-relaxed"></div>
-
-            {{-- Tags --}}
-            <div class="flex flex-wrap gap-2 pt-4 border-t border-slate-200">
-                <span class="inline-flex items-center rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-600 border border-emerald-200">
-                    Pelatihan Halal
-                </span>
-                <span class="inline-flex items-center rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-600 border border-blue-200">
-                    Learning Path
-                </span>
-            </div>
         </div>
 
         <!-- Modal Footer -->
         <div class="shrink-0 flex gap-3 px-6 sm:px-8 py-4 border-t border-slate-200 bg-white">
             <button type="button" onclick="closeCourseDetail()" class="flex-1 inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-600 transition hover:border-slate-400 hover:bg-slate-50">
-                <i class="fas fa-arrow-left"></i>
                 Tutup
             </button>
             <a href="{{ route('login') }}" class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 text-white px-6 py-3 text-sm font-semibold shadow-lg shadow-emerald-600/40 transition hover:bg-emerald-700">
-                <i class="fas fa-arrow-right"></i>
                 Daftar Pelatihan
             </a>
         </div>
