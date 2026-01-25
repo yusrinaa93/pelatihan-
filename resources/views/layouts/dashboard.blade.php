@@ -153,6 +153,14 @@
                                 <ul id="profile-menu"
                                     class="dropdown-menu absolute right-0 top-12 hidden min-w-[160px] rounded-lg border border-slate-200 bg-white/95 p-2 text-sm font-medium text-slate-600 shadow-lg focus:outline-none z-50">
                                     <li>
+                                        <a href="{{ route('account') }}">
+                                            @csrf
+                                            <button type="submit" class="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left transition hover:bg-emerald-50 hover:text-emerald-600">
+                                                <i class="fas fa-user-circle text-base"></i>
+                                                <span>Akun Saya</span>
+                                            </button>
+                                        </a>
+                                        </form>
                                         <form method="POST" action="{{ route('logout') }}">
                                             @csrf
                                             <button type="submit" class="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left transition hover:bg-emerald-50 hover:text-emerald-600">

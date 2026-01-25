@@ -113,7 +113,16 @@
                                 <p class="text-xs text-slate-400 ml-1">JPG, PNG atau GIF. Maks 2MB.</p>
                             </div>
                         </div>
-
+                        {{-- NIK --}}
+                        <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600">
+                            NIK
+                            <input type="text"
+                                   name="nik"
+                                   value="{{ old('nik', Auth::user()->nik ?? '') }}"
+                                   placeholder="Nomor Induk Kependudukan"
+                                   class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
+                        </label>
+                        
                         {{-- Input Nama --}}
                         <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600">
                             Nama Lengkap
@@ -168,15 +177,53 @@
                                    placeholder="e.g. 08123456789"
                                    class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
                         </label>
-
                         {{-- Alamat Domisili --}}
-                        <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600">
-                            Alamat Domisili
+                        <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600"">
+                            Alamat
                             <textarea name="alamat"
                                       rows="3"
                                       placeholder="Tulis alamat lengkap Anda"
                                       class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">{{ old('alamat', Auth::user()->alamat ?? '') }}</textarea>
                         </label>
+                        {{-- Provinsi / Kabupaten / Kecamatan / Kode Pos --}}
+                        <div class="grid gap-4 sm:grid-cols-2">
+                            <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600">
+                                Provinsi
+                                <input type="text"
+                                       name="provinsi"
+                                       value="{{ old('provinsi', Auth::user()->provinsi ?? '') }}"
+                                       placeholder="e.g. DI Yogyakarta"
+                                       class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
+                            </label>
+
+                            <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600">
+                                Kabupaten/Kota
+                                <input type="text"
+                                       name="kabupaten"
+                                       value="{{ old('kabupaten', Auth::user()->kabupaten ?? '') }}"
+                                       placeholder="e.g. Sleman"
+                                       class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
+                            </label>
+
+                            <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600">
+                                Kecamatan
+                                <input type="text"
+                                       name="kecamatan"
+                                       value="{{ old('kecamatan', Auth::user()->kecamatan ?? '') }}"
+                                       placeholder="e.g. Depok"
+                                       class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
+                            </label>
+
+                            <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600">
+                                Kode Pos
+                                <input type="text"
+                                       name="kodepos"
+                                       value="{{ old('kodepos', Auth::user()->kodepos ?? '') }}"
+                                       placeholder="e.g. 55281"
+                                       class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
+                            </label>
+                        
+                        </div>
                         
                         <div class="flex items-center justify-end border-t border-slate-200 pt-6">
                             <button type="submit"

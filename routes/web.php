@@ -10,13 +10,18 @@ use App\Http\Controllers\DutyController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\ExamController;
-use App\Http\Controllers\SertifikatController;
-use App\Http\Controllers\AccountController; // <--- CONTROLLER BARU DITAMBAHKAN
+use App\Http\Controllers\AccountController;
+use App\Models\Course;
 
 // --- RUTE PUBLIK (Dapat diakses siapa saja) ---
 
 Route::get('/', function () {
-    return view('home', ['activeNav' => 'home']);
+    $courses = Course::latest()->take(6)->get();
+
+    return view('home', [
+        'activeNav' => 'home',
+        'courses' => $courses,
+    ]);
 });
 
 Route::get('/about', function () {
@@ -111,9 +116,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/my-courses/certificate/{course}/generate', [CertificateController::class, 'generate'])
            ->name('certificate.generate');
            
-    // Route download sertifikat lama
-    Route::get('/sertifikat/unduh/{registration_id}', [SertifikatController::class, 'unduh'])
-           ->name('sertifikat.unduh');
 
     // --- RUTE AKUN (DIPERBARUI MENGGUNAKAN ACCOUNT CONTROLLER) ---
     

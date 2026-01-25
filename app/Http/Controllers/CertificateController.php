@@ -48,7 +48,7 @@ class CertificateController extends Controller
     public function check(Course $course)
     {
         $user = Auth::user();
-        $pendaftarData = Pendaftar::where('email', $user->email)->first();
+        $pendaftarData = User::where('email', $user->email)->first();
 
         // Cek apakah Admin sudah "meluncurkan" sertifikat
         if (!$course->is_certificate_active) {
@@ -133,7 +133,17 @@ class CertificateController extends Controller
             'tempat_lahir'  => 'required|string|max:100',
             'tanggal_lahir' => 'required|date',
             'nomor_wa'      => 'required|string|max:25',  // Sesuai name="nomor_wa" di form
+            'bank_name' => 'required|string|max:100',
+            'bank_account_name' => 'required|string|max:150',
+            'bank_account_number' => 'required|string|max:50',
         ]);
+
+        // Simpan data bank ke profil user (wajib untuk yang lulus)
+        $user->forceFill([
+            'bank_name' => $validatedData['bank_name'],
+            'bank_account_name' => $validatedData['bank_account_name'],
+            'bank_account_number' => $validatedData['bank_account_number'],
+        ])->save();
 
         // --- 3. Buat Nomor Sertifikat ---
         $serial_number = $this->generateSerialNumber($course, $user); 

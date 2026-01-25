@@ -83,4 +83,5 @@
     .fi-card {
         @apply border-slate-200 shadow-sm;
     }
+    
 }

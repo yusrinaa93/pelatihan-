@@ -28,6 +28,11 @@ class AccountController extends Controller
             'tanggal_lahir' => 'required|date',
             'nomor_wa' => 'required|string|max:20',
             'alamat' => 'required|string|max:500',
+            'nik' => 'nullable|string|max:32',
+            'provinsi' => 'nullable|string|max:100',
+            'kabupaten' => 'nullable|string|max:100',
+            'kecamatan' => 'nullable|string|max:100',
+            'kodepos' => 'nullable|string|max:10',
             'avatar' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
@@ -47,6 +52,11 @@ class AccountController extends Controller
         $user->tanggal_lahir = $request->tanggal_lahir;
         $user->nomor_wa = $request->nomor_wa;
         $user->alamat = $request->alamat;
+        $user->nik = $request->nik;
+        $user->provinsi = $request->provinsi;
+        $user->kabupaten = $request->kabupaten;
+        $user->kecamatan = $request->kecamatan;
+        $user->kodepos = $request->kodepos;
         $user->profile_completed = true; // Tandai bahwa profil sudah lengkap
         $user->save();
 

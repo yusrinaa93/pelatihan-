@@ -7,7 +7,7 @@
     
     {{-- BAGIAN KIRI: GAMBAR (TETAP) --}}
     <div class="relative hidden overflow-hidden lg:block">
-        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=1600"
+        <img src="{{ asset('gambar/fotologin.png') }}"
              alt="Pelatihan Halal"
              class="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 hover:scale-105">
         <div class="absolute inset-0 bg-emerald-900/60 mix-blend-multiply"></div>

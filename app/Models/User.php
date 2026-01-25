@@ -29,6 +29,14 @@ class User extends Authenticatable implements FilamentUser
         'tanggal_lahir',
         'nomor_wa',
         'alamat',
+        'nik',
+        'provinsi',
+        'kabupaten',
+        'kecamatan',
+        'kodepos',
+        'bank_account_name',
+        'bank_account_number',
+        'bank_name',
         'profile_completed', // Menandakan apakah profil sudah lengkap
     ];
 

@@ -82,6 +82,36 @@
                                class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-200 transition">
                     </div>
 
+                    {{-- Data Bank (Wajib untuk yang lulus) --}}
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-bold uppercase tracking-wide text-slate-500">Nama Bank</label>
+                            <input type="text"
+                                   name="bank_name"
+                                   value="{{ old('bank_name', $user->bank_name ?? '') }}"
+                                   required
+                                   class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-200 transition">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-bold uppercase tracking-wide text-slate-500">Nama Pemilik Rekening</label>
+                            <input type="text"
+                                   name="bank_account_name"
+                                   value="{{ old('bank_account_name', $user->bank_account_name ?? '') }}"
+                                   required
+                                   class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-200 transition">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-bold uppercase tracking-wide text-slate-500">Nomor Rekening</label>
+                            <input type="text"
+                                   name="bank_account_number"
+                                   value="{{ old('bank_account_number', $user->bank_account_number ?? '') }}"
+                                   required
+                                   inputmode="numeric"
+                                   autocomplete="off"
+                                   class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-200 transition">
+                        </div>
+                    </div>
+
                     {{-- Tombol Aksi --}}
                     <div class="mt-8 flex items-center gap-3 pt-2">
                         <a href="{{ route('certificate.index') }}" 
