@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL; // Tambahan penting
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Kode ini memaksa Laravel menggunakan HTTPS saat di server (Railway)
+        // Agar CSS dan Gambar tidak dianggap "Mixed Content" (rusak)
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
     }
 }
