@@ -6,8 +6,8 @@
 <div class="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans">
 
     {{-- Header (sticky saat scroll, gaya mengikuti auth layout) --}}
-    <header class="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md shadow-sm px-6 py-4 lg:px-10 lg:py-5">
-        <div class="mx-auto w-full max-w-7xl">
+    <header class="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md shadow-sm py-4 lg:py-5 pl-6 pr-2 lg:pl-10 lg:pr-2">
+        <div class="w-full">
             <div class="flex items-center justify-between">
 
                 {{-- Logo (tampil di semua ukuran layar, diperbesar) --}}
@@ -55,10 +55,16 @@
                                     Tentang
                                 </a>
                             </li>
-                        </ul>
 
-                        {{-- Desktop Profile/Login (seperti layout awal) --}}
-                        <div class="pl-1 w-12 flex items-center justify-end">
+                            @guest
+                                <li>
+                                    <a href="{{ route('login') }}"
+                                       class="inline-flex items-center rounded-full px-4 py-2 transition whitespace-nowrap {{ request()->routeIs('login') ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600' }}">
+                                        Masuk
+                                    </a>
+                                </li>
+                            @endguest
+
                             @auth
                                 @php($user = Auth::user())
                                 @php($avatarUrl = $user->avatar
@@ -69,7 +75,7 @@
                                             ? asset('storage/' . $user->avatar_path)
                                             : ('https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=10b981&color=fff'))))
 
-                                <div class="relative">
+                                <li class="relative">
                                     <button type="button"
                                             class="profile-trigger flex h-10 w-10 items-center justify-center rounded-full border-2 border-white ring-2 ring-slate-100 transition hover:ring-emerald-400 focus:outline-none"
                                             data-dropdown-target="desktop-profile-menu">
@@ -98,14 +104,12 @@
                                             </li>
                                         </ul>
                                     </div>
-                                </div>
-                            @else
-                                <a href="{{ route('login') }}"
-                                   class="inline-flex items-center rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow-sm hover:bg-emerald-700 transition">
-                                    Masuk
-                                </a>
+                                </li>
                             @endauth
-                        </div>
+                        </ul>
+
+                        {{-- Desktop Profile/Login (seperti layout awal) --}}
+                        {{-- (dipindah ke dalam pill untuk @auth) --}}
                     </div>
                 </nav>
             </div>
