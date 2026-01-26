@@ -5,7 +5,7 @@
 
 @section('content')
 
-<section class="relative overflow-hidden bg-gradient-to-b from-white to-slate-100 py-16 pt-32">
+<section class="relative overflow-hidden bg-gradient-to-b from-white to-slate-100 py-12 pt-16 lg:pt-20">
     <div class="absolute inset-0 -z-10 opacity-30">
         <div class="absolute -top-20 -left-10 h-64 w-64 rounded-full bg-emerald-200/40 blur-3xl"></div>
         <div class="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-emerald-300/30 blur-3xl"></div>

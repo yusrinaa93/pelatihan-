@@ -58,4 +58,44 @@ class DutyController extends Controller
                 ->with('status', 'File uploaded successfully.')
                 ->withFragment('tab-tugas');
     }
-}   
+    
+    /**
+     * Download file tugas yang diupload admin (attachment_path).
+     */
+    public function downloadAttachment(Duty $duty)
+    {
+        // Pastikan user login (route sudah pakai auth middleware, ini sekadar aman)
+        if (!Auth::check()) {
+            abort(403);
+        }
+
+        if (!$duty->attachment_path || !Storage::disk('public')->exists($duty->attachment_path)) {
+            abort(404);
+        }
+
+        return Storage::disk('public')->download($duty->attachment_path);
+    }
+
+    /**
+     * Download file submission user.
+     */
+    public function downloadSubmission(DutySubmission $submission)
+    {
+        if (!Auth::check()) {
+            abort(403);
+        }
+
+        // Hanya pemilik submission yang boleh download
+        if ((int) $submission->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        if (!$submission->file_path || !Storage::disk('public')->exists($submission->file_path)) {
+            abort(404);
+        }
+
+        $downloadName = $submission->original_filename ?: basename($submission->file_path);
+
+        return Storage::disk('public')->download($submission->file_path, $downloadName);
+    }
+}

@@ -191,8 +191,7 @@
                                             </td>
                                             <td class="whitespace-nowrap px-4 py-3">
                                                 @if($duty->attachment_path)
-                                                    <a href="{{ Storage::disk('public')->url($duty->attachment_path) }}"
-                                                       target="_blank"
+                                                    <a href="{{ route('duties.download', $duty) }}"
                                                        class="inline-flex items-center gap-2 rounded-full bg-sky-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-sky-400">
                                                         <i class="fas fa-file-arrow-down"></i>
                                                         Unduh Tugas
@@ -216,8 +215,7 @@
                                             <td class="whitespace-nowrap px-4 py-3">
                                                 @if(!empty($duty->submission) && !empty($duty->submission->file_path))
                                                     <div class="flex flex-col gap-2">
-                                                        <a href="{{ Storage::disk('public')->url($duty->submission->file_path) }}"
-                                                           target="_blank"
+                                                        <a href="{{ route('duty-submissions.download', $duty->submission) }}"
                                                            class="inline-flex items-center gap-2 rounded-full bg-sky-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-sky-400">
                                                             <i class="fas fa-cloud-arrow-down"></i>
                                                             Download
@@ -417,7 +415,7 @@
                 if (!res.ok) throw new Error('Server error');
                 return res.json();
             })
-            .then(data => {
+            .then data => {
                 if (data.status === 'success') {
                     presenceButton.outerHTML = `
                         <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600">

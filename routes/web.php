@@ -135,4 +135,12 @@ Route::middleware('auth')->group(function () {
 
     // Halaman "Detail Course"
     Route::get('/my-courses/{course}', [MyCourseController::class, 'show'])->name('my-courses.show');
+
+    // Download file tugas (attachment admin)
+    Route::get('/duties/{duty}/download', [DutyController::class, 'downloadAttachment'])
+        ->name('duties.download');
+
+    // Download submission user
+    Route::get('/duty-submissions/{submission}/download', [DutyController::class, 'downloadSubmission'])
+        ->name('duty-submissions.download');
 });

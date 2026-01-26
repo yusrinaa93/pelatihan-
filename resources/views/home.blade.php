@@ -147,13 +147,13 @@
                 </a>
                 
                 {{-- Contact --}}
-                <a href="https://wa.me/622741234567" target="_blank" class="h-full">
+                <a href="https://wa.me/6289504440443" target="_blank" class="h-full">
                     <div class="group h-full rounded-xl border border-emerald-100 bg-white p-6 text-center shadow-md transition hover:-translate-y-1 hover:shadow-xl flex flex-col items-center justify-center">
                         <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 transition group-hover:bg-emerald-600 group-hover:text-white">
                             <i class="fas fa-phone-alt text-xl"></i>
                         </div>
                         <h3 class="mb-1 text-base font-bold text-slate-900">Kontak</h3>
-                        <p class="text-sm text-slate-600">(0274) 123-4567</p>
+                        <p class="text-sm text-slate-600">089504440443</p>
                     </div>
                 </a>
                 

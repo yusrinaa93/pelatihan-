@@ -6,7 +6,7 @@
 @php($activeNav = 'courses')
 
 {{-- Header Section --}}
-<section class="relative overflow-hidden bg-gradient-to-b from-white to-slate-100 py-12 pt-24">
+<section class="relative overflow-hidden bg-gradient-to-b from-white to-slate-100 py-10 pt-14 lg:pt-16">
     <div class="mx-auto w-full max-w-7xl px-4">
         <p class="text-sm font-semibold uppercase tracking-widest text-emerald-500">Pelatihan</p>
         <h1 class="mt-2 text-3xl font-bold text-slate-900">PELATIHAN KAMI</h1>
