@@ -415,7 +415,7 @@
                 if (!res.ok) throw new Error('Server error');
                 return res.json();
             })
-            .then data => {
+            .then(data => {
                 if (data.status === 'success') {
                     presenceButton.outerHTML = `
                         <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600">
@@ -428,9 +428,13 @@
                 }
             })
             .catch(() => {
-                alert('Tidak dapat terhubung ke server.');
-                presenceButton.disabled = false;
-                presenceButton.classList.remove('opacity-70', 'cursor-not-allowed');
+                alert('Gagal presensi');
+            })
+            .finally(() => {
+                if (presenceButton && presenceButton.disabled) {
+                    presenceButton.disabled = false;
+                    presenceButton.classList.remove('opacity-70', 'cursor-not-allowed');
+                }
             });
         });
 
