@@ -6,248 +6,267 @@
 
 @section('content')
     <div class="space-y-8">
-        <div class="flex flex-wrap items-center justify-between gap-4">
+        {{-- Header Section --}}
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <p class="text-xs font-semibold uppercase tracking-widest text-emerald-500">Materi Pelatihan</p>
                 <h1 class="text-2xl font-bold text-slate-900">{{ $course->title }}</h1>
                 <p class="mt-2 text-sm text-slate-500">Akses jadwal, presensi, tugas dan ujian Anda.</p>
             </div>
-            <div class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-600">
-                <i class="fas fa-layer-group text-sm"></i>
-                Batch Aktif
+            <div class="self-start sm:self-auto">
+                <div class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-600">
+                    <i class="fas fa-layer-group text-sm"></i>
+                    Batch Aktif
+                </div>
             </div>
         </div>
 
+        {{-- Main Content Card --}}
         <div class="overflow-hidden rounded-3xl border border-slate-200/70 bg-white/95 shadow-lg shadow-slate-200/60">
+            {{-- Navigation Tabs --}}
             <nav class="flex flex-wrap gap-2 border-b border-slate-200/70 bg-white/80 px-4 py-3 text-sm font-semibold">
                 <button type="button"
-                        class="tab-link inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-white shadow-sm"
+                        class="tab-link inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-white shadow-sm transition-all"
                         data-tab-target="tab-zoom">
                     <i class="fas fa-video text-xs"></i>
                     Jadwal & Zoom
                 </button>
                 <button type="button"
-                        class="tab-link inline-flex items-center gap-2 rounded-full px-4 py-2 text-slate-500 transition hover:bg-emerald-50 hover:text-emerald-600"
+                        class="tab-link inline-flex items-center gap-2 rounded-full px-4 py-2 text-slate-500 transition-all hover:bg-emerald-50 hover:text-emerald-600"
                         data-tab-target="tab-presensi">
                     <i class="fas fa-clipboard-check text-xs"></i>
                     Presensi
                 </button>
                 <button type="button"
-                        class="tab-link inline-flex items-center gap-2 rounded-full px-4 py-2 text-slate-500 transition hover:bg-emerald-50 hover:text-emerald-600"
+                        class="tab-link inline-flex items-center gap-2 rounded-full px-4 py-2 text-slate-500 transition-all hover:bg-emerald-50 hover:text-emerald-600"
                         data-tab-target="tab-tugas">
                     <i class="fas fa-tasks text-xs"></i>
                     Tugas
                 </button>
                 <button type="button"
-                        class="tab-link inline-flex items-center gap-2 rounded-full px-4 py-2 text-slate-500 transition hover:bg-emerald-50 hover:text-emerald-600"
+                        class="tab-link inline-flex items-center gap-2 rounded-full px-4 py-2 text-slate-500 transition-all hover:bg-emerald-50 hover:text-emerald-600"
                         data-tab-target="tab-ujian">
                     <i class="fas fa-file-signature text-xs"></i>
                     Ujian
-                </button> 
+                </button>
             </nav>
 
-            <div class="tab-panels space-y-8 p-6">
+            <div class="tab-panels space-y-8 p-4 sm:p-6">
+
+                {{-- TAB: JADWAL & ZOOM --}}
                 <div id="tab-zoom" class="tab-panel space-y-4">
                     <h2 class="text-lg font-semibold text-slate-900">Jadwal Zoom Meeting</h2>
                     <div class="overflow-hidden rounded-2xl border border-slate-200">
-                        <table class="min-w-full divide-y divide-slate-200 text-sm">
-                            <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                                <tr>
-                                    <th class="px-4 py-3 text-left">No</th>
-                                    <th class="px-4 py-3 text-left">Tanggal</th>
-                                    <th class="px-4 py-3 text-left">Waktu</th>
-                                    <th class="px-4 py-3 text-left">Kategori</th>
-                                    <th class="px-4 py-3 text-left">Zoom</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 bg-white text-slate-600">
-                                @forelse($schedules as $schedule)
+                        {{-- Wrapper Responsif untuk Tabel --}}
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-slate-200 text-sm">
+                                <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                                     <tr>
-                                        <td class="px-4 py-3 font-semibold text-slate-800">{{ $loop->iteration }}</td>
-                                        <td class="px-4 py-3">{{ $schedule->start_time?->translatedFormat('l, d F Y') }}</td>
-                                        <td class="px-4 py-3">
-                                            {{ $schedule->start_time?->format('H:i') }} - {{ $schedule->end_time?->format('H:i') }}
-                                        </td>
-                                        <td class="px-4 py-3">{{ $schedule->category }}</td>
-                                        <td class="px-4 py-3">
-                                            @if($schedule->zoom_link)
-                                                <a href="{{ $schedule->zoom_link }}" target="_blank"
-                                                   class="inline-flex items-center gap-2 rounded-full bg-sky-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-sky-400">
-                                                    <i class="fas fa-video"></i>
-                                                    Join Zoom
-                                                </a>
-                                            @else
-                                                <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Belum tersedia</span>
-                                            @endif
-                                        </td>
+                                        <th class="whitespace-nowrap px-4 py-3 text-left">No</th>
+                                        <th class="whitespace-nowrap px-4 py-3 text-left">Tanggal</th>
+                                        <th class="whitespace-nowrap px-4 py-3 text-left">Waktu</th>
+                                        <th class="whitespace-nowrap px-4 py-3 text-left">Kategori</th>
+                                        <th class="whitespace-nowrap px-4 py-3 text-left">Zoom</th>
                                     </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="px-4 py-6 text-center text-sm text-slate-400">Belum ada jadwal.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white text-slate-600">
+                                    @forelse($schedules as $schedule)
+                                        <tr>
+                                            <td class="whitespace-nowrap px-4 py-3 font-semibold text-slate-800">{{ $loop->iteration }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->start_time?->translatedFormat('l, d F Y') }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3">
+                                                {{ $schedule->start_time?->format('H:i') }} - {{ $schedule->end_time?->format('H:i') }}
+                                            </td>
+                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->category }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3">
+                                                @if($schedule->zoom_link)
+                                                    <a href="{{ $schedule->zoom_link }}" target="_blank"
+                                                       class="inline-flex items-center gap-2 rounded-full bg-sky-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-sky-400">
+                                                        <i class="fas fa-video"></i>
+                                                        Join Zoom
+                                                    </a>
+                                                @else
+                                                    <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Belum tersedia</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="px-4 py-6 text-center text-sm text-slate-400">Belum ada jadwal.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
+                {{-- TAB: PRESENSI --}}
                 <div id="tab-presensi" class="tab-panel hidden space-y-4">
                     <h2 class="text-lg font-semibold text-slate-900">Presensi</h2>
                     <div class="overflow-hidden rounded-2xl border border-slate-200">
-                        <table class="min-w-full divide-y divide-slate-200 text-sm">
-                            <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                                <tr>
-                                    <th class="px-4 py-3 text-left">No</th>
-                                    <th class="px-4 py-3 text-left">Tanggal</th>
-                                    <th class="px-4 py-3 text-left">Waktu</th>
-                                    <th class="px-4 py-3 text-left">Materi</th>
-                                    <th class="px-4 py-3 text-left">Jam Presensi</th>
-                                    <th class="px-4 py-3 text-left">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 bg-white text-slate-600">
-                                @forelse($schedules as $schedule)
+                        {{-- Wrapper Responsif untuk Tabel --}}
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-slate-200 text-sm">
+                                <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                                     <tr>
-                                        <td class="px-4 py-3 font-semibold text-slate-800">{{ $loop->iteration }}</td>
-                                        <td class="px-4 py-3">{{ $schedule->start_time?->translatedFormat('l, d F Y') }}</td>
-                                        <td class="px-4 py-3">{{ $schedule->start_time?->format('H:i') }} - {{ $schedule->end_time?->format('H:i') }}</td>
-                                        <td class="px-4 py-3">{{ $schedule->category }}</td>
-                                        <td class="px-4 py-3">{{ $schedule->start_time?->format('H:i') }} - {{ $schedule->end_time?->format('H:i') }}</td>
-                                        <td class="px-4 py-3">
-                                            @if($schedule->has_attended)
-                                                <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600">
-                                                    <i class="fas fa-check-circle"></i>
-                                                    Sudah Presensi
-                                                </span>
-                                            @elseif($schedule->is_presence_active)
-                                                <button type="button"
-                                                        class="btn-presence inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-emerald-400"
-                                                        data-schedule-id="{{ $schedule->id }}">
-                                                    Presensi
-                                                </button>
-                                            @else
-                                                <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">
-                                                    Presensi Ditutup
-                                                </span>
-                                            @endif
-                                        </td>
+                                        <th class="whitespace-nowrap px-4 py-3 text-left">No</th>
+                                        <th class="whitespace-nowrap px-4 py-3 text-left">Tanggal</th>
+                                        <th class="whitespace-nowrap px-4 py-3 text-left">Waktu</th>
+                                        <th class="whitespace-nowrap px-4 py-3 text-left">Materi</th>
+                                        <th class="whitespace-nowrap px-4 py-3 text-left">Jam Presensi</th>
+                                        <th class="whitespace-nowrap px-4 py-3 text-left">Aksi</th>
                                     </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="px-4 py-6 text-center text-sm text-slate-400">Belum ada materi.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white text-slate-600">
+                                    @forelse($schedules as $schedule)
+                                        <tr>
+                                            <td class="whitespace-nowrap px-4 py-3 font-semibold text-slate-800">{{ $loop->iteration }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->start_time?->translatedFormat('l, d F Y') }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->start_time?->format('H:i') }} - {{ $schedule->end_time?->format('H:i') }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->category }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->start_time?->format('H:i') }} - {{ $schedule->end_time?->format('H:i') }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3">
+                                                @if($schedule->has_attended)
+                                                    <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600">
+                                                        <i class="fas fa-check-circle"></i>
+                                                        Sudah Presensi
+                                                    </span>
+                                                @elseif($schedule->is_presence_active)
+                                                    <button type="button"
+                                                            class="btn-presence inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-emerald-400"
+                                                            data-schedule-id="{{ $schedule->id }}">
+                                                        Presensi
+                                                    </button>
+                                                @else
+                                                    <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                                        Presensi Ditutup
+                                                    </span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="px-4 py-6 text-center text-sm text-slate-400">Belum ada materi.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
+                {{-- TAB: TUGAS --}}
                 <div id="tab-tugas" class="tab-panel hidden space-y-4">
                     <div class="flex flex-wrap items-center justify-between gap-3">
                         <h2 class="text-lg font-semibold text-slate-900">Tugas</h2>
                     </div>
                     <div class="overflow-hidden rounded-2xl border border-slate-200">
-                        <table class="min-w-full divide-y divide-slate-200 text-sm">
-                            <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                                <tr>
-                                    <th class="px-4 py-3 text-left">No</th>
-                                    <th class="px-4 py-3 text-left">Nama</th>
-                                    <th class="px-4 py-3 text-left">Deskripsi</th>
-                                    <th class="px-4 py-3 text-left">File Tugas</th>
-                                    <th class="px-4 py-3 text-left">Deadline</th>
-                                    <th class="px-4 py-3 text-left">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 bg-white text-slate-600">
-                                @forelse ($duties as $duty)
+                        {{-- Wrapper Responsif untuk Tabel --}}
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-slate-200 text-sm">
+                                <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                                     <tr>
-                                        <td class="px-4 py-3 font-semibold text-slate-800">{{ $loop->iteration }}</td>
-                                        <td class="px-4 py-3 font-semibold text-slate-700">{{ $duty->name }}</td>
-                                        <td class="px-4 py-3">
-                                            @if($duty->description)
-                                                <div class="prose prose-sm max-w-none text-slate-600">{!! $duty->description !!}</div>
-                                            @else
-                                                <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                                                    Tidak ada deskripsi
-                                                </span>
-                                            @endif
-                                        </td>
-                                        <td class="px-4 py-3">
-                                            @if($duty->attachment_path)
-                                                <a href="{{ Storage::disk('public')->url($duty->attachment_path) }}"
-                                                   target="_blank"
-                                                   class="inline-flex items-center gap-2 rounded-full bg-sky-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-sky-400">
-                                                    <i class="fas fa-file-arrow-down"></i>
-                                                    Unduh Tugas
-                                                </a>
-                                            @else
-                                                <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                                                    Belum ada file
-                                                </span>
-                                            @endif
-                                        </td>
-                                        <td class="px-4 py-3">
-    <div class="flex flex-col">
-        <span class="font-semibold text-slate-700">
-            {{ $duty->deadline->translatedFormat('l, d F Y') }}
-        </span>
-        <span class="text-xs text-slate-500">
-            Pukul {{ $duty->deadline->format('H:i') }}
-        </span>
-    </div>
-</td>
-                                        <td class="px-4 py-3">
-                                            @if(!empty($duty->submission) && !empty($duty->submission->file_path))
-                                                <div class="flex flex-col gap-2">
-                                                    <a href="{{ Storage::disk('public')->url($duty->submission->file_path) }}"
+                                        <th class="whitespace-nowrap px-4 py-3 text-left">No</th>
+                                        <th class="whitespace-nowrap px-4 py-3 text-left">Nama</th>
+                                        <th class="whitespace-nowrap px-4 py-3 text-left min-w-[200px]">Deskripsi</th>
+                                        <th class="whitespace-nowrap px-4 py-3 text-left">File Tugas</th>
+                                        <th class="whitespace-nowrap px-4 py-3 text-left">Deadline</th>
+                                        <th class="whitespace-nowrap px-4 py-3 text-left">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white text-slate-600">
+                                    @forelse ($duties as $duty)
+                                        <tr>
+                                            <td class="whitespace-nowrap px-4 py-3 font-semibold text-slate-800">{{ $loop->iteration }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3 font-semibold text-slate-700">{{ $duty->name }}</td>
+                                            <td class="px-4 py-3 min-w-[200px]">
+                                                @if($duty->description)
+                                                    <div class="prose prose-sm max-w-none text-slate-600 line-clamp-2 hover:line-clamp-none">{!! $duty->description !!}</div>
+                                                @else
+                                                    <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                                        Tidak ada deskripsi
+                                                    </span>
+                                                @endif
+                                            </td>
+                                            <td class="whitespace-nowrap px-4 py-3">
+                                                @if($duty->attachment_path)
+                                                    <a href="{{ Storage::disk('public')->url($duty->attachment_path) }}"
                                                        target="_blank"
                                                        class="inline-flex items-center gap-2 rounded-full bg-sky-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-sky-400">
-                                                        <i class="fas fa-cloud-arrow-down"></i>
-                                                        Download
+                                                        <i class="fas fa-file-arrow-down"></i>
+                                                        Unduh Tugas
                                                     </a>
-                                                    <span class="truncate text-xs font-medium text-slate-500">
-                                                        {{ $duty->submission->original_filename }}
+                                                @else
+                                                    <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                                        Belum ada file
+                                                    </span>
+                                                @endif
+                                            </td>
+                                            <td class="whitespace-nowrap px-4 py-3">
+                                                <div class="flex flex-col">
+                                                    <span class="font-semibold text-slate-700">
+                                                        {{ $duty->deadline->translatedFormat('l, d F Y') }}
+                                                    </span>
+                                                    <span class="text-xs text-slate-500">
+                                                        Pukul {{ $duty->deadline->format('H:i') }}
                                                     </span>
                                                 </div>
-                                            @else
-                                                @if($duty->is_deadline_passed)
-                                                    <span class="inline-flex items-center gap-2 rounded-full bg-rose-100 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-rose-600">
-                                                        <i class="fas fa-clock"></i>
-                                                        Sudah Lewat
-                                                    </span>
+                                            </td>
+                                            <td class="whitespace-nowrap px-4 py-3">
+                                                @if(!empty($duty->submission) && !empty($duty->submission->file_path))
+                                                    <div class="flex flex-col gap-2">
+                                                        <a href="{{ Storage::disk('public')->url($duty->submission->file_path) }}"
+                                                           target="_blank"
+                                                           class="inline-flex items-center gap-2 rounded-full bg-sky-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-sky-400">
+                                                            <i class="fas fa-cloud-arrow-down"></i>
+                                                            Download
+                                                        </a>
+                                                        <span class="truncate max-w-[150px] text-xs font-medium text-slate-500">
+                                                            {{ $duty->submission->original_filename }}
+                                                        </span>
+                                                    </div>
                                                 @else
-                                                    <button type="button"
-                                                            class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-emerald-400"
-                                                            data-upload-trigger
-                                                            data-duty-id="{{ $duty->id }}">
-                                                        <i class="fas fa-cloud-arrow-up"></i>
-                                                        Upload
-                                                    </button>
+                                                    @if($duty->is_deadline_passed)
+                                                        <span class="inline-flex items-center gap-2 rounded-full bg-rose-100 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-rose-600">
+                                                            <i class="fas fa-clock"></i>
+                                                            Sudah Lewat
+                                                        </span>
+                                                    @else
+                                                        <button type="button"
+                                                                class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-emerald-400"
+                                                                data-upload-trigger
+                                                                data-duty-id="{{ $duty->id }}">
+                                                            <i class="fas fa-cloud-arrow-up"></i>
+                                                            Upload
+                                                        </button>
+                                                    @endif
                                                 @endif
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="px-4 py-6 text-center text-sm text-slate-400">Belum ada tugas.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="px-4 py-6 text-center text-sm text-slate-400">Belum ada tugas.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
+                {{-- TAB: UJIAN --}}
                 <div id="tab-ujian" class="tab-panel hidden space-y-4">
                     <h2 class="text-lg font-semibold text-slate-900">Ujian</h2>
                     <div class="space-y-4">
                         @forelse($exams as $exam)
-                            <div class="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200 px-5 py-4 shadow-sm shadow-slate-200/50">
+                            <div class="flex flex-col gap-4 rounded-2xl border border-slate-200 px-5 py-4 shadow-sm shadow-slate-200/50 sm:flex-row sm:items-center sm:justify-between">
                                 <div>
                                     <h3 class="text-base font-semibold text-slate-800">{{ $exam->title }}</h3>
                                     <p class="mt-1 text-sm text-slate-500">{{ $exam->description ?? 'Tidak ada deskripsi.' }}</p>
 
                                     @if($exam->deadline)
-                                        <div class="mt-2 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold
+                                        <div class="mt-2 inline-flex flex-wrap items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold
                                             {{ $exam->is_deadline_passed ? 'bg-rose-100 text-rose-700' : 'bg-emerald-50 text-emerald-700' }}">
                                             <i class="fas fa-clock"></i>
                                             <span>
@@ -260,7 +279,7 @@
                                         {{ $exam->questions_count }} Soal
                                     </p>
                                 </div>
-                                <div>
+                                <div class="self-start sm:self-center">
                                     @if ($exam->is_completed)
                                         <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-600">
                                             <i class="fas fa-circle-check"></i>
@@ -292,6 +311,7 @@
         </div>
     </div>
 
+    {{-- Upload Modal --}}
     <div id="uploadModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 px-4 backdrop-blur-sm">
         <div class="w-full max-w-lg rounded-3xl border border-slate-200 bg-white/95 p-6 shadow-2xl shadow-slate-900/20">
             <div class="flex items-center justify-between">
@@ -374,7 +394,7 @@
         document.addEventListener('click', (event) => {
             const presenceButton = event.target.closest('.btn-presence');
             if (!presenceButton) return;
-            
+
 
             event.preventDefault();
             const scheduleId = presenceButton.dataset.scheduleId;
