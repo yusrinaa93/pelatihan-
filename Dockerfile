@@ -37,7 +37,8 @@ RUN npm install && npm run build
 
 # 8. Perintah Deploy (VERSI AMAN / STABIL)
 # Perhatikan perubahannya di baris "migrate" di bawah ini:
-CMD php artisan config:clear && \
+CMD php artisan storage:link && \
+    php artisan config:clear && \
     php artisan cache:clear && \
     php artisan view:clear && \
     php artisan migrate --force && \
