@@ -13,13 +13,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Ini User Test bawaan (Opsional, boleh dihapus kalau tidak perlu)
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // --- BAGIAN INI YANG BIKIN ERROR, HAPUS SAJA! ---
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+        // ------------------------------------------------
 
-        // 2. TAMBAHKAN INI: Membuat Akun Admin Khusus
         User::create([
             'name' => 'Administrator',
             'email' => 'admin@gmail.com',
