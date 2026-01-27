@@ -50,7 +50,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('courses') }}"
+                            <a href="{{ route('guest.courses') }}"
                                class="inline-flex items-center rounded-full px-4 py-2 transition {{ $activeNav === 'courses' ? 'bg-emerald-600 text-white' : 'text-slate-700 hover:text-emerald-600' }}">
                                 Pelatihan
                             </a>
@@ -83,7 +83,7 @@
                     <a href="{{ url('/') }}" class="rounded-md px-4 py-3 text-slate-700 hover:bg-emerald-50 hover:text-emerald-600">
                         Beranda
                     </a>
-                    <a href="{{ route('courses') }}" class="rounded-md px-4 py-3 text-slate-700 hover:bg-emerald-50 hover:text-emerald-600">
+                    <a href="{{ route('guest.courses') }}" class="rounded-md px-4 py-3 text-slate-700 hover:bg-emerald-50 hover:text-emerald-600">
                         Pelatihan
                     </a>
                     <a href="{{ url('/about') }}" class="rounded-md px-4 py-3 text-slate-700 hover:bg-emerald-50 hover:text-emerald-600">
