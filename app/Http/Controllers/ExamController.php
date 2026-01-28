@@ -18,9 +18,9 @@ class ExamController extends Controller
     {
         // Ambil semua ujian, plus jumlah soalnya
         $exams = Exam::withCount('questions')->get();
-        
+
         // Kirim data 'exams' (jamak) ke view 'exam.blade.php'
-        return view('exam', compact('exams')); 
+        return view('exam', compact('exams'));
     }
 
     /**
@@ -30,8 +30,8 @@ class ExamController extends Controller
     public function show(Exam $exam)
     {
         // Ambil 1 ujian, beserta SEMUA soal DAN pilihan jawabannya
-        $exam->load('questions.options'); 
-        
+        $exam->load('questions.options');
+
         // Kirim data 'exam' (tunggal) ke view 'exam-show.blade.php'
         return view('exam-show', compact('exam'));
     }
@@ -44,7 +44,7 @@ class ExamController extends Controller
     {
         // 1. Ambil semua jawaban dari form
         $answers = $request->input('answers'); // Format: [question_id => option_id]
-        
+
         $totalQuestions = $exam->questions->count();
         $correctAnswers = 0;
 
@@ -52,7 +52,7 @@ class ExamController extends Controller
         $correctOptionIds = Option::whereIn('question_id', $exam->questions->pluck('id'))
                                   ->where('is_correct', true)
                                   ->pluck('id');
-        
+
         // 3. Loop dan cek jawaban user
         if (!empty($answers)) {
             foreach ($answers as $questionId => $optionId) {
@@ -88,7 +88,7 @@ class ExamController extends Controller
         if ($examResult->user_id != Auth::id()) {
             abort(403, 'Anda tidak diizinkan mengakses halaman ini.');
         }
-        
+
         // Kirim data 'examResult' ke view 'exam-result.blade.php'
         return view('exam-result', ['result' => $examResult]); // Kirim sbg 'result'
     }
