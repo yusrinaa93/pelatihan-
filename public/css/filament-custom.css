@@ -1,0 +1,79 @@
+/* Custom Filament Styling - Sidebar Green */
+
+/* Sidebar Background */
+.fi-sidebar {
+    background-color: #059669;
+    color: white;
+}
+
+.fi-sidebar {
+    --color-gray-50: white;
+    --color-gray-900: #059669;
+}
+
+/* Sidebar Navigation Items */
+.fi-sidebar-nav-item {
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.2s ease;
+}
+
+.fi-sidebar-nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.fi-sidebar-nav-item.fi-active {
+    background-color: white;
+    color: #059669;
+}
+
+/* Sidebar Header */
+.fi-sidebar-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.25rem 1.5rem;
+}
+
+/* Sidebar Footer */
+.fi-sidebar-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile Sidebar Overlay */
+.fi-sidebar-mobile-overlay {
+    background-color: rgba(15, 23, 42, 0.5);
+}
+
+/* Sidebar Group Label */
+.fi-sidebar-group-label {
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+/* Sidebar Link Text */
+.fi-sidebar-nav-item-label {
+    color: inherit;
+}
+
+/* Logo Area */
+.fi-sidebar-header-heading {
+    color: white;
+}
+
+/* Topbar */
+.fi-topbar {
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
