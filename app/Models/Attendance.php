@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Attendance extends Model
 {
+    protected $table = 'presensi';
+
     // allow mass assignment for user_id and schedule_id
     protected $fillable = [
         'user_id',

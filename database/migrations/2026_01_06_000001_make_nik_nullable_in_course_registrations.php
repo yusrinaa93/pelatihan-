@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('course_registrations', function (Blueprint $table) {
+        Schema::table('pendaftaran_pelatihan', function (Blueprint $table) {
             // Change nik column to nullable with default empty string
             $table->string('nik')->nullable()->default('')->change();
         });
@@ -22,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('course_registrations', function (Blueprint $table) {
+        Schema::table('pendaftaran_pelatihan', function (Blueprint $table) {
             $table->string('nik')->nullable()->change();
         });
     }

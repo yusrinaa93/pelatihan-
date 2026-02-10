@@ -22,33 +22,33 @@ class CourseResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('title')
+                Forms\Components\TextInput::make('judul')
                     ->label('Judul Pelatihan')
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
-                Forms\Components\FileUpload::make('image_path')
+                Forms\Components\FileUpload::make('path_gambar')
                     ->label('Gambar/Cover')
                     ->image()
                     ->directory('courses')
                     ->disk('public')
                     ->visibility('public')
                     ->columnSpanFull(),
-                Forms\Components\RichEditor::make('description')
+                Forms\Components\RichEditor::make('deskripsi')
                     ->label('Deskripsi Lengkap')
                     ->helperText('Deskripsi detail yang akan tampil di modal info detail')
                     ->columnSpanFull(),
-                Forms\Components\Textarea::make('short_description')
+                Forms\Components\Textarea::make('deskripsi_singkat')
                     ->label('Deskripsi Singkat')
                     ->helperText('Deskripsi singkat yang akan tampil di card pelatihan (maksimal 200 karakter)')
                     ->maxLength(200)
                     ->rows(3)
                     ->columnSpanFull(),
-                Forms\Components\DatePicker::make('start_date')
+                Forms\Components\DatePicker::make('tanggal_mulai')
                     ->label('Tanggal Mulai'),
-                Forms\Components\DatePicker::make('end_date')
+                Forms\Components\DatePicker::make('tanggal_selesai')
                     ->label('Tanggal Selesai'),
-                Forms\Components\Toggle::make('is_certificate_active')
+                Forms\Components\Toggle::make('sertifikat_aktif')
                     ->label('Aktifkan Sertifikat untuk kursus ini?')
                     ->default(false)
                     ->helperText('Jika diaktifkan, peserta yang lulus syarat bisa mengunduh sertifikat.'),
@@ -59,10 +59,10 @@ class CourseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')->label('Judul Pelatihan')->searchable(),
-                Tables\Columns\TextColumn::make('start_date')->label('Tanggal Mulai')->date(),
-                Tables\Columns\TextColumn::make('end_date')->label('Tanggal Selesai')->date(),
-                Tables\Columns\IconColumn::make('is_certificate_active')
+                Tables\Columns\TextColumn::make('judul')->label('Judul Pelatihan')->searchable(),
+                Tables\Columns\TextColumn::make('tanggal_mulai')->label('Tanggal Mulai')->date(),
+                Tables\Columns\TextColumn::make('tanggal_selesai')->label('Tanggal Selesai')->date(),
+                Tables\Columns\IconColumn::make('sertifikat_aktif')
                     ->label('Sertifikat Aktif')
                     ->boolean(),
             ])

@@ -29,7 +29,6 @@
             </div>
         @endif
 
-        {{-- Pastikan route login benar --}}
         <form method="POST" action="{{ route('login') }}" class="space-y-5">
             @csrf
             <div class="space-y-2">
@@ -95,12 +94,6 @@
                     ? '<i class="fas fa-eye"></i>'
                     : '<i class="fas fa-eye-slash"></i>';
             });
-        });
-
-        window.addEventListener('pageshow', function(event) {
-            if (event.persisted) {
-                window.location.reload();
-            }
         });
     });
 </script>

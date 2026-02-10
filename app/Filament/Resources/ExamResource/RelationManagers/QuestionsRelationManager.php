@@ -27,20 +27,20 @@ class QuestionsRelationManager extends RelationManager
         return $form
             ->schema([
                 // Field untuk Teks Pertanyaan
-                TextInput::make('question_text')
+                TextInput::make('teks_pertanyaan')
                     ->label('Teks Pertanyaan')
                     ->required()
                     ->columnSpanFull(),
-                
+
                 // Repeater untuk Pilihan Jawaban
                 // 'options' HARUS SAMA dengan nama method relasi di Model Question.php
                 Repeater::make('options') 
                     ->relationship()
                     ->schema([
-                        TextInput::make('option_text')
+                        TextInput::make('teks_opsi')
                             ->label('Teks Pilihan Jawaban')
                             ->required(),
-                        Toggle::make('is_correct')
+                        Toggle::make('benar')
                             ->label('Ini Jawaban Benar?'),
                     ])
                     ->label('Pilihan Jawaban')
@@ -55,9 +55,9 @@ class QuestionsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('question_text')
+            ->recordTitleAttribute('teks_pertanyaan')
             ->columns([
-                TextColumn::make('question_text')->label('Teks Pertanyaan')->limit(100),
+                TextColumn::make('teks_pertanyaan')->label('Teks Pertanyaan')->limit(100),
             ])
             ->filters([
                 //

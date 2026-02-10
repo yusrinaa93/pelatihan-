@@ -11,14 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::table('schedules', function (Blueprint $table) {
-        // Tambahkan kolom baru terlebih dahulu
-        $table->dateTime('start_time')->after('category'); // Menyimpan Tanggal & Waktu Mulai
-        $table->dateTime('end_time')->after('start_time');   // Menyimpan Tanggal & Waktu Selesai
+        Schema::table('jadwal', function (Blueprint $table) {
+            // Pada skema terbaru, kolom sudah menggunakan dateTime.
+            // Migration ini dipertahankan agar instalasi lama tetap bisa naik versi tanpa error.
+            if (! Schema::hasColumn('jadwal', 'waktu_mulai')) {
+                $table->dateTime('waktu_mulai')->after('kategori');
+            }
+            if (! Schema::hasColumn('jadwal', 'waktu_selesai')) {
+                $table->dateTime('waktu_selesai')->after('waktu_mulai');
+            }
 
-        // Hapus kolom lama setelah yang baru ditambahkan
-        $table->dropColumn(['date', 'time']);
-    });
+            // Jika masih ada kolom legacy, drop.
+            if (Schema::hasColumn('jadwal', 'date')) {
+                $table->dropColumn('date');
+            }
+            if (Schema::hasColumn('jadwal', 'time')) {
+                $table->dropColumn('time');
+            }
+        });
     }
 
     /**
@@ -26,10 +36,21 @@ return new class extends Migration
      */
     public function down(): void
     {
-   Schema::table('schedules', function (Blueprint $table) {
-        $table->dropColumn(['start_time', 'end_time']);
-        $table->date('date');
-        $table->string('time');
+        Schema::table('jadwal', function (Blueprint $table) {
+            if (Schema::hasColumn('jadwal', 'waktu_mulai')) {
+                $table->dropColumn('waktu_mulai');
+            }
+            if (Schema::hasColumn('jadwal', 'waktu_selesai')) {
+                $table->dropColumn('waktu_selesai');
+            }
+
+            // Kembalikan kolom legacy (jika diperlukan untuk downgrade)
+            if (! Schema::hasColumn('jadwal', 'date')) {
+                $table->date('date');
+            }
+            if (! Schema::hasColumn('jadwal', 'time')) {
+                $table->string('time');
+            }
         });
     }
 };

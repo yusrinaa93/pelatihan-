@@ -2,22 +2,22 @@
 @php($activeNav = 'courses')
 @extends('layouts.dashboard')
 
-@section('title', 'Kerjakan Ujian - ' . $exam->title)
+@section('title', 'Kerjakan Ujian - ' . $exam->judul)
 
 @section('content')
     <div class="space-y-8">
         <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
                 <p class="text-xs font-semibold uppercase tracking-widest text-emerald-500">Kerjakan Ujian</p>
-                <h1 class="text-2xl font-bold text-slate-900">{{ $exam->title }}</h1>
-                <p class="mt-2 text-sm text-slate-500">{{ $exam->description ?? 'Jawab seluruh pertanyaan berikut dengan teliti.' }}</p>
+                <h1 class="text-2xl font-bold text-slate-900">{{ $exam->judul }}</h1>
+                <p class="mt-2 text-sm text-slate-500">{{ $exam->deskripsi ?? 'Jawab seluruh pertanyaan berikut dengan teliti.' }}</p>
 
-                @if($exam->deadline)
+                @if($exam->batas_waktu)
                     <div class="mt-4 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold
                         {{ $exam->is_deadline_passed ? 'bg-rose-100 text-rose-700' : 'bg-emerald-50 text-emerald-700' }}">
                         <i class="fas {{ $exam->is_deadline_passed ? 'fa-circle-xmark' : 'fa-clock' }}"></i>
                         <span>
-                            Deadline: {{ $exam->deadline->translatedFormat('l, d F Y') }} • {{ $exam->deadline->format('H:i') }} WIB
+                            Deadline: {{ $exam->batas_waktu->translatedFormat('l, d F Y') }}  {{ $exam->batas_waktu->format('H:i') }} WIB
                         </span>
                     </div>
                 @endif
@@ -46,7 +46,7 @@
                             <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-600">
                                 {{ $index + 1 }}
                             </span>
-                            <span>{{ $question->question_text }}</span>
+                            <span>{{ $question->teks_pertanyaan }}</span>
                         </legend>
                         <div class="mt-4 space-y-3">
                             @foreach($question->options as $option)
@@ -58,7 +58,7 @@
                                            value="{{ $option->id }}"
                                            required
                                            class="mt-1 h-4 w-4 border-slate-300 text-emerald-500 focus:ring-emerald-300">
-                                    <span>{{ $option->option_text }}</span>
+                                    <span>{{ $option->teks_opsi }}</span>
                                 </label>
                             @endforeach
                         </div>

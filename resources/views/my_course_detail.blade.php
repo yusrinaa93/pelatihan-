@@ -2,7 +2,7 @@
 @php($activeNav = 'courses')
 @extends('layouts.dashboard')
 
-@section('title', 'Materi Pelatihan - ' . $course->title)
+@section('title', 'Materi Pelatihan - ' . $course->judul)
 
 @section('content')
     <div class="space-y-8">
@@ -10,7 +10,7 @@
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <p class="text-xs font-semibold uppercase tracking-widest text-emerald-500">Materi Pelatihan</p>
-                <h1 class="text-2xl font-bold text-slate-900">{{ $course->title }}</h1>
+                <h1 class="text-2xl font-bold text-slate-900">{{ $course->judul }}</h1>
                 <p class="mt-2 text-sm text-slate-500">Akses jadwal, presensi, tugas dan ujian Anda.</p>
             </div>
             <div class="self-start sm:self-auto">
@@ -73,14 +73,14 @@
                                     @forelse($schedules as $schedule)
                                         <tr>
                                             <td class="whitespace-nowrap px-4 py-3 font-semibold text-slate-800">{{ $loop->iteration }}</td>
-                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->start_time?->translatedFormat('l, d F Y') }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->waktu_mulai?->translatedFormat('l, d F Y') }}</td>
                                             <td class="whitespace-nowrap px-4 py-3">
-                                                {{ $schedule->start_time?->format('H:i') }} - {{ $schedule->end_time?->format('H:i') }}
+                                                {{ $schedule->waktu_mulai?->format('H:i') }} - {{ $schedule->waktu_selesai?->format('H:i') }}
                                             </td>
-                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->category }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->kategori }}</td>
                                             <td class="whitespace-nowrap px-4 py-3">
-                                                @if($schedule->zoom_link)
-                                                    <a href="{{ $schedule->zoom_link }}" target="_blank"
+                                                @if($schedule->tautan_zoom)
+                                                    <a href="{{ $schedule->tautan_zoom }}" target="_blank"
                                                        class="inline-flex items-center gap-2 rounded-full bg-sky-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-sky-400">
                                                         <i class="fas fa-video"></i>
                                                         Join Zoom
@@ -122,10 +122,10 @@
                                     @forelse($schedules as $schedule)
                                         <tr>
                                             <td class="whitespace-nowrap px-4 py-3 font-semibold text-slate-800">{{ $loop->iteration }}</td>
-                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->start_time?->translatedFormat('l, d F Y') }}</td>
-                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->start_time?->format('H:i') }} - {{ $schedule->end_time?->format('H:i') }}</td>
-                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->category }}</td>
-                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->start_time?->format('H:i') }} - {{ $schedule->end_time?->format('H:i') }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->waktu_mulai?->translatedFormat('l, d F Y') }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->waktu_mulai?->format('H:i') }} - {{ $schedule->waktu_selesai?->format('H:i') }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->kategori }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3">{{ $schedule->waktu_mulai?->format('H:i') }} - {{ $schedule->waktu_selesai?->format('H:i') }}</td>
                                             <td class="whitespace-nowrap px-4 py-3">
                                                 @if($schedule->has_attended)
                                                     <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600">
@@ -218,27 +218,31 @@
                                                         <a href="{{ route('duty-submissions.download', $duty->submission) }}"
                                                            class="inline-flex items-center gap-2 rounded-full bg-sky-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-sky-400">
                                                             <i class="fas fa-cloud-arrow-down"></i>
-                                                            Download
+                                                            Unduh Jawaban
                                                         </a>
-                                                        <span class="truncate max-w-[150px] text-xs font-medium text-slate-500">
-                                                            {{ $duty->submission->original_filename }}
+
+                                                        <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600">
+                                                            <i class="fas fa-check-circle"></i>
+                                                            Sudah Upload
                                                         </span>
                                                     </div>
-                                                @else
-                                                    @if($duty->is_deadline_passed)
-                                                        <span class="inline-flex items-center gap-2 rounded-full bg-rose-100 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-rose-600">
-                                                            <i class="fas fa-clock"></i>
-                                                            Sudah Lewat
-                                                        </span>
-                                                    @else
+                                                @elseif($duty->can_submit)
+                                                    <form action="{{ route('duty.upload', $duty->id) }}" method="POST" enctype="multipart/form-data" class="space-y-2" data-duty-upload-form>
+                                                        @csrf
+
+                                                        <input type="file" name="file" required class="hidden" data-duty-file-input />
+
                                                         <button type="button"
                                                                 class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-emerald-400"
-                                                                data-upload-trigger
-                                                                data-duty-id="{{ $duty->id }}">
-                                                            <i class="fas fa-cloud-arrow-up"></i>
+                                                                data-duty-upload-trigger>
+                                                            <i class="fas fa-upload"></i>
                                                             Upload
                                                         </button>
-                                                    @endif
+                                                    </form>
+                                                @else
+                                                    <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                                        Deadline Lewat
+                                                    </span>
                                                 @endif
                                             </td>
                                         </tr>
@@ -260,15 +264,15 @@
                         @forelse($exams as $exam)
                             <div class="flex flex-col gap-4 rounded-2xl border border-slate-200 px-5 py-4 shadow-sm shadow-slate-200/50 sm:flex-row sm:items-center sm:justify-between">
                                 <div>
-                                    <h3 class="text-base font-semibold text-slate-800">{{ $exam->title }}</h3>
-                                    <p class="mt-1 text-sm text-slate-500">{{ $exam->description ?? 'Tidak ada deskripsi.' }}</p>
+                                    <h3 class="text-base font-semibold text-slate-800">{{ $exam->judul }}</h3>
+                                    <p class="mt-1 text-sm text-slate-500">{{ $exam->deskripsi ?? 'Tidak ada deskripsi.' }}</p>
 
-                                    @if($exam->deadline)
+                                    @if($exam->batas_waktu)
                                         <div class="mt-2 inline-flex flex-wrap items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold
                                             {{ $exam->is_deadline_passed ? 'bg-rose-100 text-rose-700' : 'bg-emerald-50 text-emerald-700' }}">
                                             <i class="fas fa-clock"></i>
                                             <span>
-                                                Deadline: {{ $exam->deadline->translatedFormat('d F Y') }} • {{ $exam->deadline->format('H:i') }} WIB
+                                                Deadline: {{ $exam->batas_waktu->translatedFormat('d F Y') }}  {{ $exam->batas_waktu->format('H:i') }} WIB
                                             </span>
                                         </div>
                                     @endif
@@ -470,6 +474,36 @@
             if (event.target === modal) {
                 closeModal();
             }
+        });
+
+        // Duty upload UX: click Upload => open file picker => auto submit
+        document.querySelectorAll('form[data-duty-upload-form]').forEach((form) => {
+            const input = form.querySelector('[data-duty-file-input]');
+            const trigger = form.querySelector('[data-duty-upload-trigger]');
+
+            if (!input || !trigger) return;
+
+            trigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                input.click();
+            });
+
+            input.addEventListener('change', () => {
+                const file = input.files && input.files[0] ? input.files[0] : null;
+                if (!file) return;
+
+                // Change button label to the selected filename
+                trigger.innerHTML = `
+                    <i class="fas fa-file"></i>
+                    ${file.name}
+                `;
+
+                // prevent double submission
+                trigger.disabled = true;
+                trigger.classList.add('opacity-70', 'cursor-not-allowed');
+
+                form.submit();
+            });
         });
     });
 </script>

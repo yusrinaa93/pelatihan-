@@ -10,6 +10,8 @@ class DutySubmission extends Model
 {
     use HasFactory;
 
+    protected $table = 'pengumpulan_tugas';
+
     /**
      * Atribut yang dapat diisi secara massal (mass assignable).
      *
@@ -18,9 +20,9 @@ class DutySubmission extends Model
     protected $fillable = [
         'user_id',
         'duty_id',
-        'file_path',
-        'original_filename',
-        'score',
+        'path_file',
+        'nama_file_asli',
+        'nilai',
     ];
 
     /**
@@ -49,8 +51,8 @@ class DutySubmission extends Model
      */
     public function getDownloadUrlAttribute()
     {
-        if ($this->file_path) {
-            return Storage::disk('public')->url($this->file_path);
+        if ($this->path_file) {
+            return Storage::disk('public')->url($this->path_file);
         }
 
         return null;

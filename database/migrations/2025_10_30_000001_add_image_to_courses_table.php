@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        if (Schema::hasTable('courses') && !Schema::hasColumn('courses', 'image_path')) {
-            Schema::table('courses', function (Blueprint $table) {
+        if (Schema::hasTable('pelatihan') && !Schema::hasColumn('pelatihan', 'image_path')) {
+            Schema::table('pelatihan', function (Blueprint $table) {
                 $table->string('image_path')->nullable()->after('title');
             });
         }
@@ -16,8 +16,8 @@ return new class extends Migration {
 
     public function down(): void
     {
-        if (Schema::hasTable('courses') && Schema::hasColumn('courses', 'image_path')) {
-            Schema::table('courses', function (Blueprint $table) {
+        if (Schema::hasTable('pelatihan') && Schema::hasColumn('pelatihan', 'image_path')) {
+            Schema::table('pelatihan', function (Blueprint $table) {
                 $table->dropColumn('image_path');
             });
         }

@@ -9,38 +9,67 @@ class Course extends Model
 {
     use HasFactory;
 
-    protected $table = 'courses';
+    // Ganti nama tabel: courses -> pelatihan
+    protected $table = 'pelatihan';
 
     protected $fillable = [
-        'title',
-        'image_path',
-        'description',
-        'short_description',
-        'start_date',
-        'end_date',
-        'is_certificate_active',
+        'judul',
+        'path_gambar',
+        'deskripsi',
+        'deskripsi_singkat',
+        'tanggal_mulai',
+        'tanggal_selesai',
+        'sertifikat_aktif',
     ];
 
     protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
-        'is_certificate_active' => 'boolean',
+        'tanggal_mulai' => 'date',
+        'tanggal_selesai' => 'date',
+        'sertifikat_aktif' => 'boolean',
     ];
 
     public function getRegistrationEndedAttribute(): bool
     {
-        // If end_date is missing, don't block registration.
-        if (! $this->end_date) {
+        if (! $this->tanggal_selesai) {
             return false;
         }
 
-        // Registration ends after end_date has passed.
-        return now()->startOfDay()->gt($this->end_date->startOfDay());
+        return now()->startOfDay()->gt($this->tanggal_selesai->startOfDay());
     }
+
+    // ===== Backward-compat accessors =====
+    public function getTitleAttribute() { return $this->judul; }
+    public function setTitleAttribute($value): void { $this->attributes['judul'] = $value; }
+
+    public function getDescriptionAttribute() { return $this->deskripsi; }
+    public function setDescriptionAttribute($value): void { $this->attributes['deskripsi'] = $value; }
+
+    public function getImagePathAttribute() { return $this->path_gambar; }
+    public function setImagePathAttribute($value): void { $this->attributes['path_gambar'] = $value; }
+
+    public function getStartDateAttribute() { return $this->tanggal_mulai; }
+    public function setStartDateAttribute($value): void { $this->attributes['tanggal_mulai'] = $value; }
+
+    public function getEndDateAttribute() { return $this->tanggal_selesai; }
+    public function setEndDateAttribute($value): void { $this->attributes['tanggal_selesai'] = $value; }
+
+    public function getIsCertificateActiveAttribute() { return $this->sertifikat_aktif; }
+    public function setIsCertificateActiveAttribute($value): void { $this->attributes['sertifikat_aktif'] = $value; }
 
     // Optional accessor to support older blades using 'judul'
     public function getJudulAttribute()
     {
-        return $this->title;
+        return $this->attributes['judul'] ?? null;
+    }
+
+    // Backward compatibility: support reads of $course->short_description
+    public function getShortDescriptionAttribute()
+    {
+        return $this->deskripsi_singkat;
+    }
+
+    public function setShortDescriptionAttribute($value): void
+    {
+        $this->attributes['deskripsi_singkat'] = $value;
     }
 }

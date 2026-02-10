@@ -15,7 +15,7 @@ class PresenceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'schedule_id' => 'required|exists:schedules,id',
+            'schedule_id' => 'required|exists:jadwal,id',
         ]);
 
         // 1. Ambil data jadwal berdasarkan ID

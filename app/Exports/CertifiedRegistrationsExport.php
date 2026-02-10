@@ -17,9 +17,9 @@ class CertifiedRegistrationsExport implements FromCollection, WithHeadings, With
     public function collection(): Collection
     {
         return Certificate::query()
-            ->with(['user', 'course'])
-            ->when($this->courseId, fn ($q) => $q->where('course_id', $this->courseId))
-            ->latest('certificates.created_at')
+            ->with(['user', 'pelatihan'])
+            ->when($this->courseId, fn ($q) => $q->where('pelatihan_id', $this->courseId))
+            ->latest('sertifikat.created_at')
             ->get();
     }
 

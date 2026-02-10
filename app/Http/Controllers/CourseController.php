@@ -20,7 +20,7 @@ class CourseController extends Controller
         // Cek apakah ada pengguna yang sedang login
         if (Auth::check()) {
             $registeredCourseIds = \App\Models\CourseRegistration::where('user_id', Auth::id())
-                ->pluck('course_id');
+                ->pluck('pelatihan_id');
         }
 
         // AMBIL SEMUA KURSUS DARI DATABASE

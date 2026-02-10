@@ -9,10 +9,11 @@ class Option extends Model
 {
     use HasFactory;
 
-    // Tambahkan 'option_text' ke dalam array ini
+    protected $table = 'opsi';
+
     protected $fillable = [
-        'question_id', 
-        'option_text', 
-        'is_correct'
+        'question_id',
+        'teks_opsi',
+        'benar',
     ];
 }

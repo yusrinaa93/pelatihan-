@@ -20,15 +20,15 @@
         <form id="registrationForm" action="{{ route('course.register.store') }}" method="POST" class="space-y-4 text-sm text-slate-600">
             @csrf
             <div class="space-y-2">
-                <label for="course_id" class="font-semibold text-slate-600">Pilih Pelatihan</label>
-                <select id="course_id"
-                        name="course_id"
+                <label for="pelatihan_id" class="font-semibold text-slate-600">Pilih Pelatihan</label>
+                <select id="pelatihan_id"
+                        name="pelatihan_id"
                         required
                         class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
                     <option value="" disabled {{ empty($selected_course_id) ? 'selected' : '' }}>Pilih pelatihan</option>
                     @foreach(($courses ?? []) as $course)
                         <option value="{{ $course->id }}" {{ (isset($selected_course_id) && $selected_course_id == $course->id) ? 'selected' : '' }}>
-                            {{ $course->title }}
+                            {{ $course->judul }}
                         </option>
                     @endforeach
                 </select>

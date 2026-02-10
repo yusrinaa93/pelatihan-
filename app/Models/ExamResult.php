@@ -9,6 +9,8 @@ class ExamResult extends Model
 {
     use HasFactory;
 
+    protected $table = 'hasil_ujian';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -17,7 +19,7 @@ class ExamResult extends Model
     protected $fillable = [
         'user_id',
         'exam_id',
-        'score',
+        'nilai',
     ];
 
     /**

@@ -3,7 +3,10 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PendaftarResource\Pages;
+use App\Models\Attendance;
 use App\Models\CourseRegistration;
+use App\Models\DutySubmission;
+use App\Models\ExamResult;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -23,9 +26,9 @@ class PendaftarResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('course_id')
+                Forms\Components\Select::make('pelatihan_id')
                     ->label('Pelatihan')
-                    ->relationship('course', 'title')
+                    ->relationship('pelatihan', 'judul')
                     ->disabled()
                     ->dehydrated(false),
 
@@ -35,21 +38,52 @@ class PendaftarResource extends Resource
                     ->disabled()
                     ->dehydrated(false),
 
-                Forms\Components\TextInput::make('nik')
+                Forms\Components\TextInput::make('user.nik')
                     ->label('NIK')
-                    ->disabled(),
+                    ->disabled()
+                    ->dehydrated(false),
 
-                Forms\Components\TextInput::make('no_hp')
+                Forms\Components\TextInput::make('user.nomor_wa')
                     ->label('No. HP / WhatsApp')
-                    ->disabled(),
+                    ->disabled()
+                    ->dehydrated(false),
 
-                Forms\Components\TextInput::make('tempat_lahir')
+                Forms\Components\TextInput::make('user.tempat_lahir')
                     ->label('Tempat Lahir')
-                    ->disabled(),
+                    ->disabled()
+                    ->dehydrated(false),
 
-                Forms\Components\DatePicker::make('tanggal_lahir')
+                Forms\Components\DatePicker::make('user.tanggal_lahir')
                     ->label('Tanggal Lahir')
-                    ->disabled(),
+                    ->disabled()
+                    ->dehydrated(false),
+
+                Forms\Components\Placeholder::make('kelulusan_realtime')
+                    ->label('Kelulusan (Realtime)')
+                    ->content(function ($record) {
+                        if (! $record) return '-';
+
+                        $examScore = ExamResult::where('user_id', $record->user_id)
+                            ->whereHas('exam', fn ($q) => $q->where('pelatihan_id', $record->pelatihan_id))
+                            ->avg('nilai') ?? 0;
+
+                        $dutyScore = DutySubmission::where('user_id', $record->user_id)
+                            ->whereNotNull('nilai')
+                            ->whereHas('duty', fn ($q) => $q->where('pelatihan_id', $record->pelatihan_id))
+                            ->avg('nilai') ?? 0;
+
+                        $attendanceCount = Attendance::where('user_id', $record->user_id)
+                            ->whereHas('schedule', fn ($q) => $q->where('pelatihan_id', $record->pelatihan_id))
+                            ->count();
+
+                        $lulus = ($examScore >= 50) && ($dutyScore >= 50) && ($attendanceCount >= 3);
+
+                        $examDisp = number_format((float) $examScore, 0);
+                        $dutyDisp = number_format((float) $dutyScore, 0);
+
+                        $detail = "Ujian: {$examDisp}, Tugas: {$dutyDisp}, Presensi: {$attendanceCount}";
+                        return ($lulus ? 'Lulus' : 'Tidak Lulus') . " ({$detail})";
+                    }),
             ]);
     }
 
@@ -57,7 +91,7 @@ class PendaftarResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('course.title')
+                Tables\Columns\TextColumn::make('pelatihan.judul')
                     ->label('Pelatihan')
                     ->searchable()
                     ->sortable(),
@@ -70,11 +104,11 @@ class PendaftarResource extends Resource
                     ->label('Email')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('nik')
+                Tables\Columns\TextColumn::make('user.nik')
                     ->label('NIK')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('no_hp')
+                Tables\Columns\TextColumn::make('user.nomor_wa')
                     ->label('No. HP')
                     ->searchable(),
 
@@ -82,6 +116,35 @@ class PendaftarResource extends Resource
                     ->label('Tanggal Daftar')
                     ->dateTime('d M Y H:i')
                     ->sortable(),
+
+                Tables\Columns\BadgeColumn::make('kelulusan_realtime')
+                    ->label('Kelulusan')
+                    ->getStateUsing(function (CourseRegistration $record) {
+                        $examScore = ExamResult::where('user_id', $record->user_id)
+                            ->whereHas('exam', fn ($q) => $q->where('pelatihan_id', $record->pelatihan_id))
+                            ->avg('nilai') ?? 0;
+
+                        $dutyScore = DutySubmission::where('user_id', $record->user_id)
+                            ->whereNotNull('nilai')
+                            ->whereHas('duty', fn ($q) => $q->where('pelatihan_id', $record->pelatihan_id))
+                            ->avg('nilai') ?? 0;
+
+                        $attendanceCount = Attendance::where('user_id', $record->user_id)
+                            ->whereHas('schedule', fn ($q) => $q->where('pelatihan_id', $record->pelatihan_id))
+                            ->count();
+
+                        return (($examScore >= 50) && ($dutyScore >= 50) && ($attendanceCount >= 3)) ? 1 : 0;
+                    })
+                    ->colors([
+                        'success' => 1,
+                        'danger' => 0,
+                    ])
+                    ->formatStateUsing(fn ($state) => $state === 1 ? 'Lulus' : 'Tidak Lulus'),
+
+                Tables\Columns\TextColumn::make('keterangan')
+                    ->label('Keterangan')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->wrap(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

@@ -7,7 +7,7 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Storage; // <-- WAJIB: Agar fitur download berfungsi
+use Illuminate\Support\Facades\Storage;
 
 class SubmissionsRelationManager extends RelationManager
 {
@@ -34,8 +34,8 @@ class SubmissionsRelationManager extends RelationManager
 
                 Tables\Columns\TextColumn::make('original_filename')
                     ->label('Nama File'),
-                    
-                Tables\Columns\TextColumn::make('score')
+
+                Tables\Columns\TextColumn::make('nilai')
                     ->label('Nilai')
                     ->sortable()
                     ->formatStateUsing(fn($state) => $state === null ? '-' : $state),
@@ -51,23 +51,18 @@ class SubmissionsRelationManager extends RelationManager
                 //
             ])
             ->actions([
-                // --- PERBAIKAN ACTION DOWNLOAD ---
                 Tables\Actions\Action::make('Download')
                     ->icon('heroicon-o-arrow-down-tray')
-                    // Menggunakan Storage Facade untuk menghasilkan URL yang valid
-                    ->url(fn ($record) => Storage::disk('public')->url($record->file_path))
-                    // Membuka di tab baru (opsional, karena 'download' attribute akan mengatasinya)
+                    ->url(fn ($record) => Storage::disk('public')->url($record->path_file))
                     ->openUrlInNewTab()
-                    // Menambahkan atribut HTML 'download' agar browser langsung menyimpan file
                     ->extraAttributes(fn ($record) => [
-                        'download' => $record->original_filename ?? 'downloaded-file'
-                    ]), 
-                // ---------------------------------
+                        'download' => $record->nama_file_asli ?? 'downloaded-file'
+                    ]),
 
                 Tables\Actions\Action::make('Grade')
                     ->icon('heroicon-o-pencil')
                     ->form([
-                        Forms\Components\TextInput::make('score')
+                        Forms\Components\TextInput::make('nilai')
                             ->label('Nilai (0-100)')
                             ->numeric()
                             ->minValue(0)
@@ -75,9 +70,9 @@ class SubmissionsRelationManager extends RelationManager
                             ->required(),
                     ])
                     ->action(function ($record, $data) {
-                        $record->update(['score' => (int) $data['score']]);
+                        $record->update(['nilai' => (int) $data['nilai']]);
                     })
-                    ->requiresConfirmation(false), // Mematikan konfirmasi agar lebih cepat
+                    ->requiresConfirmation(false),
 
                 Tables\Actions\DeleteAction::make(),
             ])

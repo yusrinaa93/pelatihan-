@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\DutyResource\Pages;
-use App\Filament\Resources\DutyResource\RelationManagers; // <-- PENTING
+use App\Filament\Resources\DutyResource\RelationManagers;
 use App\Models\Duty;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -23,21 +23,24 @@ class DutyResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('course_id')
+                Forms\Components\Select::make('pelatihan_id')
                     ->label('Pelatihan')
-                    ->relationship('course', 'title')
+                    ->relationship('pelatihan', 'judul')
                     ->required(),
-                Forms\Components\TextInput::make('name')
+
+                Forms\Components\TextInput::make('nama')
                     ->label('Nama Tugas')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\RichEditor::make('description')
+
+                Forms\Components\RichEditor::make('deskripsi')
                     ->label('Deskripsi / Instruksi Tambahan')
                     ->columnSpanFull(),
-                Forms\Components\FileUpload::make('attachment_path')
+
+                Forms\Components\FileUpload::make('path_lampiran')
                     ->label('File Tugas')
                     ->disk('public')
-                    ->directory('duties')
+                    ->directory('tugas')
                     ->preserveFilenames()
                     ->downloadable()
                     ->openable()
@@ -55,7 +58,8 @@ class DutyResource extends Resource
                     ])
                     ->helperText('Unggah modul atau berkas instruksi tugas (PDF/DOC/ZIP, maks 2MB).')
                     ->columnSpanFull(),
-                Forms\Components\DateTimePicker::make('deadline')
+
+                Forms\Components\DateTimePicker::make('batas_waktu')
                     ->label('Deadline')
                     ->required(),
             ]);
@@ -65,23 +69,22 @@ class DutyResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('course.title')->label('Pelatihan'),
-                Tables\Columns\TextColumn::make('name')->label('Nama Tugas'),
-                Tables\Columns\TextColumn::make('deadline')->label('Deadline')->dateTime('d M Y, H:i'),
+                Tables\Columns\TextColumn::make('pelatihan.judul')->label('Pelatihan'),
+                Tables\Columns\TextColumn::make('nama')->label('Nama Tugas'),
+                Tables\Columns\TextColumn::make('batas_waktu')->label('Deadline')->dateTime('d M Y, H:i'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ]);
     }
-    
-    // INI BAGIAN YANG ANDA TAMBAHKAN
+
     public static function getRelations(): array
     {
         return [
             RelationManagers\SubmissionsRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -89,5 +92,5 @@ class DutyResource extends Resource
             'create' => Pages\CreateDuty::route('/create'),
             'edit' => Pages\EditDuty::route('/{record}/edit'),
         ];
-    }    
+    }
 }

@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('courses', function (Blueprint $table) {
+        Schema::table('pelatihan', function (Blueprint $table) {
             // Menambahkan field untuk deskripsi singkat
-            $table->text('short_description')->nullable()->after('description');
+            if (!Schema::hasColumn('pelatihan', 'deskripsi_singkat')) {
+                $table->text('deskripsi_singkat')->nullable()->after('description');
+            }
         });
     }
 
@@ -22,8 +24,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('courses', function (Blueprint $table) {
-            $table->dropColumn('short_description');
+        Schema::table('pelatihan', function (Blueprint $table) {
+            if (Schema::hasColumn('pelatihan', 'deskripsi_singkat')) {
+                $table->dropColumn('deskripsi_singkat');
+            }
         });
     }
 };

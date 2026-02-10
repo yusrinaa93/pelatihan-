@@ -19,14 +19,14 @@
                 <article class="flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200/70 bg-white/95 shadow-lg shadow-slate-200/60 transition-shadow hover:shadow-xl">
                     
                     {{-- Gambar Cover --}}
-                    @php($cover = $course->image_path ? asset('storage/'.$course->image_path) : 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80')
-                    <img src="{{ $cover }}" alt="{{ $course->title }}" class="h-48 w-full object-cover">
+                    @php($cover = $course->path_gambar ? asset('storage/'.$course->path_gambar) : 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80')
+                    <img src="{{ $cover }}" alt="{{ $course->judul }}" class="h-48 w-full object-cover">
                     
                     <div class="flex flex-1 flex-col gap-5 p-6">
                         <div class="space-y-2">
                             <p class="text-xs font-semibold uppercase tracking-widest text-emerald-500">Pelatihan Pendamping Produk Halal</p>
-                            <h2 class="text-xl font-bold text-slate-900 line-clamp-2" title="{{ $course->title }}">
-                                {{ $course->title }}
+                            <h2 class="text-xl font-bold text-slate-900 line-clamp-2" title="{{ $course->judul }}">
+                                {{ $course->judul }}
                             </h2>
                         </div>
 

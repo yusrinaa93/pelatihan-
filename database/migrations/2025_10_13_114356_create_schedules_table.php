@@ -12,16 +12,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('schedules', function (Blueprint $table) {
+        // NOTE: Tabel aplikasi sudah di-Indonesia-kan.
+        Schema::create('jadwal', function (Blueprint $table) {
             $table->id();
-            $table->string('category'); // Contoh: 'Pelatihan PPH - Batch 1'
-            $table->date('date');       // Kolom untuk tanggal
-            $table->string('time');     // Contoh: '07.00 - 16.00'
-            $table->text('zoom_link')->nullable(); // Kolom untuk link Zoom, boleh kosong
-            $table->boolean('manual_presensi')->default(false); // Kolom untuk toggle manual presensi
-            $table->boolean('presensi_open')->default(false); // Kolom untuk menandai apakah presensi dibuka
-            $table->boolean('presensi_close')->default(false); // Kolom untuk menandai apakah presensi ditutup
-            $table->timestamps(); // Membuat kolom created_at dan updated_at
+
+            $table->string('kategori'); // Contoh: 'Pelatihan PPH - Batch 1'
+            $table->dateTime('waktu_mulai');
+            $table->dateTime('waktu_selesai');
+
+            $table->text('tautan_zoom')->nullable();
+
+            $table->boolean('manual_presensi')->default(false);
+            $table->boolean('presensi_open')->default(false);
+            $table->boolean('presensi_close')->default(false);
+
+            // Relasi ke pelatihan (nullable sesuai migration add_course_id sebelumnya)
+            $table->foreignId('pelatihan_id')->nullable()->constrained('pelatihan')->nullOnDelete();
+
+            $table->timestamps();
         });
     }
 
@@ -30,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('schedules');
+        Schema::dropIfExists('jadwal');
     }
 };

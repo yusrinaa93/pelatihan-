@@ -9,7 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 class Question extends Model
 {
     use HasFactory;
-    protected $fillable = ['exam_id', 'question_text'];
+
+    protected $table = 'pertanyaan';
+
+    protected $fillable = ['exam_id', 'teks_pertanyaan'];
 
     // Relasi ke tabel exams
     public function exam()

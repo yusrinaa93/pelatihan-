@@ -38,13 +38,13 @@ class AccountController extends Controller
 
         if ($request->hasFile('avatar')) {
             // Hapus foto lama jika ada
-            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-                Storage::disk('public')->delete($user->avatar);
+            if ($user->avatar_path && Storage::disk('public')->exists($user->avatar_path)) {
+                Storage::disk('public')->delete($user->avatar_path);
             }
 
             // Simpan foto baru
             $path = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar = $path;
+            $user->avatar_path = $path;
         }
 
         $user->name = $request->name;

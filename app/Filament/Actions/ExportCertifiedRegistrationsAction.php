@@ -17,17 +17,17 @@ class ExportCertifiedRegistrationsAction
             ->icon('heroicon-o-arrow-down-tray')
             ->color('success')
             ->form([
-                Select::make('course_id')
+                Select::make('pelatihan_id')
                     ->label('Filter Pelatihan (opsional)')
-                    ->options(fn () => Course::query()->orderBy('title')->pluck('title', 'id')->all())
+                    ->options(fn () => Course::query()->orderBy('judul')->pluck('judul', 'id')->all())
                     ->searchable()
                     ->preload()
                     ->nullable(),
             ])
             ->action(function (array $data) {
-                $courseId = $data['course_id'] ?? null;
+                $courseId = $data['pelatihan_id'] ?? null;
 
-                $filename = 'pendaftar-lulus-sertifikasi' . ($courseId ? ('-course-' . $courseId) : '') . '.xlsx';
+                $filename = 'pendaftar-lulus-sertifikasi' . ($courseId ? ('-pelatihan-' . $courseId) : '') . '.xlsx';
 
                 return Excel::download(new CertifiedRegistrationsExport($courseId), $filename);
             });

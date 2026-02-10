@@ -5,58 +5,50 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Question; // <-- PASTIKAN INI ADA
-use App\Models\ExamResult; // <-- GANTI DENGAN NAMA MODEL HASIL ANDA
+use App\Models\Question;
+use App\Models\ExamResult;
 
 class Exam extends Model
 {
     use HasFactory;
 
+    protected $table = 'ujian';
+
     protected $fillable = [
-        'title',
-        'description',
-        'course_id',
-        'deadline',
+        'judul',
+        'deskripsi',
+        'pelatihan_id',
+        'batas_waktu',
     ];
 
     protected $casts = [
-        'deadline' => 'datetime',
+        'batas_waktu' => 'datetime',
     ];
 
-    /**
-     * ==========================================================
-     * FUNGSI YANG HILANG (INI SOLUSINYA)
-     * ==========================================================
-     * Relasi untuk menghitung jumlah soal (dipakai oleh withCount).
-     */
     public function questions()
     {
         return $this->hasMany(Question::class);
     }
 
-    /**
-     * ==========================================================
-     * KODE DARI MASALAH SEBELUMNYA
-     * ==========================================================
-     * Relasi ke model hasil ujian Anda.
-     */
     public function results()
     {
-        // Ganti ExamResult::class dengan model hasil ujian Anda
-        return $this->hasMany(ExamResult::class); 
+        return $this->hasMany(ExamResult::class);
     }
 
+    public function pelatihan()
+    {
+        return $this->belongsTo(Course::class, 'pelatihan_id');
+    }
+
+    // Backward-compat alias
     public function course()
     {
-        return $this->belongsTo(Course::class);
+        return $this->pelatihan();
     }
 
-    /**
-     * Accessor untuk mengecek apakah ujian sudah selesai.
-     */
     public function getIsCompletedAttribute()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
         return $this->results()->where('user_id', Auth::id())->exists();
@@ -64,10 +56,10 @@ class Exam extends Model
 
     public function getIsDeadlinePassedAttribute(): bool
     {
-        if (! $this->deadline) {
+        if (! $this->batas_waktu) {
             return false;
         }
 
-        return now()->gt($this->deadline);
+        return now()->gt($this->batas_waktu);
     }
 }

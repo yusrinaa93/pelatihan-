@@ -13,7 +13,7 @@ return new class extends Migration
 
 public function up(): void
 {
-    Schema::create('courses', function (Blueprint $table) {
+    Schema::create('pelatihan', function (Blueprint $table) {
         $table->id(); // Membuat kolom ID otomatis
         $table->string('title'); // Kolom untuk judul pelatihan
         $table->text('description'); // Kolom untuk deskripsi
@@ -28,6 +28,6 @@ public function up(): void
      */
     public function down(): void
     {
-        Schema::dropIfExists('courses');
+        Schema::dropIfExists('pelatihan');
     }
 };

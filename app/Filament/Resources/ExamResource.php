@@ -3,18 +3,15 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ExamResource\Pages;
-// TAMBAHKAN INI: Impor Relation Manager kita
-use App\Filament\Resources\ExamResource\RelationManagers; 
+use App\Filament\Resources\ExamResource\RelationManagers;
 use App\Models\Exam;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-// Impor komponen form yang akan kita pakai
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
-// Impor komponen tabel yang akan kita pakai
 use Filament\Tables\Columns\TextColumn;
 
 class ExamResource extends Resource
@@ -29,19 +26,22 @@ class ExamResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('course_id')
+                Forms\Components\Select::make('pelatihan_id')
                     ->label('Pelatihan')
-                    ->relationship('course', 'title')
+                    ->relationship('pelatihan', 'judul')
                     ->required(),
-                TextInput::make('title') 
+
+                TextInput::make('judul')
                     ->label('Judul Ujian')
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
-                Textarea::make('description')
+
+                Textarea::make('deskripsi')
                     ->label('Deskripsi Ujian')
                     ->columnSpanFull(),
-                Forms\Components\DateTimePicker::make('deadline')
+
+                Forms\Components\DateTimePicker::make('batas_waktu')
                     ->label('Deadline Ujian')
                     ->timezone('Asia/Jakarta')
                     ->seconds(false)
@@ -55,12 +55,9 @@ class ExamResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('course.title')->label('Pelatihan'),
-                TextColumn::make('title')->label('Judul Ujian')->searchable(),
-                TextColumn::make('description')->label('Deskripsi')->limit(50),
-            ])
-            ->filters([
-                //
+                TextColumn::make('pelatihan.judul')->label('Pelatihan'),
+                TextColumn::make('judul')->label('Judul Ujian')->searchable(),
+                TextColumn::make('deskripsi')->label('Deskripsi')->limit(50),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -72,11 +69,9 @@ class ExamResource extends Resource
             ]);
     }
 
-    // INI BAGIAN PENTING YANG BARU
     public static function getRelations(): array
     {
         return [
-            // Daftarkan Relation Manager untuk Soal
             RelationManagers\QuestionsRelationManager::class,
         ];
     }

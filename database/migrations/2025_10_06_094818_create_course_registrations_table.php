@@ -13,10 +13,10 @@ return new class extends Migration
 
 public function up(): void
 {
-    Schema::create('course_registrations', function (Blueprint $table) {
+    Schema::create('pendaftaran_pelatihan', function (Blueprint $table) {
         $table->id();
         $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Menghubungkan ke tabel users
-        $table->foreignId('course_id')->constrained()->onDelete('cascade'); // Menghubungkan ke tabel courses
+        $table->foreignId('course_id')->constrained('pelatihan')->onDelete('cascade'); // Menghubungkan ke tabel pelatihan
         $table->string('nik');
         $table->string('no_hp');
         $table->string('tempat_lahir');
@@ -30,6 +30,6 @@ public function up(): void
      */
     public function down(): void
     {
-        Schema::dropIfExists('course_registrations');
+        Schema::dropIfExists('pendaftaran_pelatihan');
     }
 };

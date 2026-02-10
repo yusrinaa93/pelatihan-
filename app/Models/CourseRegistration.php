@@ -9,24 +9,31 @@ class CourseRegistration extends Model
 {
     use HasFactory;
 
-    protected $table = 'course_registrations';
+    // Ganti nama tabel: course_registrations -> pendaftaran_pelatihan
+    protected $table = 'pendaftaran_pelatihan';
 
     protected $fillable = [
         'user_id',
-        'course_id',
-        'nik',
-        'no_hp',
-        'tempat_lahir',
-        'tanggal_lahir',
+        'pelatihan_id',
+        'lulus',
+        'catatan',
     ];
+
+    // Remove legacy sync: we now store only `pelatihan_id`
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    public function pelatihan()
+    {
+        return $this->belongsTo(Course::class, 'pelatihan_id');
+    }
+
+    // Backward-compat alias
     public function course()
     {
-        return $this->belongsTo(Course::class);
+        return $this->pelatihan();
     }
 }

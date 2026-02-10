@@ -9,44 +9,77 @@ class Schedule extends Model
 {
     use HasFactory;
 
+    protected $table = 'jadwal';
+
     /**
      * Atribut yang dapat diisi secara massal.
      */
     protected $fillable = [
-        'course_id',
-        'category',
-        'start_time',
-        'end_time',
-        'zoom_link',
-        'manual_presensi',
-        'presensi_open',
-        'presensi_close',
+        'pelatihan_id',
+        'kategori',
+        'waktu_mulai',
+        'waktu_selesai',
+        'tautan_zoom',
+        // actual column names (Indonesian)
+        'presensi_manual',
+        'presensi_buka',
+        'presensi_tutup',
     ];
 
     /**
      * Casts untuk mengubah tipe data secara otomatis.
      */
     protected $casts = [
-        'start_time' => 'datetime',
-        'end_time' => 'datetime',
-        'manual_presensi' => 'boolean',
-        'presensi_open' => 'boolean',
-        'presensi_close' => 'boolean',
+        'waktu_mulai' => 'datetime',
+        'waktu_selesai' => 'datetime',
+        'presensi_manual' => 'boolean',
+        'presensi_buka' => 'boolean',
+        'presensi_tutup' => 'boolean',
     ];
+
+    // Backward-compat: map legacy attribute names used by older forms/code
+    public function setManualPresensiAttribute($value): void
+    {
+        $this->attributes['presensi_manual'] = $value;
+    }
+
+    public function getManualPresensiAttribute()
+    {
+        return $this->attributes['presensi_manual'] ?? null;
+    }
+
+    public function setPresensiOpenAttribute($value): void
+    {
+        $this->attributes['presensi_buka'] = $value;
+    }
+
+    public function getPresensiOpenAttribute()
+    {
+        return $this->attributes['presensi_buka'] ?? null;
+    }
+
+    public function setPresensiCloseAttribute($value): void
+    {
+        $this->attributes['presensi_tutup'] = $value;
+    }
+
+    public function getPresensiCloseAttribute()
+    {
+        return $this->attributes['presensi_tutup'] ?? null;
+    }
 
     /**
      * Accessor: Cek apakah Presensi SEDANG BUKA saat ini.
-     * Mengembalikan true hanya jika waktu sekarang (now) berada di antara start_time dan end_time.
      */
     public function getIsPresenceActiveAttribute()
     {
         // Admin override (manual presensi)
-        if ($this->manual_presensi) {
+        if ($this->presensi_manual) {
             // If both toggles are set, "close" wins for safety.
-            if ($this->presensi_close) {
+            if ($this->presensi_tutup) {
                 return false;
             }
-            if ($this->presensi_open) {
+            if ($this->presensi_buka) {
                 return true;
             }
             // Manual enabled but no explicit open => treat as closed.
@@ -56,12 +89,12 @@ class Schedule extends Model
         $now = now(); // Waktu server saat ini
 
         // Jika start_time atau end_time null, anggap tidak aktif
-        if (!$this->start_time || !$this->end_time) {
+        if (! $this->waktu_mulai || ! $this->waktu_selesai) {
             return false;
         }
 
         // Cek range waktu (inklusif)
-        return $now->between($this->start_time, $this->end_time);
+        return $now->between($this->waktu_mulai, $this->waktu_selesai);
     }
 
     /**
@@ -81,5 +114,8 @@ class Schedule extends Model
     }
 
     public function attendances() { return $this->hasMany(Attendance::class); }
-    public function course() { return $this->belongsTo(Course::class); }
+    public function pelatihan() { return $this->belongsTo(Course::class, 'pelatihan_id'); }
+
+    // Backward-compat alias (kalau masih ada kode lama yang memanggil $schedule->course)
+    public function course() { return $this->pelatihan(); }
 }

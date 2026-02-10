@@ -37,16 +37,21 @@ class CourseRegistrationController extends Controller
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
             'email' => 'required|email',
-            'course_id' => 'required|exists:courses,id',
+            'pelatihan_id' => 'required|exists:pelatihan,id',
         ]);
 
         try {
-            // 2. Jika user sudah login, tambahkan ke course_registrations
+            // 2. Jika user sudah login, tambahkan ke pendaftaran_pelatihan
             if (Auth::check()) {
-                \App\Models\CourseRegistration::firstOrCreate([
-                    'user_id' => Auth::id(),
-                    'course_id' => $validatedData['course_id'],
-                ]);
+                $user = Auth::user();
+
+                \App\Models\CourseRegistration::updateOrCreate(
+                    [
+                        'user_id' => $user->id,
+                        'pelatihan_id' => $validatedData['pelatihan_id'],
+                    ],
+                    []
+                );
             }
 
             // 3. Kirim balasan sukses dalam format JSON
@@ -55,7 +60,7 @@ class CourseRegistrationController extends Controller
         } catch (\Exception $e) {
             // 4. Jika gagal, kirim balasan error dalam format JSON
             return response()->json([
-                'status' => 'error', 
+                'status' => 'error',
                 'message' => 'Gagal menyimpan data: ' . $e->getMessage()
             ], 500);
         }

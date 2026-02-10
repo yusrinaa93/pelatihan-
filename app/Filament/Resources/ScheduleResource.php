@@ -9,7 +9,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use App\Models\Course;
 
 // SEMUA 'use' statement HARUS DI SINI, di luar class
 class ScheduleResource extends Resource
@@ -24,23 +23,24 @@ class ScheduleResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('course_id')
+                Forms\Components\Select::make('pelatihan_id')
                     ->label('Pelatihan')
-                    ->relationship('course', 'title')
+                    ->relationship('pelatihan', 'judul')
                     ->required(),
-                Forms\Components\TextInput::make('category')
+
+                Forms\Components\TextInput::make('kategori')
                     ->label('Nama/Kategori Jadwal')
                     ->required()
                     ->maxLength(255),
-                
-                Forms\Components\DateTimePicker::make('start_time')
+
+                Forms\Components\DateTimePicker::make('waktu_mulai')
                     ->label('Waktu Mulai')
                     ->timezone('Asia/Jakarta')
                     ->seconds(false)
                     ->displayFormat('d/m/Y H:i')
                     ->required(),
 
-                Forms\Components\DateTimePicker::make('end_time')
+                Forms\Components\DateTimePicker::make('waktu_selesai')
                     ->label('Waktu Selesai')
                     ->timezone('Asia/Jakarta')
                     ->seconds(false)
@@ -75,8 +75,8 @@ class ScheduleResource extends Resource
                         }
                     }),
 
-                Forms\Components\TextInput::make('zoom_link')
-                    ->label('Link Zoom Meeting')
+                Forms\Components\TextInput::make('tautan_zoom')
+                    ->label('Tautan Zoom Meeting')
                     ->url()
                     ->columnSpanFull(),
             ]);
@@ -86,16 +86,16 @@ class ScheduleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('category')
+                Tables\Columns\TextColumn::make('kategori')
                     ->label('Nama Jadwal')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('start_time')
+                Tables\Columns\TextColumn::make('waktu_mulai')
                     ->label('Waktu Mulai')
                     ->dateTime('d M Y, H:i')
                     ->sortable(),
-                
-                Tables\Columns\TextColumn::make('end_time')
+
+                Tables\Columns\TextColumn::make('waktu_selesai')
                     ->label('Waktu Selesai')
                     ->dateTime('d M Y, H:i')
                     ->sortable(),
@@ -113,14 +113,14 @@ class ScheduleResource extends Resource
                 ]),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [

@@ -12,7 +12,7 @@ use App\Models\DutySubmission;
 use App\Models\Attendance;
 use App\Models\User;
 use App\Models\Pendaftar;
-use App\Models\CourseRegistration; // [PENTING] Tambahkan model ini
+use App\Models\CourseRegistration;
 use Carbon\Carbon;
 
 class CertificateController extends Controller
@@ -27,13 +27,13 @@ class CertificateController extends Controller
 
         if ($user) {
             // PERBAIKAN: Ambil kursus hanya dari tabel CourseRegistration milik user
-            $registrations = CourseRegistration::with('course')
+            $registrations = CourseRegistration::with('pelatihan')
                 ->where('user_id', $user->id)
                 ->get();
 
             // Ekstrak data 'course' dari setiap pendaftaran
             $registered_courses = $registrations->map(function ($registration) {
-                return $registration->course;
+                return $registration->pelatihan;
             });
         }
 
@@ -57,16 +57,16 @@ class CertificateController extends Controller
 
         // Hitung kelayakan untuk course ini
         $examScore = ExamResult::where('user_id', $user->id)
-            ->whereHas('exam', function ($q) use ($course) { $q->where('course_id', $course->id); })
-            ->avg('score') ?? 0;
+            ->whereHas('exam', fn ($q) => $q->where('pelatihan_id', $course->id))
+            ->avg('nilai') ?? 0;
 
         $dutyScore = DutySubmission::where('user_id', $user->id)
-            ->whereNotNull('score')
-            ->whereHas('duty', function ($q) use ($course) { $q->where('course_id', $course->id); })
-            ->avg('score') ?? 0;
+            ->whereNotNull('nilai')
+            ->whereHas('duty', fn ($q) => $q->where('pelatihan_id', $course->id))
+            ->avg('nilai') ?? 0;
 
         $attendanceCount = Attendance::where('user_id', $user->id)
-            ->whereHas('schedule', function ($q) use ($course) { $q->where('course_id', $course->id); })
+            ->whereHas('schedule', fn ($q) => $q->where('pelatihan_id', $course->id))
             ->count();
 
         // Kriteria lulus: exam >= 50, duty >= 50, presensi >= 3
@@ -90,7 +90,7 @@ class CertificateController extends Controller
 
         // Jika memenuhi syarat, tampilkan form
         $existingCertificate = Certificate::where('user_id', $user->id)
-            ->where('course_id', $course->id)
+            ->where('pelatihan_id', $course->id)
             ->first();
 
         return view('certificate.form', [
@@ -110,16 +110,16 @@ class CertificateController extends Controller
 
         // --- 1. Recheck eligibility (Keamanan Server-side) ---
         $examScore = ExamResult::where('user_id', $user->id)
-            ->whereHas('exam', function ($q) use ($course) { $q->where('course_id', $course->id); })
-            ->avg('score') ?? 0;
+            ->whereHas('exam', fn ($q) => $q->where('pelatihan_id', $course->id))
+            ->avg('nilai') ?? 0;
 
         $dutyScore = DutySubmission::where('user_id', $user->id)
-            ->whereNotNull('score')
-            ->whereHas('duty', function ($q) use ($course) { $q->where('course_id', $course->id); })
-            ->avg('score') ?? 0;
+            ->whereNotNull('nilai')
+            ->whereHas('duty', fn ($q) => $q->where('pelatihan_id', $course->id))
+            ->avg('nilai') ?? 0;
 
         $attendanceCount = Attendance::where('user_id', $user->id)
-            ->whereHas('schedule', function ($q) use ($course) { $q->where('course_id', $course->id); })
+            ->whereHas('schedule', fn ($q) => $q->where('pelatihan_id', $course->id))
             ->count();
 
         if ($examScore < 50 || $dutyScore < 50 || $attendanceCount < 3) {
@@ -129,16 +129,24 @@ class CertificateController extends Controller
 
         // --- 2. VALIDASI DATA (KEY DISESUAIKAN DENGAN FORM) ---
         $validatedData = $request->validate([
-            'nama'          => 'required|string|max:255', // Sesuai name="nama" di form
+            'nama'          => 'required|string|max:255',
             'tempat_lahir'  => 'required|string|max:100',
             'tanggal_lahir' => 'required|date',
-            'nomor_wa'      => 'required|string|max:25',  // Sesuai name="nomor_wa" di form
+            'nomor_wa'      => 'required|string|max:25',
             'bank_name' => 'required|string|max:100',
             'bank_account_name' => 'required|string|max:150',
             'bank_account_number' => 'required|string|max:50',
         ]);
 
-        // Simpan data bank ke profil user (wajib untuk yang lulus)
+        // Simpan data identitas ke profil user (karena sertifikat akan ambil dari users)
+        $user->forceFill([
+            'name' => $validatedData['nama'],
+            'tempat_lahir' => $validatedData['tempat_lahir'],
+            'tanggal_lahir' => $validatedData['tanggal_lahir'],
+            'nomor_wa' => $validatedData['nomor_wa'],
+        ])->save();
+
+        // Simpan data bank (sumber data utama: rekening_bank)
         $user->forceFill([
             'bank_name' => $validatedData['bank_name'],
             'bank_account_name' => $validatedData['bank_account_name'],
@@ -146,29 +154,28 @@ class CertificateController extends Controller
         ])->save();
 
         // --- 3. Buat Nomor Sertifikat ---
-        $serial_number = $this->generateSerialNumber($course, $user); 
+        $serial_number = $this->generateSerialNumber($course, $user);
 
         // --- 4. SIMPAN DATA KE DATABASE ---
         $certificate = Certificate::updateOrCreate(
             [
                 'user_id' => $user->id,
-                'course_id' => $course->id,
+                'pelatihan_id' => $course->id,
             ],
             [
-                'title' => $course->title,
-                'serial_number' => $serial_number,
-                'name_on_certificate' => $validatedData['nama'], 
-                'ttl_on_certificate'  => $validatedData['tempat_lahir'] . ', ' . Carbon::parse($validatedData['tanggal_lahir'])->format('d-m-Y'),
-                'phone_on_certificate'=> $validatedData['nomor_wa'],
+                'judul' => $course->judul,
+                'nomor_sertifikat' => $serial_number,
             ]
         );
 
         // --- 5. Siapkan Data untuk PDF ---
+        $ttl = trim(($user->tempat_lahir ?? '') . ', ' . Carbon::parse($user->tanggal_lahir)->format('d-m-Y'));
+
         $data = [
-            'nama' => $certificate->name_on_certificate,
-            'tempat_tanggal_lahir' => $certificate->ttl_on_certificate,
-            'no_hp' => $certificate->phone_on_certificate,
-            'serial_number' => $certificate->serial_number
+            'nama' => $user->name,
+            'tempat_tanggal_lahir' => $ttl,
+            'no_hp' => $user->nomor_wa,
+            'serial_number' => $certificate->nomor_sertifikat,
         ];
 
         // --- 6. Generate PDF ---
@@ -184,11 +191,11 @@ class CertificateController extends Controller
     private function generateSerialNumber(Course $course, User $user)
     {
         $existing = Certificate::where('user_id', $user->id)
-                               ->where('course_id', $course->id)
-                               ->first();
+            ->where('pelatihan_id', $course->id)
+            ->first();
         
-        if ($existing && $existing->serial_number) {
-            return $existing->serial_number;
+        if ($existing && $existing->nomor_sertifikat) {
+            return $existing->nomor_sertifikat;
         }
 
         $prefix = "D-13/PPH/IX/2023";

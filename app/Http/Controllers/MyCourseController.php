@@ -30,27 +30,27 @@ class MyCourseController extends Controller
         // === LOGIKA HITUNG PROGRESS BAR ===
         foreach ($courses as $course) {
             // 1. Hitung TOTAL Materi (Jadwal + Tugas + Ujian)
-            $totalSchedules = Schedule::where('course_id', $course->id)->count();
-            $totalDuties    = Duty::where('course_id', $course->id)->count();
-            $totalExams     = Exam::where('course_id', $course->id)->count();
-            
+            $totalSchedules = Schedule::where('pelatihan_id', $course->id)->count();
+            $totalDuties    = Duty::where('pelatihan_id', $course->id)->count();
+            $totalExams     = Exam::where('pelatihan_id', $course->id)->count();
+
             $totalItems = $totalSchedules + $totalDuties + $totalExams;
 
             // 2. Hitung Materi yang SUDAH SELESAI (Presensi + Kumpul Tugas + Ujian Selesai)
-            
+
             // a. Presensi (Attendance)
             $attendedCount = Attendance::where('user_id', $userId)
-                ->whereHas('schedule', fn($q) => $q->where('course_id', $course->id))
+                ->whereHas('schedule', fn($q) => $q->where('pelatihan_id', $course->id))
                 ->count();
 
             // b. Tugas (Submission)
             $submittedDutyCount = DutySubmission::where('user_id', $userId)
-                ->whereHas('duty', fn($q) => $q->where('course_id', $course->id))
+                ->whereHas('duty', fn($q) => $q->where('pelatihan_id', $course->id))
                 ->count();
 
             // c. Ujian (ExamResult)
             $completedExamCount = ExamResult::where('user_id', $userId)
-                ->whereHas('exam', fn($q) => $q->where('course_id', $course->id))
+                ->whereHas('exam', fn($q) => $q->where('pelatihan_id', $course->id))
                 ->count();
 
             $completedItems = $attendedCount + $submittedDutyCount + $completedExamCount;
@@ -60,7 +60,7 @@ class MyCourseController extends Controller
                 // Batasi maksimal 100% agar tidak lebih (jika ada data aneh)
                 $percentage = min(100, round(($completedItems / $totalItems) * 100));
             } else {
-                $percentage = 0; 
+                $percentage = 0;
             }
 
             // 4. Simpan data ke object course (agar bisa dibaca di View)
@@ -79,7 +79,7 @@ class MyCourseController extends Controller
         // Filter per course
         $schedules = Schedule::with(['attendances' => function ($query) use ($userId) {
             $query->where('user_id', $userId);
-        }])->where('course_id', $course->id)->get();
+        }])->where('pelatihan_id', $course->id)->get();
 
         foreach ($schedules as $schedule) {
             $schedule->has_attended = $schedule->attendances->isNotEmpty();
@@ -96,10 +96,10 @@ class MyCourseController extends Controller
                 } else {
                     $schedule->presence_status = 'closed';
                 }
-            } elseif ($schedule->start_time && $schedule->end_time) {
-                if (now()->lt($schedule->start_time)) {
+            } elseif ($schedule->waktu_mulai && $schedule->waktu_selesai) {
+                if (now()->lt($schedule->waktu_mulai)) {
                     $schedule->presence_status = 'not_started';
-                } elseif (now()->between($schedule->start_time, $schedule->end_time)) {
+                } elseif (now()->between($schedule->waktu_mulai, $schedule->waktu_selesai)) {
                     $schedule->presence_status = 'active';
                 } else {
                     $schedule->presence_status = 'closed';
@@ -108,7 +108,7 @@ class MyCourseController extends Controller
         }
 
         // Duties + submission status for this user
-        $duties = Duty::where('course_id', $course->id)->latest()->get();
+        $duties = Duty::where('pelatihan_id', $course->id)->latest()->get();
         foreach ($duties as $duty) {
             $duty->submission = DutySubmission::where('user_id', $userId)
                 ->where('duty_id', $duty->id)
@@ -118,7 +118,7 @@ class MyCourseController extends Controller
         }
 
         // Exams list with question counts
-        $exams = Exam::where('course_id', $course->id)->withCount('questions')->get();
+        $exams = Exam::where('pelatihan_id', $course->id)->withCount('questions')->get();
 
         return view('my_course_detail', [
             'course' => $course,

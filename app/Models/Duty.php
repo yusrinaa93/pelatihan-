@@ -9,6 +9,8 @@ class Duty extends Model
 {
     use HasFactory;
 
+    protected $table = 'tugas';
+
     /**
      * Atribut yang dapat diisi secara massal (mass assignable).
      * Kolom-kolom ini diizinkan untuk diisi melalui form.
@@ -16,21 +18,21 @@ class Duty extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'course_id',
-        'name',
-        'description',
-        'attachment_path',
-        'deadline',
+        'pelatihan_id',
+        'nama',
+        'deskripsi',
+        'path_lampiran',
+        'batas_waktu',
     ];
 
     /**
      * Mengatur tipe data atribut secara otomatis.
-     * Ini akan mengubah 'deadline' menjadi objek Carbon yang lebih mudah dikelola.
+     * Ini akan mengubah 'batas_waktu' menjadi objek Carbon yang lebih mudah dikelola.
      *
      * @var array<string, string>
      */
     protected $casts = [
-        'deadline' => 'datetime',
+        'batas_waktu' => 'datetime',
     ];
 
     /**
@@ -42,9 +44,35 @@ class Duty extends Model
         return $this->hasMany(DutySubmission::class);
     }
 
+    public function pelatihan()
+    {
+        return $this->belongsTo(Course::class, 'pelatihan_id');
+    }
+
+    // Backward-compat aliases
     public function course()
     {
-        return $this->belongsTo(Course::class);
+        return $this->pelatihan();
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->nama;
+    }
+
+    public function getDescriptionAttribute()
+    {
+        return $this->deskripsi;
+    }
+
+    public function getAttachmentPathAttribute()
+    {
+        return $this->path_lampiran;
+    }
+
+    public function getDeadlineAttribute()
+    {
+        return $this->batas_waktu;
     }
 
     /**
@@ -52,7 +80,7 @@ class Duty extends Model
      */
     public function isDeadlinePassed()
     {
-        return now()->isAfter($this->deadline);
+        return now()->isAfter($this->batas_waktu);
     }
 
     /**

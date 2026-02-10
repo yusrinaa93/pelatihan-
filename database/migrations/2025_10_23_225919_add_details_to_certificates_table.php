@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('course_id')
                   ->nullable()
                   ->after('user_id') // Letakkan setelah user_id
-                  ->constrained('courses') // Hubungkan ke tabel 'courses'
+                  ->constrained('pelatihan') // Hubungkan ke tabel 'pelatihan'
                   ->onDelete('set null');
 
             // Tambahkan 3 kolom yang hilang

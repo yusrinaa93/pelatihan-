@@ -2,7 +2,7 @@
 @php($activeNav = 'courses')
 @extends('layouts.dashboard')
 
-@section('title', 'Konfirmasi Data - ' . $course->title)
+@section('title', 'Konfirmasi Data - ' . $course->judul)
 
 @section('content')
     {{-- 

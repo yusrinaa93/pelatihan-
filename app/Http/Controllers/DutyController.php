@@ -47,9 +47,9 @@ class DutyController extends Controller
         $filename = time() . '_' . Str::random(6) . '_' . preg_replace('/[^A-Za-z0-9._-]/', '_', $originalName);
         $path = $file->storeAs("duties/{$duty->id}", $filename, 'public');
 
-        $submission = \App\Models\DutySubmission::updateOrCreate(
+        DutySubmission::updateOrCreate(
             ['user_id' => $userId, 'duty_id' => $duty->id],
-            ['file_path' => $path, 'original_filename' => $originalName]
+            ['path_file' => $path, 'nama_file_asli' => $originalName]
         );
 
         // --- BAGIAN INI YANG DIUBAH ---

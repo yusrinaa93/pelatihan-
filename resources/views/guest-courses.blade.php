@@ -19,12 +19,12 @@
         {{-- Course Grid --}}
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 @forelse ($courses as $course)
-                    @php($cover = $course->image_path ? asset('storage/'.$course->image_path) : 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80')
+                    @php($cover = $course->path_gambar ? asset('storage/'.$course->path_gambar) : 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80')
                     <article class="flex flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-md hover:shadow-xl transition-all duration-300 h-full group">
                         {{-- Image Container --}}
                         <div class="relative h-48 overflow-hidden bg-gradient-to-br from-emerald-50 to-emerald-100">
                             <img src="{{ $cover }}" 
-                                 alt="Gambar {{ $course->title }}" 
+                                 alt="Gambar {{ $course->judul }}" 
                                  class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110">
                         </div>
 
@@ -36,17 +36,17 @@
                             </div>
 
                             {{-- Title --}}
-                            <h3 class="text-lg font-bold text-slate-900 line-clamp-2">{{ $course->title }}</h3>
+                            <h3 class="text-lg font-bold text-slate-900 line-clamp-2">{{ $course->judul }}</h3>
 
                             {{-- Registration deadline info --}}
                             <div class="text-xs">
-                                @if($course->end_date)
+                                @if($course->batas_daftar)
                                     <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 font-semibold
                                         {{ $course->registration_ended ? 'bg-rose-100 text-rose-700' : 'bg-emerald-50 text-emerald-700' }}">
                                         <i class="fas {{ $course->registration_ended ? 'fa-circle-xmark' : 'fa-calendar-check' }}"></i>
                                         {{ $course->registration_ended
                                             ? 'Pendaftaran berakhir'
-                                            : 'Batas daftar: ' . $course->end_date->translatedFormat('d F Y') }}
+                                            : 'Batas daftar: ' . $course->batas_daftar->translatedFormat('d F Y') }}
                                     </span>
                                 @else
                                     <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-600">
@@ -58,21 +58,21 @@
 
                             {{-- Description --}}
                             <p class="text-sm text-slate-600 line-clamp-3 flex-1">
-                                {{ $course->short_description ? strip_tags($course->short_description) : strip_tags($course->description) }}
+                                {{ $course->deskripsi_singkat ? strip_tags($course->deskripsi_singkat) : strip_tags($course->deskripsi) }}
                             </p>
 
                             {{-- Button Section --}}
                             <div class="flex gap-2 pt-4 mt-auto">
                                 <button type="button"
                                         class="flex-1 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-600 text-emerald-600 px-3 py-2.5 text-sm font-semibold transition hover:bg-emerald-50 cursor-pointer"
-                                        onclick="showCourseDetail({{ $course->id }}, '{{ addslashes($course->title) }}', '{{ addslashes($course->description) }}')">
+                                        onclick="showCourseDetail({{ $course->id }}, '{{ addslashes($course->judul) }}', '{{ addslashes($course->deskripsi) }}')">
                                     <span>Info Detail</span>
                                 </button>
 
                                 @if($course->registration_ended)
                                     <button type="button"
                                             disabled
-                                            class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-rose-100 text-rose-700 px-3 py-2.5 text-sm font-semibold cursor-not-allowed"
+                                            class="flex-1 inline-flex items-center justify
                                             title="Pendaftaran sudah berakhir">
                                         <span>Pendaftaran Berakhir</span>
                                     </button>

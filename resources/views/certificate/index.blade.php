@@ -34,7 +34,7 @@
                                 @continue(is_null($course))
                                 <tr>
                                     <td class="px-4 py-3 font-semibold text-slate-800">
-                                        {{ $course->title }}
+                                        {{ $course->judul }}
                                     </td>
                                     <td class="px-4 py-3">
                                         @if ($course->is_certificate_active)

@@ -11,7 +11,7 @@ return new class extends Migration
      */
    public function up(): void
 {
-    Schema::table('courses', function (Blueprint $table) {
+    Schema::table('pelatihan', function (Blueprint $table) {
         // Kolom ini yang akan di-klik Admin di Filament
         $table->boolean('is_certificate_active')->default(false)->after('title');
     });
@@ -19,7 +19,7 @@ return new class extends Migration
    
     public function down(): void
     {
-        Schema::table('courses', function (Blueprint $table) {
+        Schema::table('pelatihan', function (Blueprint $table) {
             //
         });
     }

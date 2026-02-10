@@ -23,7 +23,7 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
-        'is_admin', // Ditambahkan agar bisa diisi saat membuat user admin
+        'is_admin',
         'avatar_path',
         'tempat_lahir',
         'tanggal_lahir',
@@ -34,9 +34,7 @@ class User extends Authenticatable implements FilamentUser
         'kabupaten',
         'kecamatan',
         'kodepos',
-        'bank_account_name',
-        'bank_account_number',
-        'bank_name',
+        // Bank disimpan di tabel terpisah: rekening_bank
         'profile_completed', // Menandakan apakah profil sudah lengkap
     ];
 
@@ -58,7 +56,6 @@ class User extends Authenticatable implements FilamentUser
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean', // Memastikan is_admin selalu true/false
         ];
@@ -68,6 +65,58 @@ class User extends Authenticatable implements FilamentUser
     // Asumsi 1 user bisa punya banyak sertifikat
         return $this->hasMany(Certificate::class);
     }
+    public function rekeningBank()
+    {
+        return $this->hasOne(RekeningBank::class, 'user_id');
+    }
+
+    // --- Backward-compatibility: expose bank_* attributes via rekeningBank ---
+
+    public function getBankNameAttribute(): ?string
+    {
+        return $this->rekeningBank?->nama_bank;
+    }
+
+    public function getBankAccountNameAttribute(): ?string
+    {
+        return $this->rekeningBank?->nama_rekening;
+    }
+
+    public function getBankAccountNumberAttribute(): ?string
+    {
+        return $this->rekeningBank?->nomor_rekening;
+    }
+
+    public function setBankNameAttribute($value): void
+    {
+        $this->setBankField('nama_bank', $value);
+    }
+
+    public function setBankAccountNameAttribute($value): void
+    {
+        $this->setBankField('nama_rekening', $value);
+    }
+
+    public function setBankAccountNumberAttribute($value): void
+    {
+        $this->setBankField('nomor_rekening', $value);
+    }
+
+    private function setBankField(string $field, $value): void
+    {
+        // Jika user belum tersimpan (belum punya id), simpan sementara di memori.
+        // Setelah user tersimpan, caller perlu set ulang / update rekening_bank.
+        if (!$this->exists) {
+            // no-op (hindari menulis ke kolom users yang sudah dihapus)
+            return;
+        }
+
+        RekeningBank::updateOrCreate(['user_id' => $this->id], [$field => $value]);
+
+        // Pastikan relasi model up-to-date
+        $this->unsetRelation('rekeningBank');
+    }
+
     /**
      * Fungsi yang dibutuhkan oleh Filament untuk memeriksa
      * apakah seorang pengguna boleh mengakses panel admin.
