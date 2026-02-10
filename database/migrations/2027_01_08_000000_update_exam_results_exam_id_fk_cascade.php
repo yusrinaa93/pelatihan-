@@ -8,38 +8,51 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('exam_results', function (Blueprint $table) {
-            // Drop existing FK (default name from constrained())
+        // 1. Cek apakah tabel 'hasil_ujian' ada (sesuai nama di database Anda)
+        if (!Schema::hasTable('hasil_ujian')) {
+            return;
+        }
+
+        Schema::table('hasil_ujian', function (Blueprint $table) {
+            
+            // 2. Hapus FK lama dengan aman
+            // Kita coba hapus kunci yang mungkin bernama 'exam_id'
             try {
                 $table->dropForeign(['exam_id']);
             } catch (\Throwable $e) {
-                // ignore if it doesn't exist
+                // Abaikan jika tidak ada
             }
-        });
 
-        Schema::table('exam_results', function (Blueprint $table) {
-            $table->foreign('exam_id')
-                ->references('id')
-                ->on('exams')
-                ->onDelete('cascade');
+            // Coba juga hapus jika namanya masih pakai format lama (exam_results_...)
+            try {
+                $table->dropForeign('exam_results_exam_id_foreign');
+            } catch (\Throwable $e) {
+                // Abaikan
+            }
+
+            // 3. Buat FK baru yang mengarah ke tabel 'ujian' (bukan 'exams')
+            // Pastikan kolom di tabel hasil_ujian namanya 'exam_id'. 
+            // Jika kolomnya 'ujian_id', ganti 'exam_id' di bawah ini dengan 'ujian_id'.
+            try {
+                $table->foreign('exam_id')
+                    ->references('id')
+                    ->on('ujian') // INI YANG PENTING: Arahkan ke tabel 'ujian'
+                    ->onDelete('cascade');
+            } catch (\Throwable $e) {
+                // Abaikan jika FK sudah ada
+            }
         });
     }
 
     public function down(): void
     {
-        Schema::table('exam_results', function (Blueprint $table) {
-            try {
-                $table->dropForeign(['exam_id']);
-            } catch (\Throwable $e) {
-                // ignore
-            }
-        });
-
-        // Recreate original behaviour (restrict)
-        Schema::table('exam_results', function (Blueprint $table) {
-            $table->foreign('exam_id')
-                ->references('id')
-                ->on('exams');
-        });
+        // Biarkan kosong atau gunakan logic yang aman
+        if (Schema::hasTable('hasil_ujian')) {
+            Schema::table('hasil_ujian', function (Blueprint $table) {
+                try {
+                    $table->dropForeign(['exam_id']);
+                } catch (\Throwable $e) {}
+            });
+        }
     }
 };
