@@ -68,18 +68,24 @@
                                     <p class="text-emerald-600 font-semibold">Pelatihan</p>
                                 </div>
                                 <h3 class="text-lg font-bold text-slate-900 line-clamp-2">{{ $course->judul }}</h3>
+
+                                {{-- Samakan dengan halaman pelatihan: gunakan end_date / tanggal_selesai --}}
                                 <div class="text-xs">
-                                    @if($course->batas_daftar)
-                                        <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 font-semibold {{ $course->registration_ended ? 'bg-rose-100 text-rose-700' : 'bg-emerald-50 text-emerald-700' }}">
-                                            <i class="fas {{ $course->registration_ended ? 'fa-circle-xmark' : 'fa-calendar-check' }}"></i>
-                                            {{ $course->registration_ended ? 'Pendaftaran berakhir' : 'Batas daftar: ' . $course->batas_daftar->translatedFormat('d F Y') }}
-                                        </span>
+                                    @if($course->end_date)
+                                        <div class="mt-2 flex items-center gap-2 text-xs font-medium text-slate-500">
+                                            <i class="fas fa-calendar-alt text-emerald-500"></i>
+                                            <span>
+                                                Batas Daftar: {{ \Carbon\Carbon::parse($course->end_date)->translatedFormat('d F Y') }}
+                                            </span>
+                                        </div>
                                     @else
-                                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-600">
-                                            <i class="fas fa-calendar"></i> Batas daftar: -
-                                        </span>
+                                        <div class="mt-2 flex items-center gap-2 text-xs font-medium text-slate-500">
+                                            <i class="fas fa-calendar-alt text-slate-400"></i>
+                                            <span>Batas Daftar: -</span>
+                                        </div>
                                     @endif
                                 </div>
+
                                 <p class="text-sm text-slate-600 max-h-20 overflow-y-auto pr-2 hide-scrollbar">
                                     {{ $course->deskripsi_singkat ? strip_tags($course->deskripsi_singkat) : strip_tags($course->deskripsi) }}
                                 </p>

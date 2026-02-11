@@ -108,6 +108,16 @@ class CertificateController extends Controller
     {
         $user = Auth::user();
 
+        // Batasi hanya 1x cetak: jika sertifikat sudah pernah dibuat, blok.
+        $alreadyPrinted = Certificate::where('user_id', $user->id)
+            ->where('pelatihan_id', $course->id)
+            ->exists();
+
+        if ($alreadyPrinted) {
+            return redirect()->route('certificate.index')
+                ->withErrors(['msg' => 'Sertifikat sudah pernah dicetak. Anda tidak dapat mencetak ulang.']);
+        }
+
         // --- 1. Recheck eligibility (Keamanan Server-side) ---
         $examScore = ExamResult::where('user_id', $user->id)
             ->whereHas('exam', fn ($q) => $q->where('pelatihan_id', $course->id))
@@ -157,16 +167,12 @@ class CertificateController extends Controller
         $serial_number = $this->generateSerialNumber($course, $user);
 
         // --- 4. SIMPAN DATA KE DATABASE ---
-        $certificate = Certificate::updateOrCreate(
-            [
-                'user_id' => $user->id,
-                'pelatihan_id' => $course->id,
-            ],
-            [
-                'judul' => $course->judul,
-                'nomor_sertifikat' => $serial_number,
-            ]
-        );
+        $certificate = Certificate::create([
+            'user_id' => $user->id,
+            'pelatihan_id' => $course->id,
+            'judul' => $course->judul,
+            'nomor_sertifikat' => $serial_number,
+        ]);
 
         // --- 5. Siapkan Data untuk PDF ---
         $ttl = trim(($user->tempat_lahir ?? '') . ', ' . Carbon::parse($user->tanggal_lahir)->format('d-m-Y'));

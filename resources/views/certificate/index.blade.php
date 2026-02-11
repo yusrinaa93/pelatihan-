@@ -32,6 +32,11 @@
                         <tbody class="divide-y divide-slate-100 bg-white text-slate-600">
                             @foreach ($courses as $course)
                                 @continue(is_null($course))
+                                @php(
+                                    $alreadyPrinted = \App\Models\Certificate::where('user_id', auth()->id())
+                                        ->where('pelatihan_id', $course->id)
+                                        ->exists()
+                                )
                                 <tr>
                                     <td class="px-4 py-3 font-semibold text-slate-800">
                                         {{ $course->judul }}
@@ -51,11 +56,18 @@
                                     </td>
                                     <td class="px-4 py-3">
                                         @if ($course->is_certificate_active)
-                                            <a href="{{ route('certificate.check', $course->id) }}"
-                                               class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-emerald-400">
-                                                <i class="fas fa-download"></i>
-                                                Lihat / Unduh
-                                            </a>
+                                            @if ($alreadyPrinted)
+                                                <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-400" title="Sertifikat sudah pernah dicetak.">
+                                                    <i class="fas fa-check"></i>
+                                                    Sudah Cetak
+                                                </span>
+                                            @else
+                                                <a href="{{ route('certificate.check', $course->id) }}"
+                                                   class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-emerald-400">
+                                                    <i class="fas fa-download"></i>
+                                                    Lihat / Unduh
+                                                </a>
+                                            @endif
                                         @else
                                             <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
                                                 <i class="fas fa-ban"></i>
