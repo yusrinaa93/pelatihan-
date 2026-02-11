@@ -213,35 +213,59 @@
                                                 </div>
                                             </td>
                                             <td class="whitespace-nowrap px-4 py-3">
-                                                @if(!empty($duty->submission) && !empty($duty->submission->file_path))
-                                                    <div class="flex flex-col gap-2">
-                                                        <a href="{{ route('duty-submissions.download', $duty->submission) }}"
-                                                           class="inline-flex items-center gap-2 rounded-full bg-sky-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-sky-400">
-                                                            <i class="fas fa-cloud-arrow-down"></i>
-                                                            Unduh Jawaban
+                                                {{-- Cek apakah sudah ada submission dan filenya --}}
+                                                @if($duty->submission && $duty->submission->path_file)
+                                                    <div class="flex flex-col items-start gap-2">
+
+                                                        {{-- TAMPILAN FILE (Klik untuk download) --}}
+                                                        <a href="{{ route('duty-submissions.download', $duty->submission->id) }}"
+                                                        class="group flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 transition hover:border-emerald-300 hover:bg-emerald-50 hover:shadow-sm">
+
+                                                            {{-- Icon File --}}
+                                                            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-white shadow-sm ring-1 ring-slate-900/5 group-hover:bg-emerald-100 group-hover:text-emerald-600">
+                                                                <i class="fas fa-file-lines text-emerald-500 transition group-hover:text-emerald-600"></i>
+                                                            </div>
+
+                                                            {{-- Info File --}}
+                                                            <div class="flex flex-col">
+                                                                <span class="text-xs font-semibold text-slate-700 group-hover:text-emerald-800">
+                                                                    {{ Str::limit($duty->submission->nama_file_asli, 25) }}
+                                                                </span>
+                                                                <span class="text-[10px] text-slate-400 group-hover:text-emerald-600">
+                                                                    Diunggah {{ $duty->submission->updated_at->diffForHumans() }}
+                                                                </span>
+                                                            </div>
                                                         </a>
 
-                                                        <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600">
-                                                            <i class="fas fa-check-circle"></i>
-                                                            Sudah Upload
-                                                        </span>
+                                                        {{-- Tombol Ganti File (Re-upload) --}}
+                                                        @if($duty->can_submit && !$duty->isDeadlinePassed())
+                                                            <button type="button"
+                                                                    class="ml-1 text-[10px] font-medium text-slate-400 hover:text-emerald-600 hover:underline"
+                                                                    data-duty-id="{{ $duty->id }}"
+                                                                    data-duty-upload-trigger>
+                                                                <i class="fas fa-sync-alt mr-1"></i> Ganti File
+                                                            </button>
+                                                        @endif
                                                     </div>
+
                                                 @elseif($duty->can_submit)
+                                                    {{-- Kondisi: Belum Upload (Tampilkan Tombol Upload) --}}
                                                     <form action="{{ route('duty.upload', $duty->id) }}" method="POST" enctype="multipart/form-data" class="space-y-2" data-duty-upload-form>
                                                         @csrf
-
                                                         <input type="file" name="file" required class="hidden" data-duty-file-input />
-
                                                         <button type="button"
-                                                                class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-emerald-400"
+                                                                class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-emerald-400 hover:shadow-md"
                                                                 data-duty-upload-trigger>
-                                                            <i class="fas fa-upload"></i>
-                                                            Upload
+                                                            <i class="fas fa-cloud-arrow-up"></i>
+                                                            Upload Tugas
                                                         </button>
                                                     </form>
+
                                                 @else
-                                                    <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">
-                                                        Deadline Lewat
+                                                    {{-- Kondisi: Deadline Lewat & Belum Upload --}}
+                                                    <span class="inline-flex items-center gap-2 rounded-full bg-rose-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-rose-500 ring-1 ring-inset ring-rose-200">
+                                                        <i class="fas fa-lock"></i>
+                                                        Terkunci
                                                     </span>
                                                 @endif
                                             </td>
@@ -349,6 +373,37 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+
+        // --- 1. CEK SESSION LARAVEL (UNTUK UPLOAD TUGAS) ---
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                timer: 3000,
+                showConfirmButton: false
+            });
+        @endif
+
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: "{{ session('error') }}",
+            });
+        @endif
+
+        @if($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Validasi',
+                html: '<ul class="text-left">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
+            });
+        @endif
+        // ---------------------------------------------------------------------
+
+
+        // --- 2. LOGIKA TABS ---
         const ACTIVE_CLASSES = ['bg-emerald-500', 'text-white', 'shadow-sm'];
         const INACTIVE_CLASSES = ['bg-transparent', 'text-slate-500', 'hover:bg-emerald-50', 'hover:text-emerald-600'];
 
@@ -393,15 +448,26 @@
             });
         }
 
+        // --- 3. LOGIKA PRESENSI DENGAN SWEETALERT2 (AJAX) ---
         document.addEventListener('click', (event) => {
             const presenceButton = event.target.closest('.btn-presence');
             if (!presenceButton) return;
 
-
             event.preventDefault();
             const scheduleId = presenceButton.dataset.scheduleId;
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
             if (!scheduleId || !csrfToken) return;
+
+            // Tampilkan Loading
+            Swal.fire({
+                title: 'Memproses...',
+                text: 'Sedang mencatat presensi Anda',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
 
             presenceButton.disabled = true;
             presenceButton.classList.add('opacity-70', 'cursor-not-allowed');
@@ -415,33 +481,42 @@
                 },
                 body: JSON.stringify({ schedule_id: scheduleId })
             })
-            .then(res => {
-                if (!res.ok) throw new Error('Server error');
-                return res.json();
-            })
-            .then(data => {
-                if (data.status === 'success') {
+            .then(res => res.json().then(data => ({ status: res.status, body: data })))
+            .then(({ status, body }) => {
+                if (body.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: body.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
                     presenceButton.outerHTML = `
                         <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600">
                             <i class="fas fa-check-circle"></i>
                             Sudah Presensi
                         </span>
                     `;
+                } else if (body.status === 'warning') {
+                    Swal.fire({ icon: 'warning', title: 'Perhatian', text: body.message });
                 } else {
-                    alert(data.message || 'Gagal presensi');
+                    Swal.fire({ icon: 'error', title: 'Gagal', text: body.message });
                 }
             })
-            .catch(() => {
-                alert('Gagal presensi');
+            .catch(error => {
+                console.error(error);
+                Swal.fire({ icon: 'error', title: 'Error Sistem', text: 'Terjadi kesalahan jaringan.' });
             })
             .finally(() => {
-                if (presenceButton && presenceButton.disabled) {
+                if (document.body.contains(presenceButton)) {
                     presenceButton.disabled = false;
                     presenceButton.classList.remove('opacity-70', 'cursor-not-allowed');
                 }
             });
         });
 
+        // --- 4. LOGIKA MODAL UPLOAD TUGAS ---
         const modal = document.getElementById('uploadModal');
         const uploadForm = document.getElementById('uploadForm');
         const fileInput = uploadForm?.querySelector('input[type="file"]');
@@ -457,11 +532,16 @@
             if (fileInput) fileInput.value = '';
         }
 
-        document.querySelectorAll('[data-upload-trigger]').forEach(trigger => {
+        document.querySelectorAll('[data-duty-upload-trigger]').forEach(trigger => {
             trigger.addEventListener('click', () => {
-                const dutyId = trigger.dataset.dutyId;
-                if (!uploadForm || !dutyId) return;
-                uploadForm.action = `/duty/${dutyId}/upload`;
+                const dutyId = trigger.dataset.dutyId; // Pastikan di HTML ada data-duty-id
+
+                // Jika tombol trigger ada di dalam form (versi tanpa modal), biarkan logic form yang handle
+                if(trigger.closest('form[data-duty-upload-form]')) return;
+
+                if (!uploadForm) return;
+                // Jika pakai modal, set actionnya
+                // uploadForm.action = ...
                 openModal();
             });
         });
@@ -471,40 +551,48 @@
         });
 
         modal?.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                closeModal();
-            }
+            if (event.target === modal) closeModal();
         });
 
-        // Duty upload UX: click Upload => open file picker => auto submit
+        // --- 5. LOGIKA SUBMIT FILE TUGAS (FORM LANGSUNG) ---
         document.querySelectorAll('form[data-duty-upload-form]').forEach((form) => {
             const input = form.querySelector('[data-duty-file-input]');
             const trigger = form.querySelector('[data-duty-upload-trigger]');
 
             if (!input || !trigger) return;
 
+            // 1. Klik tombol "Upload" -> Buka File Picker
             trigger.addEventListener('click', (e) => {
                 e.preventDefault();
                 input.click();
             });
 
+            // 2. Saat file dipilih -> Submit Form
             input.addEventListener('change', () => {
                 const file = input.files && input.files[0] ? input.files[0] : null;
                 if (!file) return;
 
-                // Change button label to the selected filename
-                trigger.innerHTML = `
-                    <i class="fas fa-file"></i>
-                    ${file.name}
-                `;
+                // Tampilkan Loading
+                Swal.fire({
+                    title: 'Mengunggah...',
+                    text: 'Mohon tunggu sebentar...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
 
-                // prevent double submission
+                // Update UI Tombol
+                trigger.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Mengunggah...`;
                 trigger.disabled = true;
                 trigger.classList.add('opacity-70', 'cursor-not-allowed');
 
+                // Submit Form
                 form.submit();
             });
         });
-    });
+
+    }); // <-- INI YANG TADI HILANG (Penutup DOMContentLoaded)
 </script>
 @endpush

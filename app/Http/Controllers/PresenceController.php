@@ -39,12 +39,12 @@ class PresenceController extends Controller
         // 4. Beri respon berdasarkan apakah data baru dibuat atau tidak
         if ($attendance->wasRecentlyCreated) {
             return response()->json([
-                'status' => 'success', 
+                'status' => 'success',
                 'message' => 'Presensi berhasil dicatat!'
             ]);
         } else {
             return response()->json([
-                'status' => 'warning', 
+                'status' => 'warning',
                 'message' => 'Anda sudah melakukan presensi sebelumnya.'
             ]);
         }

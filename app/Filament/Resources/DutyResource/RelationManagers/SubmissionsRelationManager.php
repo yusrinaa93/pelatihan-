@@ -17,7 +17,7 @@ class SubmissionsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('original_filename')
+                Forms\Components\TextInput::make('nama_file_asli')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -26,44 +26,55 @@ class SubmissionsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('original_filename')
+            ->recordTitleAttribute('nama_file_asli') // Pastikan ini nama_file_asli
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Nama Pengunggah')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('original_filename')
-                    ->label('Nama File'),
+                // PERBAIKAN: Gunakan 'nama_file_asli' sesuai database
+                Tables\Columns\TextColumn::make('nama_file_asli')
+                    ->label('Nama File')
+                    ->limit(30)
+                    ->tooltip(fn ($record) => $record->nama_file_asli),
 
                 Tables\Columns\TextColumn::make('nilai')
                     ->label('Nilai')
                     ->sortable()
-                    ->formatStateUsing(fn($state) => $state === null ? '-' : $state),
+                    ->badge()
+                    ->color(fn ($state) => $state >= 70 ? 'success' : ($state === null ? 'gray' : 'danger'))
+                    ->formatStateUsing(fn($state) => $state === null ? 'Belum Dinilai' : $state),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Tanggal Upload')
-                    ->dateTime('d M Y, H:i'),
-            ])
-            ->filters([
-                //
-            ])
-            ->headerActions([
-                //
+                    ->dateTime('d M Y, H:i')
+                    ->sortable(),
             ])
             ->actions([
+                // ACTION DOWNLOAD LANGSUNG (Tanpa Controller)
                 Tables\Actions\Action::make('Download')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->url(fn ($record) => Storage::disk('public')->url($record->path_file))
-                    ->openUrlInNewTab()
-                    ->extraAttributes(fn ($record) => [
-                        'download' => $record->nama_file_asli ?? 'downloaded-file'
-                    ]),
+                    ->label('Download')
+                    ->action(function ($record) {
+                        // Cek apakah file ada
+                        if (!$record->path_file || !Storage::disk('public')->exists($record->path_file)) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('File tidak ditemukan')
+                                ->danger()
+                                ->send();
+                            return;
+                        }
+
+                        // Download langsung
+                        return Storage::disk('public')->download($record->path_file, $record->nama_file_asli);
+                    }),
 
                 Tables\Actions\Action::make('Grade')
                     ->icon('heroicon-o-pencil')
+                    ->label('Nilai')
                     ->form([
                         Forms\Components\TextInput::make('nilai')
-                            ->label('Nilai (0-100)')
+                            ->label('Berikan Nilai (0-100)')
                             ->numeric()
                             ->minValue(0)
                             ->maxValue(100)
@@ -71,15 +82,14 @@ class SubmissionsRelationManager extends RelationManager
                     ])
                     ->action(function ($record, $data) {
                         $record->update(['nilai' => (int) $data['nilai']]);
-                    })
-                    ->requiresConfirmation(false),
+
+                        \Filament\Notifications\Notification::make()
+                            ->title('Nilai berhasil disimpan')
+                            ->success()
+                            ->send();
+                    }),
 
                 Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 }

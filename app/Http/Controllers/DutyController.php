@@ -52,13 +52,12 @@ class DutyController extends Controller
             ['path_file' => $path, 'nama_file_asli' => $originalName]
         );
 
-        // --- BAGIAN INI YANG DIUBAH ---
-        // Tambahkan ->withFragment('tab-tugas') agar setelah reload langsung membuka tab tugas
         return redirect()->back()
-                ->with('status', 'File uploaded successfully.')
+                // ->with('status', 'File uploaded successfully.')
+                ->with('success', 'File berhasil diupload.')
                 ->withFragment('tab-tugas');
     }
-    
+
     /**
      * Download file tugas yang diupload admin (attachment_path).
      */
@@ -81,21 +80,27 @@ class DutyController extends Controller
      */
     public function downloadSubmission(DutySubmission $submission)
     {
+        // 1. Pastikan User Login
         if (!Auth::check()) {
-            abort(403);
+            abort(403, 'Anda harus login.');
         }
 
-        // Hanya pemilik submission yang boleh download
-        if ((int) $submission->user_id !== (int) Auth::id()) {
-            abort(403);
+        $user = Auth::user();
+
+        // 2. LOGIC IZIN:
+        // Izinkan jika User adalah PEMILIK file --ATAU-- User adalah ADMIN
+        // Asumsi kolom admin di tabel users bernama 'is_admin' (boolean)
+        if ($submission->user_id !== $user->id && !$user->is_admin) {
+            abort(403, 'Anda tidak memiliki akses ke file ini.');
         }
 
-        if (!$submission->file_path || !Storage::disk('public')->exists($submission->file_path)) {
-            abort(404);
+        // 3. Cek File Fisik
+        if (!$submission->path_file || !Storage::disk('public')->exists($submission->path_file)) {
+            abort(404, 'File fisik tidak ditemukan di server.');
         }
 
-        $downloadName = $submission->original_filename ?: basename($submission->file_path);
-
-        return Storage::disk('public')->download($submission->file_path, $downloadName);
+        // 4. Download
+        $downloadName = $submission->nama_file_asli ?: basename($submission->path_file);
+        return Storage::disk('public')->download($submission->path_file, $downloadName);
     }
 }
