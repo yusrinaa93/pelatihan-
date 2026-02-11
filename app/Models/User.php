@@ -111,7 +111,18 @@ class User extends Authenticatable implements FilamentUser
             return;
         }
 
-        RekeningBank::updateOrCreate(['user_id' => $this->id], [$field => $value]);
+        // Karena kolom rekening_bank bersifat NOT NULL, updateOrCreate harus selalu
+        // menyertakan nilai untuk kolom-kolom wajib ketika record belum ada.
+        $current = $this->rekeningBank;
+
+        $payload = [
+            'nama_bank' => $current?->nama_bank ?? '',
+            'nama_rekening' => $current?->nama_rekening ?? '',
+            'nomor_rekening' => $current?->nomor_rekening ?? '',
+            $field => (string) ($value ?? ''),
+        ];
+
+        RekeningBank::updateOrCreate(['user_id' => $this->id], $payload);
 
         // Pastikan relasi model up-to-date
         $this->unsetRelation('rekeningBank');

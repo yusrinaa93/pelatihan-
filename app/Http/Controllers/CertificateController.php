@@ -182,7 +182,16 @@ class CertificateController extends Controller
         $pdf = Pdf::loadView('certificate.template', $data);
         $pdf->setPaper('letter', 'portrait');
 
-        return $pdf->download('Sertifikat-PPH-' . str_replace(' ', '-', $user->name) . '.pdf');
+        // Saat PDF di-download, halaman form tetap terbuka (itu normal di browser).
+        // Solusi paling aman tanpa JS di client: buka PDF di tab baru, dan biarkan
+        // user kembali manual. Tapi kita bisa bantu dengan membuka PDF inline
+        // sehingga user bisa klik back dengan mudah.
+
+        $filename = 'Sertifikat-PPH-' . str_replace(' ', '-', $user->name) . '.pdf';
+
+        return response($pdf->output(), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="' . $filename . '"');
     }
 
     /**

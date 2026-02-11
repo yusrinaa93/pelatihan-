@@ -236,16 +236,6 @@
                                                                 </span>
                                                             </div>
                                                         </a>
-
-                                                        {{-- Tombol Ganti File (Re-upload) --}}
-                                                        @if($duty->can_submit && !$duty->isDeadlinePassed())
-                                                            <button type="button"
-                                                                    class="ml-1 text-[10px] font-medium text-slate-400 hover:text-emerald-600 hover:underline"
-                                                                    data-duty-id="{{ $duty->id }}"
-                                                                    data-duty-upload-trigger>
-                                                                <i class="fas fa-sync-alt mr-1"></i> Ganti File
-                                                            </button>
-                                                        @endif
                                                     </div>
 
                                                 @elseif($duty->can_submit)

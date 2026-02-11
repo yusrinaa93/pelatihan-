@@ -10,6 +10,11 @@ class EditDuty extends EditRecord
 {
     protected static string $resource = DutyResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
     protected function getHeaderActions(): array
     {
         return [

@@ -40,19 +40,13 @@
 
                             {{-- Registration deadline info --}}
                             <div class="text-xs">
-                                @if($course->batas_daftar)
-                                    <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 font-semibold
-                                        {{ $course->registration_ended ? 'bg-rose-100 text-rose-700' : 'bg-emerald-50 text-emerald-700' }}">
-                                        <i class="fas {{ $course->registration_ended ? 'fa-circle-xmark' : 'fa-calendar-check' }}"></i>
-                                        {{ $course->registration_ended
-                                            ? 'Pendaftaran berakhir'
-                                            : 'Batas daftar: ' . $course->batas_daftar->translatedFormat('d F Y') }}
+                                    @if($course->end_date)
+                                <div class="mt-2 flex items-center gap-2 text-xs font-medium text-slate-500">
+                                <i class="fas fa-calendar-alt text-emerald-500"></i>
+                                    <span>
+                                Batas Daftar: {{ \Carbon\Carbon::parse($course->end_date)->translatedFormat('d F Y') }}
                                     </span>
-                                @else
-                                    <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-600">
-                                        <i class="fas fa-calendar"></i>
-                                        Batas daftar: -
-                                    </span>
+                                </div>
                                 @endif
                             </div>
 
@@ -62,7 +56,8 @@
                             </p>
 
                             {{-- Button Section --}}
-                            <div class="flex gap-2 pt-4 mt-auto">
+                            <div class="flex flex-col gap-2 pt-4 mt-auto sm:flex-row">
+                                {{-- Info detail tetap bisa dibuka, walaupun pendaftaran berakhir --}}
                                 <button type="button"
                                         class="flex-1 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-600 text-emerald-600 px-3 py-2.5 text-sm font-semibold transition hover:bg-emerald-50 cursor-pointer"
                                         onclick="showCourseDetail({{ $course->id }}, '{{ addslashes($course->judul) }}', '{{ addslashes($course->deskripsi) }}')">
@@ -72,8 +67,9 @@
                                 @if($course->registration_ended)
                                     <button type="button"
                                             disabled
-                                            class="flex-1 inline-flex items-center justify
-                                            title="Pendaftaran sudah berakhir">
+                                            title="Pendaftaran sudah berakhir"
+                                            class="flex-1 inline-flex items-center justify-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-3 py-2.5 text-sm font-semibold text-rose-600 cursor-not-allowed">
+                                        <i class="fas fa-lock"></i>
                                         <span>Pendaftaran Berakhir</span>
                                     </button>
                                 @else

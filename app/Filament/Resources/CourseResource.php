@@ -36,11 +36,12 @@ class CourseResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\RichEditor::make('deskripsi')
                     ->label('Deskripsi Lengkap')
-                    ->helperText('Deskripsi detail yang akan tampil di modal info detail')
+                    ->required()
+                    ->helperText('Wajib diisi. Deskripsi detail yang akan tampil di modal info detail.')
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('deskripsi_singkat')
                     ->label('Deskripsi Singkat')
-                    ->helperText('Deskripsi singkat yang akan tampil di card pelatihan (maksimal 200 karakter)')
+                    ->helperText('Opsional. Tampil di card pelatihan (maksimal 200 karakter).')
                     ->maxLength(200)
                     ->rows(3)
                     ->columnSpanFull(),
