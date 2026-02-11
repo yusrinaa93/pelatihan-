@@ -16,10 +16,10 @@
         <p class="mb-8 text-base leading-relaxed text-white/90">
             Pelatihan Pendamping dan Pelatihan Penyelia Bagi Calon Penggiat Halal untuk memahami dan mendampingi pelaku usaha dalam memenuhi persyaratan sertifikasi halal.
         </p>
-        
-        <a href="{{ route('guest.courses') }}" 
+
+        <a href="{{ route('guest.courses') }}"
            class="inline-block rounded-full border-2 border-emerald-600 bg-emerald-600 px-8 py-4 text-base font-semibold text-white transition hover:bg-emerald-700">
-            DAFTAR PELATIHAN 
+            DAFTAR PELATIHAN
         </a>
     </div>
 </section>
@@ -27,7 +27,7 @@
 {{-- ================================================= --}}
 {{-- 2. COURSE SECTION (PELATIHAN) --}}
 {{-- ================================================= --}}
-<section class="bg-[#F7F9F7] py-16">    
+<section class="bg-[#F7F9F7] py-16">
     <div class="mx-auto w-full max-w-6xl px-4">
         {{-- Course Section Header --}}
         <div class="mb-8 flex items-end justify-between gap-4">
@@ -55,7 +55,8 @@
         <div class="max-w-7xl mx-auto space-y-8 pb-12">
             <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
                 @forelse ($courses as $course)
-                    @php($cover = $course->path_gambar ? asset('storage/'.$course->path_gambar) : 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80')
+                    {{-- @php($cover = $course->path_gambar ? asset('storage/'.$course->path_gambar) : 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80') --}}
+                    @php($cover = $course->path_gambar ? \Illuminate\Support\Facades\Storage::disk('public')->url($course->path_gambar) : 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80')
                     <a href="{{ route('guest.courses') }}" class="block h-full">
                         <article class="flex flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-md hover:shadow-xl transition-all duration-300 h-full group">
                             {{-- Image Container --}}
@@ -122,7 +123,7 @@
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
 </section>
 
 {{-- ================================================= --}}
@@ -130,7 +131,7 @@
 {{-- ================================================= --}}
 <section class="bg-gradient-to-b from-emerald-50 via-emerald-50/40 to-white py-20">
     <div class="mx-auto w-full max-w-6xl px-4">
-        
+
         {{-- Header Section --}}
         <div class="text-center mb-10">
             <span class="rounded-full bg-emerald-100 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700">Contact Us</span>
@@ -140,7 +141,7 @@
         <div class="grid gap-8 lg:grid-cols-2">
             {{-- KOLOM KIRI: Grid Kartu Informasi (2 Baris x 2 Kolom) --}}
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 h-full content-start">
-                
+
                 {{-- Address --}}
                 <a href="#map-section" class="h-full">
                     <div class="group h-full rounded-xl border border-emerald-100 bg-white p-6 text-center shadow-md transition hover:-translate-y-1 hover:shadow-xl flex flex-col items-center justify-center">
@@ -151,7 +152,7 @@
                         <p class="text-sm text-slate-600">Papringan, Caturtunggal, Depok, Sleman</p>
                     </div>
                 </a>
-                
+
                 {{-- Contact --}}
                 <a href="https://wa.me/6289504440443" target="_blank" class="h-full">
                     <div class="group h-full rounded-xl border border-emerald-100 bg-white p-6 text-center shadow-md transition hover:-translate-y-1 hover:shadow-xl flex flex-col items-center justify-center">
@@ -162,7 +163,7 @@
                         <p class="text-sm text-slate-600">089504440443</p>
                     </div>
                 </a>
-                
+
                 {{-- Email --}}
                 <a href="mailto:kontak@pelatihanhalal.com" class="h-full">
                     <div class="group h-full rounded-xl border border-emerald-100 bg-white p-6 text-center shadow-md transition hover:-translate-y-1 hover:shadow-xl flex flex-col items-center justify-center">
@@ -188,13 +189,13 @@
 
             {{-- KOLOM KANAN: Peta --}}
             <div id="map-section" class="h-full min-h-[300px] w-full rounded-2xl border border-emerald-100 bg-white p-2 shadow-lg">
-                <iframe 
-                    src="https://maps.google.com/maps?q=Halal%20Center%20UIN%20Sunan%20Kalijaga&t=&z=15&ie=UTF8&iwloc=&output=embed" 
-                    width="100%" 
-                    height="100%" 
-                    style="border:0; border-radius: 12px; min-height: 100%;" 
-                    allowfullscreen="" 
-                    loading="lazy" 
+                <iframe
+                    src="https://maps.google.com/maps?q=Halal%20Center%20UIN%20Sunan%20Kalijaga&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                    width="100%"
+                    height="100%"
+                    style="border:0; border-radius: 12px; min-height: 100%;"
+                    allowfullscreen=""
+                    loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
             </div>
