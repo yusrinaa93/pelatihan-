@@ -35,9 +35,9 @@ RUN composer install --no-dev --optimize-autoloader
 # 7. Build Tampilan (TIDAK PERLU DIUBAH)
 RUN npm install && npm run build
 
-# 8. Perintah Deploy (VERSI AMAN / STABIL)
-# Perhatikan perubahannya di baris "migrate" di bawah ini:
-CMD php artisan storage:link && \
+# 8. Perintah Deploy (VERSI FIX SYMLINK)
+CMD rm -rf public/storage && \
+    php artisan storage:link && \
     php artisan config:clear && \
     php artisan cache:clear && \
     php artisan view:clear && \
