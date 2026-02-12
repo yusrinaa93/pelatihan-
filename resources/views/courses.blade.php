@@ -27,8 +27,7 @@
         {{-- Grid Pelatihan --}}
         <div class="grid gap-6 md:grid-cols-2">
             @forelse ($courses as $course)
-                {{-- Mengamankan gambar jika null --}}
-                @php($cover = $course->image_path ? asset('storage/'.$course->image_path) : 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80')
+                @php($cover = $course->path_gambar ? asset('storage/'.$course->path_gambar) : 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80')
 
                 <article class="flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200/70 bg-white/95 shadow-lg shadow-slate-200/60 transition hover:shadow-xl">
                     <img src="{{ $cover }}" alt="Gambar Pelatihan" class="h-48 w-full object-cover">
