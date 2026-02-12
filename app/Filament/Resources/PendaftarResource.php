@@ -12,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class PendaftarResource extends Resource
 {
@@ -21,6 +22,15 @@ class PendaftarResource extends Resource
     protected static ?string $navigationLabel = 'Pendaftar';
     protected static ?string $modelLabel = 'Pendaftar';
     protected static ?string $pluralModelLabel = 'Daftar Pendaftar';
+
+    public static function getEloquentQuery(): Builder
+        {
+            return parent::getEloquentQuery()
+                ->with([
+                    'user:id,name,email,nik,nomor_wa,created_at',
+                    'pelatihan:id,judul'
+                ]);
+        }
 
     public static function form(Form $form): Form
     {

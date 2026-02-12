@@ -1,7 +1,5 @@
-# Gunakan PHP 8.3 sebagai basis
 FROM php:8.3-cli
 
-# 1. Install Library System (TIDAK PERLU DIUBAH)
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -14,32 +12,29 @@ RUN apt-get update && apt-get install -y \
     curl \
     gnupg
 
-# 2. Install Ekstensi PHP (TIDAK PERLU DIUBAH)
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd zip intl pdo pdo_pgsql
+    && docker-php-ext-install -j$(nproc) gd zip intl pdo pdo_pgsql opcache
 
-# 3. Install Node.js (TIDAK PERLU DIUBAH)
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
-# 4. Install Composer (TIDAK PERLU DIUBAH)
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 5. Siapkan Folder Kerja (TIDAK PERLU DIUBAH)
 WORKDIR /app
 COPY . .
 
-# 6. Install Dependency Laravel (TIDAK PERLU DIUBAH)
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
-# 7. Build Tampilan (TIDAK PERLU DIUBAH)
 RUN npm install && npm run build
 
-# 8. Perintah Deploy (VERSI FIX SYMLINK)
-CMD rm -rf public/storage && \
-    php artisan storage:link && \
-    php artisan config:clear && \
-    php artisan cache:clear && \
-    php artisan view:clear && \
+CMD sh -c "php artisan storage:link && \
     php artisan migrate --force && \
-    php artisan serve --host=0.0.0.0 --port=8080
+    php artisan optimize:clear && \
+    php artisan config:cache && \
+    php artisan route:cache && \
+    php artisan view:cache && \
+    php artisan icons:cache && \
+    php artisan filament:optimize && \
+    php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"
