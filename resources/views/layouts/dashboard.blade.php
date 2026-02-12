@@ -135,8 +135,8 @@
                                 class="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white transition hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 data-dropdown-target="mobile-profile-menu">
                             <img class="h-full w-full rounded-full object-cover"
-                                 src="{{ Auth::user()->avatar ? \Illuminate\Support\Facades\Storage::disk('public')->url(Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=10b981&color=fff' }}"
-                                 alt="Avatar">
+                                src="{{ Auth::user()->avatar_url }}"
+                                alt="{{ Auth::user()->name }}">
                         </button>
 
                         {{-- Dropdown Menu Khusus Mobile --}}
@@ -202,8 +202,8 @@
                                         class="profile-trigger inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 transition hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1"
                                         data-dropdown-target="desktop-profile-menu">
                                     <img class="h-full w-full rounded-full object-cover"
-                                         src="{{ Auth::user()->avatar ? \Illuminate\Support\Facades\Storage::disk('public')->url(Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=10b981&color=fff' }}"
-                                         alt="{{ Auth::user()->name }}">
+                                        src="{{ Auth::user()->avatar_url }}"
+                                        alt="{{ Auth::user()->name }}">
                                 </button>
 
                                 <ul id="desktop-profile-menu"
