@@ -55,7 +55,6 @@
         <div class="max-w-7xl mx-auto space-y-8 pb-12">
             <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
                 @forelse ($courses as $course)
-                    {{-- @php($cover = $course->path_gambar ? asset('storage/'.$course->path_gambar) : 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80') --}}
                     @php($cover = $course->path_gambar ? \Illuminate\Support\Facades\Storage::disk('public')->url($course->path_gambar) : 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80')
                     <a href="{{ route('guest.courses') }}" class="block h-full">
                         <article class="flex flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-md hover:shadow-xl transition-all duration-300 h-full group">

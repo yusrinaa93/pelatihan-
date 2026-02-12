@@ -127,8 +127,7 @@
 
                     {{--
                         === PERBAIKAN DI SINI (PROFILE MOBILE) ===
-                        Sekarang menggunakan <button> dan struktur Dropdown,
-                        bukan hanya gambar diam.
+                        Menggunakan Storage Facade untuk URL gambar avatar
                     --}}
                     @auth
                     <div class="relative lg:hidden ml-auto">
@@ -136,7 +135,7 @@
                                 class="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white transition hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 data-dropdown-target="mobile-profile-menu">
                             <img class="h-full w-full rounded-full object-cover"
-                                 src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=10b981&color=fff' }}"
+                                 src="{{ Auth::user()->avatar ? \Illuminate\Support\Facades\Storage::disk('public')->url(Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=10b981&color=fff' }}"
                                  alt="Avatar">
                         </button>
 
@@ -174,8 +173,7 @@
                     @endauth
 
                     {{--
-                        NAVBAR DESKTOP (TIDAK BERUBAH)
-                        Tetap hidden di mobile (lg:flex).
+                        NAVBAR DESKTOP
                     --}}
                     <ul class="hidden lg:flex items-center gap-3 rounded-full bg-white px-3 py-2 shadow-sm text-xs font-semibold uppercase tracking-wide ml-auto">
                         <li>
@@ -199,11 +197,12 @@
 
                         @auth
                             <li class="relative">
+                                {{-- PERBAIKAN DESKTOP AVATAR --}}
                                 <button type="button"
                                         class="profile-trigger inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 transition hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1"
                                         data-dropdown-target="desktop-profile-menu">
                                     <img class="h-full w-full rounded-full object-cover"
-                                         src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=10b981&color=fff' }}"
+                                         src="{{ Auth::user()->avatar ? \Illuminate\Support\Facades\Storage::disk('public')->url(Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=10b981&color=fff' }}"
                                          alt="{{ Auth::user()->name }}">
                                 </button>
 

@@ -58,19 +58,19 @@
 
         {{-- Layout Grid --}}
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
-            
+
             {{-- KOLOM KIRI: Sidebar Tab --}}
             <aside class="lg:col-span-1">
                 <nav class="space-y-2 sticky top-24">
                     {{-- Tab Profil --}}
-                    <a href="#profil" 
+                    <a href="#profil"
                        data-tab-toggle="profil"
                        class="tab-link group flex items-center gap-3 rounded-xl bg-emerald-100 px-4 py-3 text-emerald-700 transition">
                         <i class="fas fa-user-circle text-base"></i>
                         <span class="font-medium">Profil</span>
                     </a>
                     {{-- Tab Password --}}
-                    <a href="#password" 
+                    <a href="#password"
                        data-tab-toggle="password"
                        class="tab-link group flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 transition hover:bg-slate-100">
                         <i class="fas fa-lock text-base"></i>
@@ -81,26 +81,26 @@
 
             {{-- KOLOM KANAN: Konten Form --}}
             <div class="lg:col-span-3">
-                
+
                 {{-- TAB 1: FORM PROFIL --}}
                 <section id="profil" class="tab-content">
-                    <form action="{{ route('account.updateProfile') }}" 
-                          method="POST" 
+                    <form action="{{ route('account.updateProfile') }}"
+                          method="POST"
                           enctype="multipart/form-data"
                           class="rounded-3xl border border-slate-200/70 bg-white/95 p-8 shadow-lg shadow-slate-200/60 space-y-6">
                         @csrf
                         @method('PATCH')
 
                         <h3 class="text-lg font-semibold text-slate-900">Informasi Profil</h3>
-                        
+
                         {{-- BAGIAN FOTO PROFIL --}}
                         <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
                             <img id="avatar-preview"
-                                 src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=10b981&color=fff' }}"
+                                src="{{ Auth::user()->avatar ? \Illuminate\Support\Facades\Storage::disk('public')->url(Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=10b981&color=fff' }}"
                                  alt="Avatar Pengguna"
                                  onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=10b981&color=fff';"
                                  class="h-24 w-24 rounded-full border-4 border-white object-cover shadow-lg">
-                            
+
                             <div class="flex flex-col gap-1">
                                 <div class="flex gap-3">
                                     <input type="file" name="avatar" id="avatar-upload" class="hidden" accept="image/*">
@@ -122,7 +122,7 @@
                                    placeholder="Nomor Induk Kependudukan"
                                    class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
                         </label>
-                        
+
                         {{-- Input Nama --}}
                         <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600">
                             Nama Lengkap
@@ -136,7 +136,7 @@
                         <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600">
                             Alamat Email
                             <input type="email"
-                                   name="email" 
+                                   name="email"
                                    value="{{ Auth::user()->email }}"
                                    readonly
                                    class="cursor-not-allowed rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-500">
@@ -222,9 +222,9 @@
                                        placeholder="e.g. 55281"
                                        class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
                             </label>
-                        
+
                         </div>
-                        
+
                         <div class="flex items-center justify-end border-t border-slate-200 pt-6">
                             <button type="submit"
                                     class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-lg shadow-emerald-500/40 transition hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
@@ -237,7 +237,7 @@
 
                 {{-- TAB 2: FORM PASSWORD --}}
                 <section id="password" class="tab-content hidden">
-                    <form action="{{ route('account.updatePassword') }}" 
+                    <form action="{{ route('account.updatePassword') }}"
                           method="POST"
                           class="rounded-3xl border border-slate-200/70 bg-white/95 p-8 shadow-lg shadow-slate-200/60 space-y-6">
                         @csrf
@@ -254,7 +254,7 @@
                                    required
                                    class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
                         </label>
-                        
+
                         <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600">
                             Password Baru
                             <input type="password"
@@ -263,7 +263,7 @@
                                    required
                                    class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
                         </label>
-                        
+
                         <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600">
                             Konfirmasi Password Baru
                             <input type="password"

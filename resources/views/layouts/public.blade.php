@@ -5,12 +5,12 @@
 
 <div class="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans">
 
-    {{-- Header (sticky saat scroll, gaya mengikuti auth layout) --}}
+    {{-- Header (sticky saat scroll) --}}
     <header class="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md shadow-sm py-4 lg:py-5 pl-6 pr-2 lg:pl-10 lg:pr-2">
         <div class="w-full">
             <div class="flex items-center justify-between">
 
-                {{-- Logo (tampil di semua ukuran layar, diperbesar) --}}
+                {{-- Logo --}}
                 <a href="{{ url('/') }}" class="flex items-center gap-3">
                     <img src="{{ asset('gambar/logo halal center.png') }}" alt="Logo" class="h-12 w-auto lg:h-14">
                     <div class="leading-tight">
@@ -26,7 +26,7 @@
                     </svg>
                 </button>
 
-                {{-- NAVIGASI DESKTOP (mirip auth layout) --}}
+                {{-- NAVIGASI DESKTOP --}}
                 <nav class="hidden lg:block">
                     <div class="flex items-center gap-4">
                         <ul class="flex items-center gap-3 rounded-full bg-white px-3 py-2 shadow-sm text-xs font-semibold uppercase tracking-wide border border-slate-100">
@@ -68,11 +68,11 @@
                             @auth
                                 @php($user = Auth::user())
                                 @php($avatarUrl = $user->avatar
-                                    ? asset('storage/' . $user->avatar)
+                                    ? \Illuminate\Support\Facades\Storage::disk('public')->url($user->avatar)
                                     : ($user->profile_photo_path
-                                        ? asset('storage/' . $user->profile_photo_path)
+                                        ? \Illuminate\Support\Facades\Storage::disk('public')->url($user->profile_photo_path)
                                         : ($user->avatar_path
-                                            ? asset('storage/' . $user->avatar_path)
+                                            ? \Illuminate\Support\Facades\Storage::disk('public')->url($user->avatar_path)
                                             : ('https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=10b981&color=fff'))))
 
                                 <li class="relative">
@@ -107,14 +107,11 @@
                                 </li>
                             @endauth
                         </ul>
-
-                        {{-- Desktop Profile/Login (seperti layout awal) --}}
-                        {{-- (dipindah ke dalam pill untuk @auth) --}}
                     </div>
                 </nav>
             </div>
 
-            {{-- MENU MOBILE (Slide Down, mirip auth layout) --}}
+            {{-- MENU MOBILE --}}
             <div id="public-mobile-menu" class="hidden absolute left-0 right-0 top-full z-30 mt-2 origin-top transform bg-white shadow-xl lg:hidden mx-4 rounded-xl border border-slate-100 transition-all">
                 <div class="flex flex-col p-2 text-sm font-medium">
                     <a href="{{ url('/') }}" class="rounded-md px-4 py-3 text-slate-700 hover:bg-emerald-50 hover:text-emerald-600">
