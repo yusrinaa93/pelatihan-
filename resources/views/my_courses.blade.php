@@ -17,11 +17,11 @@
         <div class="grid gap-6 md:grid-cols-2">
             @forelse ($courses as $course)
                 <article class="flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200/70 bg-white/95 shadow-lg shadow-slate-200/60 transition-shadow hover:shadow-xl">
-                    
-                    {{-- Gambar Cover --}}
-                    @php($cover = $course->path_gambar ? asset('storage/'.$course->path_gambar) : 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80')
+
+                    @php($cover = $course->path_gambar ? \Illuminate\Support\Facades\Storage::disk('public')->url($course->path_gambar) : 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80')
+
                     <img src="{{ $cover }}" alt="{{ $course->judul }}" class="h-48 w-full object-cover">
-                    
+
                     <div class="flex flex-1 flex-col gap-5 p-6">
                         <div class="space-y-2">
                             <p class="text-xs font-semibold uppercase tracking-widest text-emerald-500">Pelatihan Pendamping Produk Halal</p>
@@ -30,20 +30,17 @@
                             </h2>
                         </div>
 
-                        {{-- === BAGIAN PROGRESS BAR (SUDAH DIPERBAIKI) === --}}
+                        {{-- Bagian Progress Bar --}}
                         <div class="space-y-3">
                             <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-slate-500">
                                 <span>Progress</span>
-                                {{-- Menggunakan ?? 0 agar tidak error jika null --}}
                                 <span class="text-emerald-600">{{ $course->progress_percent ?? 0 }}%</span>
                             </div>
                             <div class="h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
-                                {{-- Style width dinamis --}}
-                                <div class="h-full bg-emerald-500 transition-all duration-1000 ease-out" 
+                                <div class="h-full bg-emerald-500 transition-all duration-1000 ease-out"
                                      style="width: {{ $course->progress_percent ?? 0 }}%">
                                 </div>
                             </div>
-                    
                         </div>
 
                         <div class="mt-auto pt-2">
