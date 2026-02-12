@@ -93,12 +93,11 @@
 
                         <h3 class="text-lg font-semibold text-slate-900">Informasi Profil</h3>
 
-                        {{-- BAGIAN FOTO PROFIL --}}
+                        {{-- BAGIAN FOTO PROFIL (DIPERBAIKI) --}}
                         <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
                             <img id="avatar-preview"
-                                src="{{ Auth::user()->avatar ? \Illuminate\Support\Facades\Storage::disk('public')->url(Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=10b981&color=fff' }}"
+                                 src="{{ Auth::user()->avatar_url }}"
                                  alt="Avatar Pengguna"
-                                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=10b981&color=fff';"
                                  class="h-24 w-24 rounded-full border-4 border-white object-cover shadow-lg">
 
                             <div class="flex flex-col gap-1">
@@ -113,6 +112,7 @@
                                 <p class="text-xs text-slate-400 ml-1">JPG, PNG atau GIF. Maks 2MB.</p>
                             </div>
                         </div>
+
                         {{-- NIK --}}
                         <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600">
                             NIK
@@ -178,7 +178,7 @@
                                    class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
                         </label>
                         {{-- Alamat Domisili --}}
-                        <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600"">
+                        <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600">
                             Alamat
                             <textarea name="alamat"
                                       rows="3"
@@ -248,29 +248,47 @@
 
                         <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600">
                             Password Saat Ini
-                            <input type="password"
-                                   name="current_password"
-                                   placeholder="Masukkan password saat ini"
-                                   required
-                                   class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
+                            <div class="relative">
+                                <input type="password"
+                                       name="current_password"
+                                       id="current_password"
+                                       placeholder="Masukkan password saat ini"
+                                       required
+                                       class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 pr-12 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
+                                <button type="button" onclick="togglePassword('current_password', 'icon-current')" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 hover:text-emerald-500 focus:outline-none">
+                                    <i id="icon-current" class="fas fa-eye"></i>
+                                </button>
+                            </div>
                         </label>
 
                         <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600">
                             Password Baru
-                            <input type="password"
-                                   name="new_password"
-                                   placeholder="Minimal 8 karakter"
-                                   required
-                                   class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
+                            <div class="relative">
+                                <input type="password"
+                                       name="new_password"
+                                       id="new_password"
+                                       placeholder="Minimal 8 karakter"
+                                       required
+                                       class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 pr-12 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
+                                <button type="button" onclick="togglePassword('new_password', 'icon-new')" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 hover:text-emerald-500 focus:outline-none">
+                                    <i id="icon-new" class="fas fa-eye"></i>
+                                </button>
+                            </div>
                         </label>
 
                         <label class="flex flex-col gap-2 text-sm font-semibold text-slate-600">
                             Konfirmasi Password Baru
-                            <input type="password"
-                                   name="new_password_confirmation"
-                                   placeholder="Ulangi password baru"
-                                   required
-                                   class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
+                            <div class="relative">
+                                <input type="password"
+                                       name="new_password_confirmation"
+                                       id="new_password_confirmation"
+                                       placeholder="Ulangi password baru"
+                                       required
+                                       class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 pr-12 text-sm text-slate-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
+                                <button type="button" onclick="togglePassword('new_password_confirmation', 'icon-confirm')" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 hover:text-emerald-500 focus:outline-none">
+                                    <i id="icon-confirm" class="fas fa-eye"></i>
+                                </button>
+                            </div>
                         </label>
 
                         <div class="flex items-center justify-end border-t border-slate-200 pt-6">
@@ -345,5 +363,20 @@
             });
         }
     });
+
+    function togglePassword(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    }
 </script>
 @endpush
